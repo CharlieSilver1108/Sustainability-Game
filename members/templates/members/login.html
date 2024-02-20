@@ -11,19 +11,19 @@
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-lg-5">
-                            <form method="POST" action="#">
+                            <form method="POST">
                                 {% csrf_token %}
                                 <div class="card shadow-lg border-0 rounded-lg mt-4">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-2">Login</h3></div>
                                     <div class="card-body small">
                                         <div class="login">
                                             <div class="form-floating mb-3">
+                                                <label for="inputUsername">Username:</label>
                                                 <input class="form-control" id="inputUsername" name="username" type="username" placeholder="Username" autocomplete="off" required/>
-                                                <label for="inputUsername">Username</label>
                                             </div>
                                             <div class="form-floating mb-3">
+                                                <label for="inputPassword">Password:</label>
                                                 <input class="form-control" id="inputPassword" name="password" type="password" placeholder="Password" required/>
-                                                <label for="inputPassword">Password</label>
                                             </div>
 
                                             {% if messages %}
@@ -47,7 +47,7 @@
                                     </div>
                                     <div class="card-footer text-center py-2">
                                         <div class="d-flex align-items-center justify-content-between mt-2 mb-0">
-                                            <a class="small" href="#">Forgot Password?</a>
+                                            <a class="small" href="{% url 'register_user' %}">Don't Have an Account?</a>
                                             <button type="submit" id="submitButton" class="btn" style="background-color:#0B6623; color: white;" value="Submit">Login</button>
                                         </div>
                                     </div>
@@ -60,6 +60,16 @@
         </div>
     </div>
 
+    <script>    
+        function showPassword() {                       //Javascript function used to toggle between password view and text view
+            var x = document.getElementById("inputPassword");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+    </script>
 
 
 {% endblock %}
