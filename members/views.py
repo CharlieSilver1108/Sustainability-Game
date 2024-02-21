@@ -45,6 +45,19 @@ def register_user(request):
         form = RegisterUserForm()
     return render(request, 'members/register.html', {'form':form,})
 
+def delete_user(request):
+    if request.method == 'POST':
+        request.user.delete() # Delete the user account
+        logout(request)  # Log out the user after deleting the account
+        messages.success(request, ("You Have Been Logged Out"))
+        return redirect('login_user') # Redirect to the login page
+    else:
+        return render(request, 'members/delete.html')
+
 
 def profile_user(request):        
     return render(request, 'members/profile.html', {})
+
+
+def privacy_policy(request):        
+    return render(request, 'members/privacy_policy.html', {})

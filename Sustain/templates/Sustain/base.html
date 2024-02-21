@@ -21,7 +21,7 @@
 
   <body id="mainContent" style="background: #f4f4f4;">
     <br/>
-    <div style="padding: 5px;">
+    <div style="padding: 7px;">
       {% block content %}
       
       {% endblock %}
@@ -34,7 +34,7 @@
   <footer class="py-4 bg-light mt-auto" style="font-size: smaller; padding: 5px; position: fixed; bottom: 0; width: 100%; height: auto; justify-content: space-between;" id="footer">
       <div class="text-muted float-left text-left col-6">Copyright &copy; ScrumBuddies 2024</div>
       <div class="float-right text-right col-6" style="display: flex; flex-direction: column;">
-          <a href="#">&middot; Privacy Policy</a>
+          <a href="{% url 'privacy_policy' %}">&middot; Privacy Policy</a>
           <a href="#">Terms &amp; Conditions</a>
       </div>
   </footer>

@@ -24,23 +24,22 @@
 
 
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Settings
-          </a>
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            
-            {% if user.is_authenticated and user.is_superuser %}
-              <a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
-            {% endif %}
-            
-            <div class="dropdown-divider"></div>
-              {% if user.is_authenticated %}
-                <a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a>
-              {% else %}
-                <a class="dropdown-item" href="{% url 'login_user' %}">Login</a>
+
+            {% if user.is_authenticated %}
+              {% if user.is_superuser %}
+                <a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
               {% endif %}
+
+              <a class="dropdown-item" href="#">Update Account</a>
+              <a class="dropdown-item text-muted" href="{% url 'delete_user' %}">Delete Account</a>
+
+              <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a>               
+            {% else %}
+              <a class="dropdown-item" href="{% url 'login_user' %}">Login</a>
+            {% endif %}
           </div>
         </li>
       </ul>
