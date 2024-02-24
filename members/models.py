@@ -9,6 +9,7 @@ class Profile(models.Model):
     taskOne = models.ForeignKey(Task, related_name='taskOne', on_delete=models.CASCADE, null=True, blank=True)
     taskTwo = models.ForeignKey(Task, related_name='taskTwo', on_delete=models.CASCADE, null=True, blank=True)
     taskThree = models.ForeignKey(Task, related_name='taskThree', on_delete=models.CASCADE, null=True, blank=True)
+    points = models.IntegerField(default=0)
     def __str__(self):
         return str(self.user)
 
