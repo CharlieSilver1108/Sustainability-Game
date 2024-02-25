@@ -1,8 +1,10 @@
+import requests
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .forms import RegisterUserForm
+
 
 # Create your views here.
 
@@ -61,3 +63,4 @@ def profile_user(request):
 
 def privacy_policy(request):        
     return render(request, 'members/privacy_policy.html', {})
+
