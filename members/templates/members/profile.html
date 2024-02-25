@@ -1,9 +1,56 @@
+
 {% extends 'Sustain/base.html' %}
-
-
+{%load static%}
 {% block content %}
-    <title>Profile</title>
 
-    <h1>Hello, world. You're at your user profile</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <!-- Link your CSS file here -->
+    <link rel="stylesheet" href="{%static 'css/profile.css' %}">
+</head>
 
+<body>
+
+    <div class="container">
+        <div class="profile-header">
+            <img class="profile-pic" src="{%static 'img/lukeBottle.jpg' %}" alt="Profile Picture">
+            <div class="profile-details">
+                <div class="user-detail">
+                    <p>User Name: {{user.username}}</p>
+                </div>
+                <div class="user-detail">
+                    {%if user.email%}
+                        <p>Email: {{user.email}}</p>
+                    {%else%}
+                        <p>Please complete profile creation and add you email</p>
+                    {%endif%}
+                </div>
+                <div class="user-detail">
+                    {%if user.first_name%}
+                    <p>First name: {{user.firstName}}</p>
+                {%else%}
+                    <p>Please complete profile creation and add your name</p>
+                {%endif%}
+                </div>
+                <div class="user-detail">
+                    {%if user.last_name%}
+                        <p>Email: {{user.last_name}}</p>
+                    {%else%}
+                        <p>Please complete profile creation and add your last name</p>
+                    {%endif%}
+                </div>
+            </div>
+        </div>
+        <div class="additional-details">
+            <h3>Additional Details</h3>
+            <p>When more functionality has been added i want to display things like the Users total points here and their position on the leaderboard </p>
+            <p>Additionally there also probably needs to be a link to some way of changing account details/completing account creation</p>
+        </div>
+    </div>
+    
+    </body>
 {% endblock %}
