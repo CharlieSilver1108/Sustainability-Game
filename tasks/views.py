@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Task, Task_Type
-from .forms import FindTask, CompleteTask
+from .forms import FindTask, CompleteTask, CreateMultipleChoiceTask
 
 def task_view(request):
     allTasks = Task.objects.all()
@@ -22,6 +22,21 @@ def task_view(request):
     currentTasks = Task.objects.filter(id__in=currentTaskIDs)
 
     return render(request, 'tasks/tasks.html', {'currentTasks': currentTasks,'availableTasks': availableTasks, 'profile': profile})
+
+def create_task_page(request):
+    return render(request, 'tasks/create_tasks.html', {})
+
+def create_task(request):
+    if request.method == 'POST':
+        form = CreateMultipleChoiceTask(request.POST)
+        if form.is_valid():
+            try:
+                print("Placeholder")
+            except:
+                print("Placeholder")
+            return
+
+
 
 def add_task(request):
     if request.method == 'POST':

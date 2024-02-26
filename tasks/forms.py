@@ -13,3 +13,8 @@ class CompleteTask(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['answer', 'id']
+
+class CreateMultipleChoiceTask(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['id', 'name', 'description', 'task_type', 'answer']
