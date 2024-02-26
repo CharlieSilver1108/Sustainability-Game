@@ -34,43 +34,46 @@
                     {% endif %}
                 </a>
             </div>
-            <h1 class="mt-2">{{user.username}}</h1>                
+            <h1 class="mt-2">{{ user.username }}</h1>                
         </div>
         <div class="profile-details">
             <div class="user-detail">
-                {% if user.first_name %}
-                    <p>First Name: {{user.first_name}}</p>
-                {% else %}
-                    <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your first name</p>
-                {%endif%}
+                <h3>Details</h3>
+                <ul>
+                    {% if user.first_name %}
+                        {% if user.last_name %}
+                            <li>Name: {{user.first_name}} {{user.last_name}}</li>
+                        {% else %}
+                            <li>First Name: {{user.first_name}}</li>
+                        {% endif %}
+                    {% else %}
+                        <li>Surname: {{user.last_name}}</li>
+                    {% endif %}
+                
+                    {%if user.email%}
+                        <li>Email: {{user.email}}</li>
+                    {%else%}
+                        <li><a href="{% url 'update_user' %}">Complete your profile</a> by adding your email</li>
+                    {%endif%}
+
+                    {%if user.profile.pronouns %}
+                        <li>Pronouns: {{user.profile.pronouns}}</li>
+                    {%else%}
+                        <li><a href="{% url 'update_user' %}">Complete your profile</a> by adding your pronouns</li>
+                    {%endif%}
+                </ul>
             </div>
             <div class="user-detail">
-                {% if user.last_name %}
-                    <p>Last Name: {{user.last_name}}</p>
-                {% else %}
-                    <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your surname</p>
-                {%endif%}
-            </div>
-            <div class="user-detail">
-                {%if user.email%}
-                    <p>Email: {{user.email}}</p>
-                {%else%}
-                    <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your email</p>
-                {%endif%}
-            </div>
-            <div class="user-detail">
-                {%if user.profile.pronouns %}
-                    <p>Pronouns: {{user.profile.pronouns}}</p>
-                {%else%}
-                    <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your pronouns</p>
-                {%endif%}
-            </div>
-            <div class="user-detail">
+                <h5>Bio:</h5>
                 {%if user.profile.bio%}
-                    <p>Bio: {{user.profile.bio}}</p>
+                    <p>{{user.profile.bio}}</p>
                 {%else%}
                     <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding a bio</p>
                 {%endif%}
+            </div>
+            <div class="user-detail">
+                <h5>Points:</h5>
+                <p>{{user.profile.points}}</p>
             </div>
         </div>
         <div class="additional-details">

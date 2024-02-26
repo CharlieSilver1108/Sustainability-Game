@@ -116,6 +116,10 @@ def challenge(request, code):
         correct_answer = challenge.correct_answer
         if (str(correct_answer) == choice):
             messages.success(request, 'Correct Answer!')
+            user = request.user
+            profile = user.profile
+            profile.points += challenge.points
+            profile.save()
             return redirect('profile_user')
         else:
             messages.success(request, 'Incorrect Answer!')
@@ -130,4 +134,5 @@ def challenge(request, code):
             "choice2": challenge.choice2,
             "choice3": challenge.choice3,
             "choice4": challenge.choice4,
+            "points": challenge.points,
         })

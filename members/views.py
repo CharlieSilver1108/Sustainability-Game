@@ -85,7 +85,7 @@ def update_user(request):
         return redirect('index')
 
 
-def profile_user(request):        
+def profile_user(request):
     return render(request, 'members/profile.html', {'user': request.user})
 
 
