@@ -65,6 +65,13 @@
                     <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your pronouns</p>
                 {%endif%}
             </div>
+            <div class="user-detail">
+                {%if user.profile.bio%}
+                    <p>Bio: {{user.profile.bio}}</p>
+                {%else%}
+                    <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding a bio</p>
+                {%endif%}
+            </div>
         </div>
         <div class="additional-details">
             <h3>Additional Details</h3>

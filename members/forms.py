@@ -56,6 +56,16 @@ class addPronounsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(addPronounsForm, self).__init__(*args, **kwargs)
         
+class bioForm(forms.ModelForm):
+    bio = forms.CharField(required=False, max_length=500, widget=forms.Textarea(attrs={'class':'form-control'}))
+    
+    class Meta:
+        model = Profile
+        fields = ['bio']
+
+    def __init__(self, *args, **kwargs):
+        super(bioForm, self).__init__(*args, **kwargs)
+        
 
 class ProfilePictureForm(forms.ModelForm):
     class Meta:
