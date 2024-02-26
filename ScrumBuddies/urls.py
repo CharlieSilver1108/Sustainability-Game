@@ -22,4 +22,5 @@ urlpatterns = [
     path("", include("Sustain.urls")),
     path("members/", include("members.urls")),
     path("members/", include("django.contrib.auth.urls")),
+    path("tasks/", include("tasks.urls")),
 ]

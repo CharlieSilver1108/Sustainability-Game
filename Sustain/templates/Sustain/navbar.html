@@ -18,6 +18,10 @@
         
         {% if user.is_authenticated %}
           <li class="nav-item">
+            <a class="nav-link" href="{% url 'qr_explain' %}">Challenges</a>
+          </li>
+          
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'profile_user' %}">Profile</a>
           </li>
         {% endif %}
