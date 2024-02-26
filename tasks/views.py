@@ -102,3 +102,6 @@ def complete_task(request):
             return redirect('task_view')
     else:
         return render(request, 'tasks/tasks.html', {})
+    
+def qr_explain(request):
+    return render(request, 'tasks/qr_explain.html', {})

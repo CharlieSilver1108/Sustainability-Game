@@ -4,3 +4,4 @@ members/__pycache__/
 ScrumBuddies/__pycache__/
 *.pyc
 myEnv/
+db.sqlite3

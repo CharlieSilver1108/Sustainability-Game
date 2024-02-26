@@ -1,10 +1,59 @@
 {% extends 'Sustain/base.html' %}
 {% load static %}
 
+
 {% block content %}
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
-    </form>
+    <title>Update Profile Picture</title>
+
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="card shadow-lg border-0 rounded-lg mt-4">
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-2">Update Profile Picture</h3></div>
+                                    <div class="card-body small">
+                                        {% if form.errors %}
+                                            <div class="alert alert-warning fade show text-center mb-3" role="alert">
+                                                <p>There was an error with your form, please try again</p>
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="login">
+                                            <small class="form-text text-muted">
+                                                {% if form.errors %}
+                                                    <br>
+                                                    <ul>
+                                                        {% for field in form %}
+                                                            {% for error in field.errors %}
+                                                                <li>{{ field.label }}: {{ error }}</li>
+                                                            {% endfor %}
+                                                        {% endfor %}
+                                                    </ul>
+                                                {% endif %}
+                                            </small>
+
+                                            {{ form.as_p }}
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="card-footer py-2">
+                                        <div class="d-flex align-items-center justify-content-between mt-2 mb-0">
+                                            <a class="text-muted"><small>Note: These details will be stored, see our privacy policy for details</small></a>
+                                            <button type="submit" id="submitButton" class="btn" style="background-color:#0B6623; color: white;" value="Submit">Update</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
 {% endblock %}
