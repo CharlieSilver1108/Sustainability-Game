@@ -9,4 +9,5 @@ urlpatterns = [
     path('remove_task', views.remove_task, name='remove_task'),
     path('complete_task', views.complete_task, name='complete_task'),
     path('qr_explain', views.qr_explain, name='qr_explain'),
+    path('challenge/<str:code>', views.challenge, name='challenge'),
 ]

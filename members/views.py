@@ -49,7 +49,7 @@ def register_user(request):
             return redirect('profile_user')
     else:
         form = RegisterUserForm()
-    return render(request, 'members/register.html', {'form':form,})
+    return render(request, 'members/register.html', {'form':form})
 
 def delete_user(request):
     if request.method == 'POST':    # if form has been submit
