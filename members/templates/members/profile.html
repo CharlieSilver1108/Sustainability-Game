@@ -6,48 +6,86 @@
     
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 
+    <style>
+        .square-container {
+          position: relative;
+          width: 150px; /* Set the width */
+          padding-bottom: 100%; /* This ensures the height matches the width */
+          overflow: hidden; /* Hide any overflowing content */
+        }
+        .square-container img {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          object-fit:fill;
+        }
+      </style>
+
     <title>Your Profile</title>
 
-    <body>
-        <div class="container row" style="justify-content: center; flex-direction: row;">
-            <div class="profile-header" style="flex-direction: column;">
-                <img class="profile-pic" style="size: auto;" src="{% static 'img/lukeBottle.jpg' %}" alt="Profile Picture">
-                <h1 class="mt-2">{{user.username}}</h1>
+    <div class="container row mt-4" style="justify-content: center; flex-direction: row;">
+        <div class="profile-header" style="flex-direction: column; margin-right: 40px;">
+            <div class="square-container">
+                <a href="{% url 'update_profile_picture' %}">
+                    {% if user.profile.profile_picture %}
+                        <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="max-width: 180px; height: width; object-fit: contain;">
+                    {% else %}
+                        <img src="img/default.jpg" alt="Profile Picture" class="rounded-circle" style="max-width: 180px;">
+                    {% endif %}
+                </a>
             </div>
-            <div class="profile-details">
-                <div class="user-detail">
+            <h1 class="mt-2">{{ user.username }}</h1>                
+        </div>
+        <div class="profile-details">
+            <div class="user-detail">
+                <h3>Details</h3>
+                <ul>
                     {% if user.first_name %}
-                        <p>First Name: {{user.first_name}}</p>
+                        {% if user.last_name %}
+                            <li>Name: {{user.first_name}} {{user.last_name}}</li>
+                        {% else %}
+                            <li>First Name: {{user.first_name}}</li>
+                        {% endif %}
                     {% else %}
-                        <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your first name</p>
-                    {%endif%}
-                </div>
-                <div class="user-detail">
-                    {% if user.last_name %}
-                        <p>Last Name: {{user.last_name}}</p>
-                    {% else %}
-                        <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your surname</p>
-                    {%endif%}
-                </div>
-                <div class="user-detail">
+                        <li>Surname: {{user.last_name}}</li>
+                    {% endif %}
+                
                     {%if user.email%}
-                        <p>Email: {{user.email}}</p>
+                        <li>Email: {{user.email}}</li>
                     {%else%}
-                        <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your email</p>
+                        <li><a href="{% url 'update_user' %}">Complete your profile</a> by adding your email</li>
                     {%endif%}
-                </div>
+
+                    {%if user.profile.pronouns %}
+                        <li>Pronouns: {{user.profile.pronouns}}</li>
+                    {%else%}
+                        <li><a href="{% url 'update_user' %}">Complete your profile</a> by adding your pronouns</li>
+                    {%endif%}
+                </ul>
             </div>
-            <div class="additional-details">
-                <h3>Additional Details</h3>
-                <p>When more functionality has been added I want to display things like the user's total points here and their position on the leaderboard </p>
-                <a class="float-left" href="{% url 'update_user' %}">
-                    <button type="button" class="btn" style="background: #0d7a2e; color: white;"><small>Edit Profile</small></button>
-                </a>
-                <a class="float-right" href="{% url 'delete_user' %}">
-                    <button type="button" class="btn" style="background: #0d7a2e; color: white;"><small>Delete Profile</small></button>
-                </a>
+            <div class="user-detail">
+                <h5>Bio:</h5>
+                {%if user.profile.bio%}
+                    <p>{{user.profile.bio}}</p>
+                {%else%}
+                    <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding a bio</p>
+                {%endif%}
+            </div>
+            <div class="user-detail">
+                <h5>Points:</h5>
+                <p>{{user.profile.points}}</p>
             </div>
         </div>
+        <div class="additional-details">
+            <h3>Additional Details</h3>
+            <p>When more functionality has been added I want to display things like the user's total points here and their position on the leaderboard </p>
+            <a class="float-left" href="{% url 'update_user' %}">
+                <button type="button" class="btn" style="background: #0d7a2e; color: white;"><small>Edit Profile</small></button>
+            </a>
+            <a class="float-right" href="{% url 'delete_user' %}">
+                <button type="button" class="btn" style="background: #0d7a2e; color: white;"><small>Delete Profile</small></button>
+            </a>
+        </div>
+    </div>
     
-    </body>
 {% endblock %}

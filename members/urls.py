@@ -12,4 +12,5 @@ urlpatterns = [
     path('profile_user', views.profile_user, name="profile_user"),
     path('update_user', views.update_user, name="update_user"),
     path('privacy_policy', views.privacy_policy, name="privacy_policy"),    
+    path('update_profile_picture', views.update_profile_picture, name='update_profile_picture'),
 ]
