@@ -28,5 +28,6 @@ class MultipleChoiceTask(models.Model):
     choice3 = models.CharField(max_length=30)
     choice4 = models.CharField(max_length=30)
     correct_answer = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
+    points = models.IntegerField(default=0)
     def __str__(self):
         return self.code
