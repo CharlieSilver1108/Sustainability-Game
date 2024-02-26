@@ -31,8 +31,7 @@
               {% if user.is_superuser %}
                 <a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
               {% endif %}
-
-              <a class="dropdown-item" href="{% url 'update_user' %}">Update Profile</a>
+              
               <a class="dropdown-item" href="{% url 'update_password' %}">Change Password</a>
               <a class="dropdown-item text-muted" href="{% url 'delete_user' %}">Delete Account</a>
 

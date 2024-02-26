@@ -1,56 +1,53 @@
-
 {% extends 'Sustain/base.html' %}
-{%load static%}
+
+{% load static %}
+
 {% block content %}
+    
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <!-- Link your CSS file here -->
-    <link rel="stylesheet" href="{%static 'css/profile.css' %}">
-</head>
+    <title>Your Profile</title>
 
-<body>
-
-    <div class="container">
-        <div class="profile-header">
-            <img class="profile-pic" src="{%static 'img/lukeBottle.jpg' %}" alt="Profile Picture">
+    <body>
+        <div class="container row" style="justify-content: center; flex-direction: row;">
+            <div class="profile-header" style="flex-direction: column;">
+                <img class="profile-pic" style="size: auto;" src="{% static 'img/lukeBottle.jpg' %}" alt="Profile Picture">
+                <h1 class="mt-2">{{user.username}}</h1>
+            </div>
             <div class="profile-details">
                 <div class="user-detail">
-                    <p>User Name: {{user.username}}</p>
+                    {% if user.first_name %}
+                        <p>First Name: {{user.first_name}}</p>
+                    {% else %}
+                        <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your first name</p>
+                    {%endif%}
+                </div>
+                <div class="user-detail">
+                    {% if user.last_name %}
+                        <p>Last Name: {{user.last_name}}</p>
+                    {% else %}
+                        <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your surname</p>
+                    {%endif%}
                 </div>
                 <div class="user-detail">
                     {%if user.email%}
                         <p>Email: {{user.email}}</p>
                     {%else%}
-                        <p>Please complete profile creation and add you email</p>
-                    {%endif%}
-                </div>
-                <div class="user-detail">
-                    {%if user.first_name%}
-                        <p>First name: {{user.firstName}}</p>
-                    {%else%}
-                        <p>Please complete profile creation and add your name</p>
-                    {%endif%}
-                </div>
-                <div class="user-detail">
-                    {%if user.last_name%}
-                        <p>Email: {{user.last_name}}</p>
-                    {%else%}
-                        <p>Please complete profile creation and add your last name</p>
+                        <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your email</p>
                     {%endif%}
                 </div>
             </div>
+            <div class="additional-details">
+                <h3>Additional Details</h3>
+                <p>When more functionality has been added I want to display things like the user's total points here and their position on the leaderboard </p>
+                <a class="float-left" href="{% url 'update_user' %}">
+                    <button type="button" class="btn" style="background: #0d7a2e; color: white;"><small>Edit Profile</small></button>
+                </a>
+                <a class="float-right" href="{% url 'delete_user' %}">
+                    <button type="button" class="btn" style="background: #0d7a2e; color: white;"><small>Delete Profile</small></button>
+                </a>
+            </div>
         </div>
-        <div class="additional-details">
-            <h3>Additional Details</h3>
-            <p>When more functionality has been added i want to display things like the Users total points here and their position on the leaderboard </p>
-            <p>Additionally there also probably needs to be a link to some way of changing account details/completing account creation</p>
-        </div>
-    </div>
     
     </body>
 {% endblock %}
