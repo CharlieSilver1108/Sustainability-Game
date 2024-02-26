@@ -19,6 +19,8 @@ class RegisterUserForm(UserCreationForm):
         self.fields['password1'].widget.attrs['class']= 'form-control'
         self.fields['password2'].widget.attrs['class']= 'form-control'
 
+
+
 class PasswordChangingForm(PasswordChangeForm):
     old_password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password'}))
     new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password'}))
@@ -27,6 +29,7 @@ class PasswordChangingForm(PasswordChangeForm):
     class Meta:
         model = User
         fields = ['old_password', 'password1', 'password2']
+
 
 
 class UpdateUserForm(UserChangeForm):

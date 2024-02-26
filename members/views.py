@@ -12,19 +12,16 @@ from .forms import RegisterUserForm, PasswordChangingForm, UpdateUserForm
 # Create your views here.
 
 def login_user(request):
-    if request.method == "POST":
+    if request.method == "POST":    # if form has been submitted
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-
         if user is not None:
             login(request, user)
             return redirect('index')
-
         else:
             messages.success(request, ("Username or Password Incorrect, Please Try Again"))
             return redirect('login_user')
-
     else:
         return render(request, 'members/login.html', {})
     
@@ -36,8 +33,8 @@ def logout_user(request):
 
 
 def register_user(request):
-    if request.method == "POST":
-        form = RegisterUserForm(request.POST)
+    if request.method == "POST":    # if form has been submitted
+        form = RegisterUserForm(request.POST)   # this form template is in forms.py
         if form.is_valid():
             form.save()
             username = form.cleaned_data['username']
@@ -51,24 +48,23 @@ def register_user(request):
     return render(request, 'members/register.html', {'form':form,})
 
 def delete_user(request):
-    if request.method == 'POST':
-        request.user.delete() # Delete the user account
-        logout(request)  # Log out the user after deleting the account
+    if request.method == 'POST':    # if form has been submit
+        request.user.delete()       # delete user account
+        logout(request) 
         messages.success(request, ("You Have Been Logged Out"))
-        return redirect('login_user') # Redirect to the login page
+        return redirect('login_user')
     else:
         return render(request, 'members/delete.html')
 
 class PasswordsChangeView(PasswordChangeView):
-    form_class = PasswordChangingForm
-    success_url = reverse_lazy('index')
+    form_class = PasswordChangingForm       # this form template is in forms.py
+    success_url = reverse_lazy('index')     # if the form is successful, redirect to 'index'
 
 
 def update_user(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated:       # check user is logged in
         current_user = User.objects.get(id=request.user.id)
-        form = UpdateUserForm(request.POST or None, instance=current_user)
-
+        form = UpdateUserForm(request.POST or None, instance=current_user)  # this form template is in forms.py
         if form.is_valid():
             form.save()
             login(request, current_user)
