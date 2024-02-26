@@ -77,7 +77,7 @@ def update_user(request):
 
 
 def profile_user(request):        
-    return render(request, 'members/profile.html', {})
+    return render(request, 'members/profile.html', {'user': request.user})
 
 
 def privacy_policy(request):        
