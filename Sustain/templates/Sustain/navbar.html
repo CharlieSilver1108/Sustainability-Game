@@ -8,10 +8,6 @@
       <ul class="navbar-nav mr-auto">
         
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'index' %}">Home</a>
-        </li>
-
-        <li class="nav-item">
           <a class="nav-link" href="#">Leaderboard</a>
         </li>
 
@@ -36,7 +32,8 @@
                 <a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
               {% endif %}
 
-              <a class="dropdown-item" href="#">Update Account</a>
+              <a class="dropdown-item" href="{% url 'update_user' %}">Update Profile</a>
+              <a class="dropdown-item" href="{% url 'update_password' %}">Change Password</a>
               <a class="dropdown-item text-muted" href="{% url 'delete_user' %}">Delete Account</a>
 
               <div class="dropdown-divider"></div>

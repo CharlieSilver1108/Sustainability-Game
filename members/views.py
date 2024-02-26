@@ -1,9 +1,12 @@
 import requests
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import RegisterUserForm
+from .forms import RegisterUserForm, PasswordChangingForm, UpdateUserForm
 
 
 # Create your views here.
@@ -55,6 +58,26 @@ def delete_user(request):
         return redirect('login_user') # Redirect to the login page
     else:
         return render(request, 'members/delete.html')
+
+class PasswordsChangeView(PasswordChangeView):
+    form_class = PasswordChangingForm
+    success_url = reverse_lazy('index')
+
+
+def update_user(request):
+    if request.user.is_authenticated:
+        current_user = User.objects.get(id=request.user.id)
+        form = UpdateUserForm(request.POST or None, instance=current_user)
+
+        if form.is_valid():
+            form.save()
+            login(request, current_user)
+            messages.success(request, "Profile Successfully Updated")
+            return redirect('profile_user')
+        return render(request, 'members/update_user.html', {'form':form,})
+    else:
+        messages.success(request, "You must be logged in to access this page!")
+        return redirect('index')
 
 
 def profile_user(request):        
