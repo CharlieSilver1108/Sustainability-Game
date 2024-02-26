@@ -1,3 +1,6 @@
  __pycache__/
+Sustain/__pycache__/
+members/__pycache__/
+ScrumBuddies/__pycache__/
 *.pyc
 db.sqlite3
