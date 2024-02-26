@@ -5,3 +5,4 @@ ScrumBuddies/__pycache__/
 *.pyc
 myEnv/
 db.sqlite3
+img/profile_pictures/

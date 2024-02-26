@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Task, Task_Type
-from .forms import FindTask, CompleteTask
+from django.contrib import messages
+from .models import Task, Task_Type, MultipleChoiceTask
+from .forms import FindTask, CompleteTask, MultipleChoiceQuestionForm
 
 def task_view(request):
     allTasks = Task.objects.all()
@@ -105,3 +106,28 @@ def complete_task(request):
     
 def qr_explain(request):
     return render(request, 'tasks/qr_explain.html', {})
+
+
+def challenge(request, code):
+    challenge = MultipleChoiceTask.objects.get(code=code)
+    
+    if request.method == 'POST':
+        choice = request.POST['choice']
+        correct_answer = challenge.correct_answer
+        if (str(correct_answer) == choice):
+            messages.success(request, 'Correct Answer!')
+            return redirect('profile_user')
+        else:
+            messages.success(request, 'Incorrect Answer!')
+            return redirect('qr_explain')
+
+    else:
+        return render(request, 'tasks/challenge.html', {
+            "location": challenge.location,
+            "description": challenge.description,
+            "question": challenge.question,
+            "choice1": challenge.choice1,
+            "choice2": challenge.choice2,
+            "choice3": challenge.choice3,
+            "choice4": challenge.choice4,
+        })
