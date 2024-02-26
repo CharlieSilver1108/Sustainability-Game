@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import RegisterUserForm, PasswordChangingForm, UpdateUserForm, ProfilePictureForm, addPronounsForm
+from .forms import RegisterUserForm, PasswordChangingForm, UpdateUserForm, ProfilePictureForm, addPronounsForm, bioForm
 from .models import Profile
 
 
@@ -71,13 +71,15 @@ def update_user(request):
         current_user = User.objects.get(id=request.user.id)
         form1 = UpdateUserForm(request.POST or None, instance=current_user)  # this form template is in forms.py
         form2 = addPronounsForm(request.POST or None, instance=current_user.profile)
-        if form1.is_valid() and form2.is_valid():
+        bio_form = bioForm(request.POST or None, instance=current_user.profile)
+        if form1.is_valid() and form2.is_valid() and bio_form.is_valid():
             form1.save()
             form2.save()
+            bio_form.save()
             login(request, current_user)
             messages.success(request, "Profile Successfully Updated")
             return redirect('profile_user')
-        return render(request, 'members/update_user.html', {'form1':form1, 'form2':form2})
+        return render(request, 'members/update_user.html', {'form1':form1, 'form2':form2, 'bio_form': bio_form})
     else:
         messages.success(request, "You must be logged in to access this page!")
         return redirect('index')
