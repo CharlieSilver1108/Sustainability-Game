@@ -7,8 +7,8 @@ class Task_Type(models.Model):
         return self.task_type
 
 class Task(models.Model):
-    name = models.CharField(max_length=30)
-    description = models.CharField(max_length=200)
+    name = models.CharField(max_length=2000)
+    description = models.CharField(max_length=2000)
     task_type = models.ForeignKey(Task_Type, on_delete=models.CASCADE)
     answer = models.CharField(max_length=300)
     def __str__(self):
