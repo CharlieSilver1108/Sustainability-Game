@@ -19,7 +19,10 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('index')
+            if user.is_superuser:
+                return redirect('admin:index')
+            else:
+                return redirect('index')
         else:
             messages.success(request, ("Username or Password Incorrect, Please Try Again"))
             return redirect('login_user')
@@ -50,6 +53,7 @@ def register_user(request):
 
 def delete_user(request):
     if request.method == 'POST':    # if form has been submit
+        request.user.profile.delete()   #delete user profile
         request.user.delete()       # delete user account
         logout(request) 
         messages.success(request, ("You Have Been Logged Out"))
