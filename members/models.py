@@ -10,6 +10,8 @@ class Profile(models.Model):
     taskTwo = models.ForeignKey(Task, related_name='taskTwo', on_delete=models.CASCADE, null=True, blank=True)
     taskThree = models.ForeignKey(Task, related_name='taskThree', on_delete=models.CASCADE, null=True, blank=True)
     points = models.IntegerField(default=0)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', default='default.jpg')
+    
     def __str__(self):
         return str(self.user)
 

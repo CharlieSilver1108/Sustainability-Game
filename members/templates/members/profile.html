@@ -10,9 +10,11 @@
 
     <body>
         <div class="container row" style="justify-content: center; flex-direction: row;">
-            <div class="profile-header" style="flex-direction: column;">
-                <img class="profile-pic" style="size: auto;" src="{% static 'img/lukeBottle.jpg' %}" alt="Profile Picture">
-                <h1 class="mt-2">{{user.username}}</h1>
+            <div class="profile-header" style="flex-direction: column;">    
+                <a href="{% url 'update_profile_picture' %}">                        
+                    <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" style="width: 250px; height: 250px;">
+                </a>
+                <h1 class="mt-2">{{user.username}}</h1>                
             </div>
             <div class="profile-details">
                 <div class="user-detail">

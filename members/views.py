@@ -6,7 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import RegisterUserForm, PasswordChangingForm, UpdateUserForm
+from .forms import RegisterUserForm, PasswordChangingForm, UpdateUserForm, ProfilePictureForm
+from .models import Profile
 
 
 # Create your views here.
@@ -83,3 +84,12 @@ def profile_user(request):
 def privacy_policy(request):        
     return render(request, 'members/privacy_policy.html', {})
 
+def update_profile_picture(request):
+    if request.method == 'POST':
+        form = ProfilePictureForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile_user')  # Redirect to profile view
+    else:
+        form = ProfilePictureForm(instance=request.user.profile)
+    return render(request, 'members/upload_profile_picture.html', {'form': form})
