@@ -35,7 +35,9 @@
                                                 <label for="{{ form.password1.id_for_label }}">Password:</label>
                                                 {{ form.password1 }}
                                                 <small class="form-text text-muted">
+                                                    {{ form.password1.help_text }}
                                                     {% if form.errors %}
+                                                        <br>
                                                         <ul>
                                                             {% for field in form %}
                                                                 {% for error in field.errors %}
