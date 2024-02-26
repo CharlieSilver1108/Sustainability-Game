@@ -16,7 +16,7 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-4">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-2">Update Profile</h3></div>
                                     <div class="card-body small">
-                                        {% if form.errors %}
+                                        {% if form1.errors or form2.errors %}
                                             <div class="alert alert-warning fade show text-center mb-3" role="alert">
                                                 <p>There was an error with your form, please try again</p>
                                             </div>
@@ -24,10 +24,20 @@
 
                                         <div class="login">
                                             <small class="form-text text-muted">
-                                                {% if form.errors %}
+                                                {% if form1.errors %}
                                                     <br>
                                                     <ul>
-                                                        {% for field in form %}
+                                                        {% for field in form1 %}
+                                                            {% for error in field.errors %}
+                                                                <li>{{ field.label }}: {{ error }}</li>
+                                                            {% endfor %}
+                                                        {% endfor %}
+                                                    </ul>
+                                                {% endif %}
+                                                {% if form2.errors %}
+                                                    <br>
+                                                    <ul>
+                                                        {% for field in form2 %}
                                                             {% for error in field.errors %}
                                                                 <li>{{ field.label }}: {{ error }}</li>
                                                             {% endfor %}
@@ -38,36 +48,40 @@
 
                                             <div class="form-floating mb-3">
                                                 <label for="{{ form.username.id_for_label }}">Username:</label>
-                                                {{ form.username }}
+                                                {{ form1.username }}
                                                 <small class="form-text text-muted">
-                                                    {{ form.username.help_text }}
+                                                    {{ form1.username.help_text }}
                                                 </small>
                                             </div>
 
                                             <div class="form-floating mb-3">
                                                 <label for="{{ form.firstName.id_for_label }}">First Name:</label>
-                                                {{ form.first_name }}
+                                                {{ form1.first_name }}
                                                 <small class="form-text text-muted">
-                                                    {{ form.firstName.help_text }}
+                                                    {{ form1.firstName.help_text }}
                                                 </small>
                                             </div>
 
                                             <div class="form-floating mb-3">
                                                 <label for="{{ form.lastName.id_for_label }}">Surname:</label>
-                                                {{ form.last_name }}
+                                                {{ form1.last_name }}
                                                 <small class="form-text text-muted">
-                                                    {{ form.lastName.help_text }}
+                                                    {{ form1.lastName.help_text }}
                                                 </small>
                                             </div>
                                             
                                             <div class="form-floating mb-3">
                                                 <label for="{{ form.email.id_for_label }}">Email:</label>
-                                                {{ form.email }}
+                                                {{ form1.email }}
                                                 <small class="form-text text-muted">
-                                                    {{ form.email.help_text }}
+                                                    {{ form1.email.help_text }}
                                                 </small>
                                             </div>
                                             
+                                            <div class="form-floating mb-3">
+                                                <label for="{{ form2.pronouns.id_for_label }}">Pronouns:</label>
+                                                {{ form2.pronouns }}
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="card-footer py-2">

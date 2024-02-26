@@ -10,9 +10,9 @@
 
     <body>
         <div class="container row" style="justify-content: center; flex-direction: row;">
-            <div class="profile-header" style="flex-direction: column;">    
+            <div class="profile-header" style="flex-direction: column; margin-right: 40px;">
                 <a href="{% url 'update_profile_picture' %}">                        
-                    <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" style="width: 250px; height: 250px;">
+                    <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="max-width: 180px;">
                 </a>
                 <h1 class="mt-2">{{user.username}}</h1>                
             </div>
@@ -36,6 +36,13 @@
                         <p>Email: {{user.email}}</p>
                     {%else%}
                         <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your email</p>
+                    {%endif%}
+                </div>
+                <div class="user-detail">
+                    {%if user.profile.pronouns %}
+                        <p>Pronouns: {{user.profile.pronouns}}</p>
+                    {%else%}
+                        <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your pronouns</p>
                     {%endif%}
                 </div>
             </div>

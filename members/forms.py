@@ -45,7 +45,18 @@ class UpdateUserForm(UserChangeForm):
     def __init__(self, *args, **kwargs):
         super(UpdateUserForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs['class']= 'form-control'
+
+class addPronounsForm(forms.ModelForm):
+    pronouns = forms.CharField(required=False, max_length=10, widget=forms.TextInput(attrs={'class':'form-control'}))
+    
+    class Meta:
+        model = Profile
+        fields = ['pronouns']
+
+    def __init__(self, *args, **kwargs):
+        super(addPronounsForm, self).__init__(*args, **kwargs)
         
+
 class ProfilePictureForm(forms.ModelForm):
     class Meta:
         model = Profile
