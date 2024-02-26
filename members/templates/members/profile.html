@@ -1,0 +1,55 @@
+{% extends 'Sustain/base.html' %}
+
+{% load static %}
+
+{% block content %}
+    
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+    <title>Your Profile</title>
+
+    <body>
+        <div class="container row" style="justify-content: center; flex-direction: row;">
+            <div class="profile-header" style="flex-direction: column;">    
+                <a href="{% url 'update_profile_picture' %}">                        
+                    <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" style="width: 250px; height: 250px;">
+                </a>
+                <h1 class="mt-2">{{user.username}}</h1>                
+            </div>
+            <div class="profile-details">
+                <div class="user-detail">
+                    {% if user.first_name %}
+                        <p>First Name: {{user.first_name}}</p>
+                    {% else %}
+                        <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your first name</p>
+                    {%endif%}
+                </div>
+                <div class="user-detail">
+                    {% if user.last_name %}
+                        <p>Last Name: {{user.last_name}}</p>
+                    {% else %}
+                        <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your surname</p>
+                    {%endif%}
+                </div>
+                <div class="user-detail">
+                    {%if user.email%}
+                        <p>Email: {{user.email}}</p>
+                    {%else%}
+                        <p><a href="{% url 'update_user' %}">Complete your profile</a> by adding your email</p>
+                    {%endif%}
+                </div>
+            </div>
+            <div class="additional-details">
+                <h3>Additional Details</h3>
+                <p>When more functionality has been added I want to display things like the user's total points here and their position on the leaderboard </p>
+                <a class="float-left" href="{% url 'update_user' %}">
+                    <button type="button" class="btn" style="background: #0d7a2e; color: white;"><small>Edit Profile</small></button>
+                </a>
+                <a class="float-right" href="{% url 'delete_user' %}">
+                    <button type="button" class="btn" style="background: #0d7a2e; color: white;"><small>Delete Profile</small></button>
+                </a>
+            </div>
+        </div>
+    
+    </body>
+{% endblock %}
