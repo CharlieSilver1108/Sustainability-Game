@@ -1,0 +1,37 @@
+{% extends 'Sustain/base.html' %}
+
+{% block content %}
+    <title>Challenge Page</title>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="card-title mb-4">Welcome to the Challenge Page!</h1>
+                        <p class="card-text small"></p>
+                    </div>
+
+                    <div class="card-body">
+                        <h3 class="card-title mt-1">How It Works:</h3>
+                            <ul>
+                                <li>Go to one of the locations below</li>
+                                <li>Find the QR code</li>
+                                <li>Scan it</li>
+                                <li>You be directed to a page containing the challenge</li>
+                                <li>Complete the challenge to earn points!</li>
+                            </ul>
+
+                        <hr style="border-top: 1px solid #bbb;">
+                            <ul>
+                                <li>Location 1</li>
+                                <li>Location 2</li>
+                            </ul>
+                            <!-- Add more locations as needed, potentially list from database?? -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
