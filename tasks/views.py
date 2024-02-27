@@ -279,4 +279,11 @@ def complete_waypoint(request, waypoint_id):
         
         waypoint = LocationBasedTask.objects.get(id=waypoint_id)
         UserLocationRelation.objects.create(user=request.user, location_based_task=waypoint)
+        
+        user = request.user
+        profile = user.profile
+        
+        profile.points += waypoint.points
+        profile.save()
+        
         return redirect('location')
