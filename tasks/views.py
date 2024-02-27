@@ -3,7 +3,7 @@ import random
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Task, Task_Type, PersonBasedCode, UserCodeRelation
+from .models import Task, Task_Type, PersonBasedCode, UserCodeRelation, MultipleChoiceTask
 from .forms import FindTask, CompleteTask, MultipleChoiceQuestionForm, Task_Type, MultipleChoiceTaskForm, PersonBasedCodeForm
 from django.contrib import messages
 
@@ -128,7 +128,7 @@ def qr_explain(request):
     return render(request, 'tasks/qr_explain.html', {})
 
 
-def challenge(request, code):
+def MCQchallenge(request, code):
     challenge = MultipleChoiceTask.objects.get(code=code)
     
     if request.method == 'POST':
@@ -146,7 +146,7 @@ def challenge(request, code):
             return redirect('qr_explain')
 
     else:
-        return render(request, 'tasks/challenge.html', {
+        return render(request, 'tasks/MCQchallenge.html', {
             "location": challenge.location,
             "description": challenge.description,
             "question": challenge.question,

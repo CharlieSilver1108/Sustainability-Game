@@ -8,7 +8,6 @@ class RegisterUserForm(UserCreationForm):
     email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={'class':'form-control', 'placeholder':''}))
     first_name = forms.CharField(required=False, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
     last_name = forms.CharField(required=False, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
-    
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
@@ -26,18 +25,15 @@ class PasswordChangingForm(PasswordChangeForm):
     old_password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password'}))
     new_password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password'}))
     new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'type':'password'}))
-
     class Meta:
         model = User
         fields = ['old_password', 'password1', 'password2']
-
 
 
 class UpdateUserForm(UserChangeForm):
     email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={'class':'form-control'}))
     first_name = forms.CharField(required=False, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
     last_name = forms.CharField(required=False, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
-    
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
@@ -47,8 +43,14 @@ class UpdateUserForm(UserChangeForm):
         self.fields['username'].widget.attrs['class']= 'form-control'
 
 class addPronounsForm(forms.ModelForm):
-    pronouns = forms.CharField(required=False, max_length=10, widget=forms.TextInput(attrs={'class':'form-control'}))
-    
+    OPTIONS = (
+        ('', ''),
+        ('He/Him', 'He/Him'),
+        ('She/Her', 'She/Her'),
+        ('They/Them', 'They/Them'),
+        ('Other', 'Other')
+    )
+    pronouns = forms.ChoiceField(choices=OPTIONS, required=False, widget=forms.Select(attrs={'class':'form-control'}))
     class Meta:
         model = Profile
         fields = ['pronouns']

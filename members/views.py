@@ -1,5 +1,5 @@
 import requests
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -19,10 +19,7 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            if user.is_superuser:
-                return redirect('admin:index')
-            else:
-                return redirect('index')
+            return redirect('index')
         else:
             messages.success(request, ("Username or Password Incorrect, Please Try Again"))
             return redirect('login_user')
@@ -88,6 +85,9 @@ def update_user(request):
 def profile_user(request):
     return render(request, 'members/profile.html', {'user': request.user})
 
+def profile_other(request, username):
+    userToView = get_object_or_404(User, username=username)
+    return render(request, 'members/profileViewer.html', {'userToView': userToView})
 
 def privacy_policy(request):        
     return render(request, 'members/privacy_policy.html', {})

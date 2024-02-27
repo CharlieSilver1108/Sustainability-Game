@@ -1,0 +1,79 @@
+{% extends 'Sustain/base.html' %}
+
+{% load static %}
+
+{% block content %}
+    
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+    <style>
+        .square-container {
+          position: relative;
+          width: 150px; /* Set the width */
+          padding-bottom: 100%; /* This ensures the height matches the width */
+          overflow: hidden; /* Hide any overflowing content */
+        }
+        .square-container img {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          object-fit:fill;
+        }
+    </style>
+
+    <title>{{ userToView.username }}'s Profile</title>
+
+    <div class="container row mt-4" style="justify-content: center; flex-direction: row;">
+        <div class="profile-header" style="flex-direction: column; margin-right: 40px;">
+            <div class="square-container">
+                {% if userToView.profile.profile_picture %}
+                    <img src="{{ userToView.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="max-width: 180px; height: width; object-fit: contain;">
+                {% else %}
+                    <img src="img/default.jpg" alt="Profile Picture" class="rounded-circle" style="max-width: 180px;">
+                {% endif %}
+            </div>
+            <h1 class="mt-2">{{ userToView.username }}</h1>                
+        </div>
+        <div class="profile-details">
+            <div class="user-detail">
+                <h3>Details</h3>
+                <ul>
+                    {% if userToView.first_name %}
+                        {% if userToView.last_name %}
+                            <li>Name: {{userToView.first_name}} {{userToView.last_name}}</li>
+                        {% else %}
+                            <li>First Name: {{userToView.first_name}}</li>
+                        {% endif %}
+                    {% else %}
+                        {% if userToView.last_name %}
+                            <li>Surname: {{userToView.last_name}}</li>
+                        {% endif %}
+                    {% endif %}
+                
+                    {%if userToView.profile.pronouns %}
+                        <li>Pronouns: {{userToView.profile.pronouns}}</li>
+                    {%endif%}
+
+                    {%if userToView.email%}
+                        <li>Email: {{userToView.email}}</li>
+                    {%endif%}
+                </ul>
+            </div>
+            <div class="user-detail">
+                <h5>Bio:</h5>
+                {%if userToView.profile.bio%}
+                    <p>{{userToView.profile.bio}}</p>
+                {%endif%}
+            </div>
+            <div class="user-detail">
+                <h5>Points:</h5>
+                <p>{{userToView.profile.points}}</p>
+            </div>
+        </div>
+        <div class="additional-details">
+            <h3>Additional Details</h3>
+            <p>When more functionality has been added I want to display things like the user's total points here and their position on the leaderboard </p>
+        </div>
+    </div>
+    
+{% endblock %}
