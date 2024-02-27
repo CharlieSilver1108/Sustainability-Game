@@ -1,5 +1,4 @@
 from django.urls import path
-
 from . import views
 from .views import add_task, task_view, remove_task, complete_task
 
