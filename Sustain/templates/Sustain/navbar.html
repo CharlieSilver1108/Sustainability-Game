@@ -19,10 +19,22 @@
           <a class="nav-link" href="{% url 'learning' %}">Learning</a>
         </li>
 
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'person_based_codes' %}">Person Based Task</a>
+        </li>
         
+        {%if user.is_superuser%}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'create_task_page' %}">Create new tasks</a>
+        </li>       
+        {% endif %}
+
         {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'profile_user' %}">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'task_view' %}">Task</a>
           </li>
         {% endif %}
 

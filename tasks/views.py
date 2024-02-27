@@ -136,3 +136,165 @@ def complete_task(request):
         return render(request, 'tasks/tasks.html', {})
 
 # ------- END -------
+
+def qr_explain(request):
+    return render(request, 'tasks/qr_explain.html', {})
+
+
+def challenge(request, code):
+    challenge = MultipleChoiceTask.objects.get(code=code)
+    
+    if request.method == 'POST':
+        choice = request.POST['choice']
+        correct_answer = challenge.correct_answer
+        if (str(correct_answer) == choice):
+            messages.success(request, 'Correct Answer!')
+            user = request.user
+            profile = user.profile
+            profile.points += challenge.points
+            profile.save()
+            return redirect('profile_user')
+        else:
+            messages.success(request, 'Incorrect Answer!')
+            return redirect('qr_explain')
+
+    else:
+        return render(request, 'tasks/challenge.html', {
+            "location": challenge.location,
+            "description": challenge.description,
+            "question": challenge.question,
+            "choice1": challenge.choice1,
+            "choice2": challenge.choice2,
+            "choice3": challenge.choice3,
+            "choice4": challenge.choice4,
+            "points": challenge.points,
+        })
+        
+def create_person_based_code(request):
+    if request.method == 'POST':
+        form = PersonBasedCodeForm(request.POST)
+        # Generate a unique 4-digit code
+        unique_code = generate_unique_code()
+    
+        # Create a PersonBasedCode instance but don't save it yet            
+        person_based_code = form.save(commit=False)
+        
+        # Assign the unique code to the instance
+        person_based_code.code = unique_code
+        
+        # Now save the instance to the database
+        person_based_code.save()
+        
+        # Redirect to 'task_view' or appropriate URL name after successful save
+        return redirect('person_based_codes')
+    else:
+        form = PersonBasedCodeForm()
+    
+    # Render the empty or invalid form
+    return render(request, 'tasks/create_person_based_code.html', {'form': form})
+
+def generate_unique_code():
+    while True:
+        # Generate a random 4-digit code
+        code = str(random.randint(1000, 9999))
+        # Check if this code already exists in the database
+        if not PersonBasedCode.objects.filter(code=code).exists():
+            return code
+        
+def person_based_codes(request):
+    # renders the person based codes html files
+    if request.user.is_superuser:
+        # For superusers, fetch all codes without filtering by user
+        codes = PersonBasedCode.objects.all()
+    else:
+        # For regular users, fetch codes based on their submissions
+        codes_relations = UserCodeRelation.objects.filter(user=request.user).select_related('person_based_code')
+        codes = [relation.person_based_code for relation in codes_relations]
+        
+    return render(request, 'tasks/person_based_codes.html', {'person_based_codes': codes})
+
+def delete_person_based_code(request, code_id):
+    
+    if request.method == "POST":
+        code = PersonBasedCode.objects.get(id=code_id)
+        code.delete()
+        messages.success(request, "Person based code successfully deleted.")
+        return redirect('person_based_codes')
+    else:
+        messages.error(request, "Person based code not found.")
+        return redirect('person_based_codes')
+    
+def submit_code(request):
+    if request.method == 'POST':
+        code = request.POST.get('code')
+        try:
+            person_based_code = PersonBasedCode.objects.get(code=code)
+            # Check if the code is already added by the user
+            if UserCodeRelation.objects.filter(user=request.user, person_based_code=person_based_code).exists():
+                messages.error(request, "You have already added this code.")
+            else:
+                UserCodeRelation.objects.create(user=request.user, person_based_code=person_based_code)
+                
+                user = request.user
+                profile = user.profile
+                profile.points += person_based_code.points
+                
+                messages.success(request, "Code added successfully.")
+        except PersonBasedCode.DoesNotExist:
+            messages.error(request, "Invalid code.")
+        return redirect('person_based_codes')  # Redirect to the same page or to a success page
+    return redirect('person_based_codes')
+
+def location_page(request):
+    existing_waypoints_qs = LocationBasedTask.objects.all()
+    existing_waypoints_json = serializers.serialize('json', existing_waypoints_qs)
+    
+    visited_waypoints_qs = UserLocationRelation.objects.filter(user=request.user).select_related('location_based_task')
+    visited_waypoints = [relation.location_based_task for relation in visited_waypoints_qs]
+
+    # Serialize existing waypoints to JSON for JavaScript
+    existing_waypoints_for_js = json.dumps([{
+        "latitude": wp.latitude,
+        "longitude": wp.longitude,
+        "title": wp.title,
+        "description": wp.description,
+        "id": wp.id,
+        "visited": wp in visited_waypoints  # Add a visited flag
+    } for wp in existing_waypoints_qs])
+
+    return render(request, 'tasks/location.html', {
+        'form': LocationBasedTaskForm,
+        'existing_waypoints': existing_waypoints_for_js,
+        'is_superuser': request.user.is_superuser
+    })
+    
+def upload_waypoint(request):
+    if request.method == 'POST':
+        form = LocationBasedTaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print('success')
+            return redirect('location')
+        else:
+            print('form not valid')
+            print(form.errors)
+        
+        return redirect('location')
+
+def complete_waypoint(request, waypoint_id):
+    
+    if request.method == 'POST':
+        # check they have not already completed this waypoint, if so do nothing
+        if UserLocationRelation.objects.filter(user=request.user, location_based_task=waypoint_id).exists():
+            return redirect('location')
+        
+        waypoint = LocationBasedTask.objects.get(id=waypoint_id)
+        UserLocationRelation.objects.create(user=request.user, location_based_task=waypoint)
+        
+        user = request.user
+        profile = user.profile
+        
+        profile.points += waypoint.points
+        profile.save()
+        
+        return redirect('location')
