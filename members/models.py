@@ -14,6 +14,10 @@ class Profile(models.Model):
     taskTwo = models.ForeignKey(Task, related_name='taskTwo', on_delete=models.CASCADE, null=True, blank=True)
     taskThree = models.ForeignKey(Task, related_name='taskThree', on_delete=models.CASCADE, null=True, blank=True)
     points = models.IntegerField(default=0)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', default='profile_pictures/default.png')
+    pronouns = models.CharField(max_length=10 ,null=True, blank=True)
+    bio = models.TextField(max_length=500, null=True, blank=True)
+    
     def __str__(self):
         return str(self.user)
 

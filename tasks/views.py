@@ -1,8 +1,13 @@
+import random
+
 from django.shortcuts import render, redirect
+from django.core import serializers
+import json
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Task, Task_Type
-from .forms import FindTask, CompleteTask
+from .models import Task, Task_Type, PersonBasedCode, UserCodeRelation, UserLocationRelation
+from .forms import FindTask, CompleteTask, MultipleChoiceTaskForm, PersonBasedCodeForm, LocationBasedTask, LocationBasedTaskForm
+from django.contrib import messages
 
 # ------- CODING BY LUKE HALES -------
 
@@ -34,6 +39,25 @@ def task_view(request):
     return render(request, 'tasks/tasks.html', {'currentTasks': currentTasks,'availableTasks': availableTasks, 'profile': profile})
 
 # this view adds tasks to the profile if there is space available
+
+def create_task_page(request):
+    return render(request, 'tasks/create_tasks.html', {})
+
+def create_task(request):
+    if request.method == 'POST':
+        form = MultipleChoiceTaskForm(request.POST)
+        if form.is_valid():
+            print("Form Valid")
+            form.save()  # Save the form data to the database
+            return redirect('task_view')  # Redirect to a success page after saving
+        else:
+            print("Form not valid")
+            print(form.errors)
+    else:
+        form = MultipleChoiceTaskForm()  # Create a new form instance
+
+    return render(request, 'tasks/create_tasks.html', {'form': form})
+
 def add_task(request):
     if request.method == 'POST':
         # uses the FindTask form in order to get the ID of the task to add
@@ -134,7 +158,6 @@ def complete_task(request):
             return redirect('task_view')
     else:
         return render(request, 'tasks/tasks.html', {})
-
 # ------- END -------
 
 def qr_explain(request):

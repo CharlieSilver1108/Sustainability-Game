@@ -13,15 +13,15 @@ class Task_Type(models.Model):
 
 # creates the task model which holds the name, description, an input to complete the task, and contains a foreign key which links it to a task type
 class Task(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, default='Name')
     location = models.CharField(max_length=30, default='Location')
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, default='Description')
     task_type = models.ForeignKey(Task_Type, on_delete=models.CASCADE)
-    answer = models.CharField(max_length=300)
+    answer = models.CharField(max_length=300, default='Answer')
     def __str__(self):
         return self.name
-
 # ------- END -------
+    
 
 class MultipleChoiceTask(models.Model):
     code = models.CharField(max_length=30)
@@ -42,6 +42,7 @@ class PersonBasedCode(models.Model):
     code = models.CharField(max_length=4)
     # name of the person, where they can be found and their area of expertise
     name = models.CharField(max_length=30)
+
     location = models.CharField(max_length=30)
     expertise = models.CharField(max_length=30)
     points = models.IntegerField(default=0)
@@ -50,7 +51,6 @@ class LocationBasedTask(models.Model):
     
     longitude = models.FloatField()
     latitude = models.FloatField()
-    
     title = models.CharField(max_length=30)
     description = models.CharField(max_length=200)
     points = models.IntegerField(default=0)

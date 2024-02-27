@@ -1,5 +1,5 @@
 from django import forms
-from .models import Task, Task_Type
+from .models import Task, Task_Type, MultipleChoiceTask, PersonBasedCode, LocationBasedTask
 from django.contrib.auth.models import User
 
 # ------- CODING BY LUKE HALES -------
@@ -19,7 +19,6 @@ class CompleteTask(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['answer', 'id']
-
 # ------- END -------
 
 class MultipleChoiceTaskForm(forms.ModelForm):
