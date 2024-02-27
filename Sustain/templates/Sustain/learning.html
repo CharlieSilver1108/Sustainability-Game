@@ -1,36 +1,56 @@
 {% extends 'Sustain/base.html' %}
 
 {% block content %}
+    <!-- 
+    File: learning.html
+    Description: This is the Learning Page for the Sustain website. It contains information about sustainability and the actions that individuals and the University of Exeter are taking to promote it. The page is divided into a sidebar and main content. The sidebar contains links to external resources, while the main content includes information about what individuals can do, what the University of Exeter is doing, and a note from the Scrum Buddies team.
+    Author: Greg 
+    -->
     <title>Learning Page</title>
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h1 class="card-title mb-4">Welcome to the Learning Page</h1>
-                        <p class="card-text small">SustainExe and the University of Exeter are committed to lead meaningful action against the climate emergency and ecological crisis. Here you can find out more about sustainability and take the knowledge you've learned to become a stronger eco warrior! If you want to learn even more about sustainability<a href="https://www.exeter.ac.uk/sustainability/" target="_blank"> check out the University of Exeter's page here</a>.</p>
-                    </div>
+    <div class="container-fluid">
+        <div class="row">
 
-                    <div class="card-body">
-                        <h3 class="card-title mt-1">Who Are We</h3>
-                            <p class="mb-1">*Add paragraph about who we are*</p> <!-- ADD -->
-
-                        <h3 class="card-title mt-5">What You Can Do</h3>
+     <!-- Sidebar -->
+     <!-- The sidebar contains links to external resources related to sustainability. Each link opens in a new tab. -->
+     <div class="col-2 d-none d-md-block">
+        <div class="list-group">
+            <a href="https://www.exeter.ac.uk/about/sustainability/whatwearedoing/waste-recycling/a-to-z/" class="list-group-item list-group-item-action" style="background-color: greenyellow;" target="_blank">Waste A-Z</a>
+            <a href="https://exetercommunitygarden.co.uk/" class="list-group-item list-group-item-action" style="background-color: greenyellow;" target="_blank">Volunteer</a>
+            <a href="https://www.bbc.co.uk/programmes/m00049b1" class="list-group-item list-group-item-action" style="background-color: greenyellow;" target="_blank">Watch</a>
+        </div>
+    </div>
+        <!-- Main content -->
+        <!-- This section contains the main content of the Learning Page. It includes information about what individuals can do, what the University of Exeter is doing, and a note from the Scrum Buddies team. -->
+        <div class="col-12 col-md-8 mx auto">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <!-- Welcome message and brief introduction -->
+                            <h1 class="card-title mb-4">Welcome to the Learning Page</h1>
+                            <p class="card-text small">The Sustain team and the University of Exeter are committed to lead meaningful action against the climate emergency and ecological crisis. Here you can find out more about sustainability and take the knowledge you've learned to become a stronger eco warrior! If you want to learn even more about sustainability<a href="https://www.exeter.ac.uk/sustainability/" target="_blank"> check out the University of Exeter's page here</a>.</p>
+                        </div>
+                        
+                        <div class="card-body">
+                            <!-- Section about what individuals can do -->
+                            <h3 class="card-title">What You Can Do</h3>
                             <p class="mb-1">There are simple changes you can make to live more sustainably and reduce your carbon footprint. Recycling is an easy step. Also consider how you shop, study and get to campus - each change, however small, is a move towards being more sustainable. There are also a range of opportunities to get involved with sustainability initiatives, such as volunteering, biodiversity projects and the community garden.</p>
-
-                        <h3 class="card-title mt-5">What We Are Doing</h3>
+                        
+                            <!-- Section about what the University of Exeter is doing -->
+                            <h3 class="card-title mt-5">What The University of Exeter is doing</h3>
                             <p class="mb-1">The United Nations Sustainable Development Goals (SDGs) are a set of 17 goals which provide a shared blueprint for peace and prosperity for people and the planet, now and into the future. They are at the heart of 'The 2030 Agenda for Sustainable Development', which was adopted by all United Nations Member States in 2015.</p>
-                            <p class="mb-1">The University of Exeter is committed to the SDGs and has a range of initiatives and projects to support them. These include the Living Systems Institute, the Global Systems Institute, and the Exeter Climate Assembly.</p>
-                            <img src="https://ecosystemmarketplace.com/wp-content/uploads/2016/06/SDGs.jpg" alt="Description of image" style="width: 100%; max-width: 600px;">
+                            <p class="mb-1">The University of Exeter is committed to the SDGs and has a range of initiatives and projects to support them. These include the Living Systems Institute, the Global Systems Institute, and the Exeter Climate Assembly.<br></p>
+                            <img src="https://ecosystemmarketplace.com/wp-content/uploads/2016/06/SDGs.jpg" alt="Description of image" style="width: 100%; max-width: 600px;" class="mx-auto d-block">
                         
-                        <h3 class="card-title mt-5">Our Game</h3>
-                            <p class="mb-1">*Add paragraph about how game works here*</p> <!-- add -->
-                        
-                            <!-- Add more topics as needed -->
+                            <!-- A note from the Scrum Buddies team -->
+                            <h3 class="card-title mt-5">A Note From Us</h3>
+                            <p class="mb-1">We are Scrum Buddies, a passionate and tight-knit team of student developers committed to promoting sustainability through education. Our mission is to make learning about sustainability not just accessible, but also engaging and enjoyable. We believe that everyone has a role to play in protecting our planet, and we want to empower individuals to make a difference in their own unique ways. That's why we created Sustain, an innovative game that combines education and action in a fun and interactive way. In Sustain, players can challenge their knowledge about sustainability, participate in community activities, and earn XP to track their contributions. The game is designed to be both informative and entertaining, providing players with a rewarding experience as they learn about sustainability and take steps to implement sustainable practices in their daily lives. Join us in our journey towards a more sustainable future. Play, learn, and make a difference with Sustain.</p>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 
