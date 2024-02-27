@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.conf import settings
 
 
 class Task_Type(models.Model):
@@ -31,3 +32,21 @@ class MultipleChoiceTask(models.Model):
     points = models.IntegerField(default=0, null=True, blank=True)
     def __str__(self):
         return self.code
+    
+class PersonBasedCode(models.Model):
+    # 4 digit code
+    code = models.CharField(max_length=4)
+    # name of the person, where they can be found and their area of expertise
+    name = models.CharField(max_length=30)
+    location = models.CharField(max_length=30)
+    expertise = models.CharField(max_length=30)
+    points = models.IntegerField(default=0)
+    
+class UserCodeRelation(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    person_based_code = models.ForeignKey(PersonBasedCode, on_delete=models.CASCADE)
+    # You can add a timestamp here if you want to record when the code was added
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.person_based_code}"
