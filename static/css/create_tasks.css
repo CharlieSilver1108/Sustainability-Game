@@ -1,0 +1,70 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+h1 {
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+.multiple-choice-group{
+    margin-bottom: 20px;
+    display: inline-block;
+    width: 49%; /* Adjust the width as needed */
+    vertical-align: top; /* Align elements to the top */
+}
+.dropdown-menu{
+    display: inline block;
+    margin: 0 auto; /* Set top and bottom margin to 0, and left and right margin to auto */
+    width: fit-content; /* Set width to fit the content */
+
+}
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+select {
+    width: 100%; /* Set width to 100% */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; /* Include padding and border in element's total width */
+    margin-top: 5px; /* Add a margin for better spacing */
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}

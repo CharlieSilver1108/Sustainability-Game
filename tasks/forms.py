@@ -14,6 +14,10 @@ class CompleteTask(forms.ModelForm):
         model = Task
         fields = ['answer', 'id']
 
+class MultipleChoiceTaskForm(forms.ModelForm):
+    class Meta:
+        model = MultipleChoiceTask
+        fields = ['code',  'location', 'description', 'question', 'choice1', 'choice2', 'choice3', 'choice4', 'correct_answer', 'points']
 
 class MultipleChoiceQuestionForm(forms.Form):
     choice1 = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple)

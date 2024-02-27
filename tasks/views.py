@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from .models import Task, Task_Type
+from .forms import FindTask, CompleteTask, MultipleChoiceQuestionForm, Task_Type, MultipleChoiceTaskForm
 from django.contrib import messages
-from .models import Task, Task_Type, MultipleChoiceTask
-from .forms import FindTask, CompleteTask, MultipleChoiceQuestionForm
+
 
 def task_view(request):
     allTasks = Task.objects.all()
@@ -23,6 +24,28 @@ def task_view(request):
     currentTasks = Task.objects.filter(id__in=currentTaskIDs)
 
     return render(request, 'tasks/tasks.html', {'currentTasks': currentTasks,'availableTasks': availableTasks, 'profile': profile})
+
+def create_task_page(request):
+    return render(request, 'tasks/create_tasks.html', {})
+
+def create_task(request):
+    if request.method == 'POST':
+        form = MultipleChoiceTaskForm(request.POST)
+        if form.is_valid():
+            print("Form Valid")
+            form.save()  # Save the form data to the database
+            return redirect('task_view')  # Redirect to a success page after saving
+        else:
+            print("Form not valid")
+            print(form.errors)
+    else:
+        form = MultipleChoiceTaskForm()  # Create a new form instance
+
+    return render(request, 'tasks/create_tasks.html', {'form': form})
+
+       
+
+
 
 def add_task(request):
     if request.method == 'POST':

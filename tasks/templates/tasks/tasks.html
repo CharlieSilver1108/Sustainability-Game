@@ -15,7 +15,7 @@
                     <td>{{task.name}}</td>
                     <td>{{task.description}}</td>
                     <td>
-                        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#completeTaskModal" data-taskid="{{ task.id }}">Complete Task</button>
+                        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#completeTaskModal" data-taskid="{{ task.id }}" data-taskname="{{ task.name }}">Complete Task</button>
                     </td>
                     <td>
                         <form method="POST" action="{% url 'remove_task' %}" style="display:inline">
@@ -59,8 +59,10 @@
             </div>
             <form method="POST" action="{% url 'complete_task' %}" style="display:inline">
                 {% csrf_token %}
+                
                 <div class="modal-body">
-                    Code:
+                    <p>What is a gree energy source? name: {{this.task.name}}</p>
+                    <p>A. coal, B, Nueclear, C Water</p>
                     <input type="text" name="answer" required>
                     <input type="hidden" name="id">
                 </div>
