@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Task, Task_Type
-from .forms import FindTask, CompleteTask, CreateMultipleChoiceTask, MultipleChoiceQuestionForm, Task_Type
+from .forms import FindTask, CompleteTask, MultipleChoiceQuestionForm, Task_Type, MultipleChoiceTaskForm
 from django.contrib import messages
 
 
@@ -30,13 +30,20 @@ def create_task_page(request):
 
 def create_task(request):
     if request.method == 'POST':
-        form = CreateMultipleChoiceTask(request.POST)
+        form = MultipleChoiceTaskForm(request.POST)
         if form.is_valid():
-            try:
-                print("Placeholder")
-            except:
-                print("Placeholder")
-            return
+            print("Form Valid")
+            form.save()  # Save the form data to the database
+            return redirect('task_view')  # Redirect to a success page after saving
+        else:
+            print("Form not valid")
+            print(form.errors)
+    else:
+        form = MultipleChoiceTaskForm()  # Create a new form instance
+
+    return render(request, 'tasks/create_tasks.html', {'form': form})
+
+       
 
 
 

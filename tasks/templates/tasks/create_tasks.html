@@ -1,36 +1,54 @@
 {% extends 'Sustain/base.html' %}
-
 {% load static %}
-
 {% block content %}
     <link rel="stylesheet" href="{% static 'css/create_tasks.css' %}">
     </head>
     <body>
         <div class="container">
-            <h1>Create a New Task</h1>
-            <form action="" method="post">
+            <h1>Create a New Multiple Choice Challenge</h1>
+            <form action="{% url 'create_task' %}" method="post">
+                {% csrf_token %}
                 <div class="form-group">
-                    <label for="task-type">Task Type:</label>
-                    <select name="task-type" id="task-type">
-                        <option value="type1">Multiple Choice Task</option>
-                        <option value="type2">To be added in future</option>
-                        <option value="type3">To be added in future</option>
-                        <!-- Add more options as needed -->
+                    <label for="task-title">Challenge Title:</label>
+                    <input type="text" id="task-title" name="code" placeholder="Enter task title">
+                </div>
+                
+                <div class="form-group">
+                    <label for="task-description">Challenge Question:</label>
+                    <textarea id="task-description" name="question" rows="4" placeholder="Enter task description"></textarea>
+                </div>
+                
+                <div class="multiple-choice-group">
+                    <label for="task-choice1">Challenge Answer 1:</label>
+                    <textarea id="task-choice1" name="choice1" rows="2" placeholder="Enter task answers"></textarea>
+                </div>
+                
+                <div class="multiple-choice-group">
+                    <label for="task-choice2">Challenge Answer 2:</label>
+                    <textarea id="task-choice2" name="choice2" rows="2" placeholder="Enter task answers"></textarea>
+                </div>
+                
+                <div class="multiple-choice-group">
+                    <label for="task-choice3">Challenge Answer 3:</label>
+                    <textarea id="task-choice3" name="choice3" rows="2" placeholder="Enter task answers"></textarea>
+                </div>
+                
+                <div class="multiple-choice-group">
+                    <label for="task-choice4">Challenge Answer 4:</label>
+                    <textarea id="task-choice4" name="choice4" rows="2" placeholder="Enter task answers"></textarea>
+                </div>
+                
+                <div class="multiple-choice-group">
+                    <label for="task-solution">Challenge solution:</label>
+                    <select id="task-solution" name="correct_answer">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="task-title">Task Title:</label>
-                    <input type="text" id="task-title" name="task-title" placeholder="Enter task title">
-                </div>
-                <div class="form-group">
-                    <label for="task-description">Task Description:</label>
-                    <textarea id="task-description" name="task-description" rows="4" placeholder="Enter task description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="task-answers">Task Answers:</label>
-                    <textarea id="task-answers" name="task-answers" rows="4" placeholder="Enter task answers"></textarea>
-                </div>
-                <button type="submit">Submit</button>
+                
+                <button type="submit">Create Challenge</button>
             </form>
         </div>
     </body>
