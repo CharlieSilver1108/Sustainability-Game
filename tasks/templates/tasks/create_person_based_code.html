@@ -1,0 +1,62 @@
+{% extends 'Sustain/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/custom.css' %}"> <!-- Ensure you have a custom.css in your static/css directory -->
+<div class="container mt-5">
+    <h1 class="mb-4">Contribute to Sustainability: Create a New Entry</h1>
+    <p class="mb-4">Provide information about key individuals on campus who are known for their commitment to sustainability. By creating profiles for these sustainability champions, you'll enable players to seek them out for meaningful conversations on environmental topics. After each insightful dialogue, these knowledgeable figures will share a unique code with the students. This code, a token of their meaningful exchange, can then be used by students to earn rewards within our sustainability initiative.</p>
+    <form action="{% url 'create_person_based_code' %}" method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label for="person-name">Name:</label>
+            <input type="text" class="form-control" id="person-name" name="name" placeholder="Enter the name of the person or your name" required>
+            <div class="invalid-feedback">
+                Please enter a name.
+            </div>
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="person-location">Location:</label>
+            <input type="text" class="form-control" id="person-location" name="location" placeholder="Enter the location of expertise" required>
+            <div class="invalid-feedback">
+                Please enter a location.
+            </div>
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="person-expertise">Expertise:</label>
+            <input type="text" class="form-control" id="person-expertise" name="expertise" placeholder="Enter the area of expertise" required>
+            <div class="invalid-feedback">
+                Please specify the area of expertise.
+            </div>
+        </div>
+        <div>
+            <label for="person-points">How many points should the player earn for meeting this person?</label>
+            <input type="number" class="form-control" id="person-points" name="points" placeholder="Enter the number of points" required>
+            <div class="invalid-feedback">
+                Please specify the number of points.
+            </div>
+        </div>
+        <br/>
+        <button type="submit" class="btn btn-primary">Create Entry</button>
+    </form>
+</div>
+<script>
+// JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    var forms = document.getElementsByClassName('needs-validation');
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
+{% endblock %}
