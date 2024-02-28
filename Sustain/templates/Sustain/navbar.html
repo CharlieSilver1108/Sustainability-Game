@@ -17,7 +17,6 @@
         <a class="nav-link" href="#">Leaderboard</a>
       </li>
 
-
       <li class="nav-item">
         <a class="nav-link" href="{% url 'learning' %}">Learning</a>
       </li>
@@ -36,11 +35,22 @@
         </li>
       {% endif %}
 
-      {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link" href="#">Add Tasks - i cant find the URL to this, whoever made this please link</a>
+      
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Challenges</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+            {% if user.is_authenticated %}
+              <a class="dropdown-item" href="{% url 'qr_explain' %}">QR Challenges</a>
+              <a class="dropdown-item" href="#">GPS Challenges</a>
+              <a class="dropdown-item" href="#">People Challenges</a>
+            {% endif %}
+
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item text-muted" href="{% url 'how_to_play' %}">How To Play</a>
+
+          </div>
         </li>
-      {% endif %}
 
 
       <li class="nav-item dropdown">

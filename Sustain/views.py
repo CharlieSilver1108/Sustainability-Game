@@ -11,3 +11,6 @@ def index(request):
 
 def learning(request):
     return render(request, 'Sustain/learning.html', {})
+
+def how_to_play(request):
+    return render(request, 'Sustain/how_to_play.html', {})
