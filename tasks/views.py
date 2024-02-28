@@ -5,6 +5,7 @@ from django.core import serializers
 import json
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.utils.safestring import mark_safe
 from .models import *
 from .forms import *
 from django.contrib import messages
@@ -198,9 +199,10 @@ def MCQchallenge(request, code):
             return redirect('qr_explain')
 
     else:                                                       # if the form has not been submit, display the question
+        description = mark_safe(challenge.description)
         return render(request, 'tasks/MCQchallenge.html', {
             "location": challenge.location,
-            "description": challenge.description,
+            "description": description,
             "question": challenge.question,
             "choice1": challenge.choice1,
             "choice2": challenge.choice2,
