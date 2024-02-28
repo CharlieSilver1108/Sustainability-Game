@@ -2,107 +2,110 @@
 
 
 {% block content %}
+    <!-- 
+    File: register.html
+    Description: This is the page allowing the user to create a new accout. It verifies the user's inputs and, if successful, creates a new database entry for the user's account
+    Author: Charlie
+    -->
+
     <title>Register</title>
-
-    <div id="layoutAuthentication">
-        <div id="layoutAuthentication_content">
-            <main>
-
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-5">
-                            <form method="POST" action="{% url 'register_user' %}">
-                                {% csrf_token %}
-                                <div class="card shadow-lg border-0 rounded-lg mt-4">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-2">Register</h3></div>
-                                    <div class="card-body small">
-                                        {% if form.errors %}
-                                            <div class="alert alert-warning fade show text-center mb-3" role="alert">
-                                                <p>There was an error with your form, please try again</p>
-                                            </div>
-                                        {% endif %}
-
-                                        <div class="login">
-                                            <div class="form-floating mb-3">
-                                                <label for="{{ form.username.id_for_label }}">Username:</label>
-                                                {{ form.username }}
-                                                <small class="form-text text-muted">
-                                                    {{ form.username.help_text }}
-                                                </small>
-                                            </div>
-                                            
-                                            <div class="form-floating mb-3">
-                                                <label for="{{ form.password1.id_for_label }}">Password:</label>
-                                                {{ form.password1 }}
-                                                <small class="form-text text-muted">
-                                                    {{ form.password1.help_text }}
-                                                    {% if form.errors %}
-                                                        <br>
-                                                        <ul>
-                                                            {% for field in form %}
-                                                                {% for error in field.errors %}
-                                                                    <li>{{ field.label }}: {{ error }}</li>
-                                                                {% endfor %}
-                                                            {% endfor %}
-                                                        </ul>
-                                                    {% endif %}
-                                                </small>
-                                            </div>
-
-                                            <div class="form-floating mb-3">
-                                                <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
-                                                {{ form.password2 }}
-                                                <small class="form-text text-muted">
-                                                    {{ form.password2.help_text }}
-                                                </small>
-                                            </div>
-
-                                            <button type="button" class="btn float-right" style="background: #0d7a2e; color: white;" id="toggleOptionalFields"><small>Show Optional Fields</small></button>
-                                            <div id="optionalFields" class="mt-5" style="display: none;">
-                                                
-                                                <div class="form-floating mb-3">
-                                                    <label for="{{ form.firstName.id_for_label }}">First Name:</label>
-                                                    {{ form.first_name }}
-                                                    <small class="form-text text-muted">
-                                                        {{ form.firstName.help_text }}
-                                                    </small>
-                                                </div>
-
-                                                <div class="form-floating mb-3">
-                                                    <label for="{{ form.lastName.id_for_label }}">Surname:</label>
-                                                    {{ form.last_name }}
-                                                    <small class="form-text text-muted">
-                                                        {{ form.lastName.help_text }}
-                                                    </small>
-                                                </div>
-                                                
-                                                <div class="form-floating mb-3">
-                                                    <label for="{{ form.email.id_for_label }}">Email:</label>
-                                                    {{ form.email }}
-                                                    <small class="form-text text-muted">
-                                                        {{ form.email.help_text }}
-                                                    </small>
-                                                </div>
-
-                                            </div>
-                                            
-                                        </div>
+    
+    <main>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    <form method="POST" action="{% url 'register_user' %}">
+                        {% csrf_token %}
+                        <div class="card shadow-lg border-0 rounded-lg mt-4">
+                            <div class="card-header"><h3 class="text-center font-weight-light my-2">Register</h3></div>
+                            <div class="card-body small">
+                                {% if form.errors %}
+                                    <div class="alert alert-warning fade show text-center mb-3" role="alert">
+                                        <p>There was an error with your form, please try again</p>
                                     </div>
-                                    <div class="card-footer py-2">
-                                        <div class="d-flex align-items-center justify-content-between mt-2 mb-0">
-                                            <a class="text-muted"><small>Note: These details will be stored, see our privacy policy for details</small></a>
-                                            <button type="submit" id="submitButton" class="btn" style="background-color:#0B6623; color: white;" value="Submit">Register</button>
-                                        </div>
+                                {% endif %}
+
+                                <div class="login">
+                                    <div class="form-floating mb-3">
+                                        <label for="{{ form.username.id_for_label }}">Username:</label>
+                                        {{ form.username }}
+                                        <small class="form-text text-muted">
+                                            {{ form.username.help_text }}
+                                        </small>
                                     </div>
+                                    
+                                    <div class="form-floating mb-3">
+                                        <label for="{{ form.password1.id_for_label }}">Password:</label>
+                                        {{ form.password1 }}
+                                        <small class="form-text text-muted">
+                                            {{ form.password1.help_text }}
+                                            {% if form.errors %}
+                                                <br>
+                                                <ul>
+                                                    {% for field in form %}
+                                                        {% for error in field.errors %}
+                                                            <li>{{ field.label }}: {{ error }}</li>
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </small>
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+                                        <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+                                        {{ form.password2 }}
+                                        <small class="form-text text-muted">
+                                            {{ form.password2.help_text }}
+                                        </small>
+                                    </div>
+
+                                    <!-- Uses jQuery to display/not display the optional fields for the user's account -->
+                                    <button type="button" class="btn float-right" style="background: #0d7a2e; color: white;" id="toggleOptionalFields"><small>Show Optional Fields</small></button>
+                                    <div id="optionalFields" class="mt-5" style="display: none;">
+                                        
+                                        <div class="form-floating mb-3">
+                                            <label for="{{ form.firstName.id_for_label }}">First Name:</label>
+                                            {{ form.first_name }}
+                                            <small class="form-text text-muted">
+                                                {{ form.firstName.help_text }}
+                                            </small>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <label for="{{ form.lastName.id_for_label }}">Surname:</label>
+                                            {{ form.last_name }}
+                                            <small class="form-text text-muted">
+                                                {{ form.lastName.help_text }}
+                                            </small>
+                                        </div>
+                                        
+                                        <div class="form-floating mb-3">
+                                            <label for="{{ form.email.id_for_label }}">Email:</label>
+                                            {{ form.email }}
+                                            <small class="form-text text-muted">
+                                                {{ form.email.help_text }}
+                                            </small>
+                                        </div>
+
+                                    </div>
+                                    
                                 </div>
-                            </form>
+                            </div>
+                            <div class="card-footer py-2">
+                                <div class="d-flex align-items-center justify-content-between mt-2 mb-0">
+                                    <a class="text-muted"><small>Note: These details will be stored, see our privacy policy for details</small></a>
+                                    <button type="submit" id="submitButton" class="btn" style="background-color:#0B6623; color: white;" value="Submit">Register</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </main>
+            </div>
         </div>
-    </div>
+    </main>
 
+    <!-- jQuery function to add a slide toggle for the optional fields -->
     <script>
         $(document).ready(function() {
             $('#toggleOptionalFields').click(function() {

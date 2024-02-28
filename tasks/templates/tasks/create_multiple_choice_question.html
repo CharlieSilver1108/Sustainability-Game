@@ -1,0 +1,26 @@
+{% extends 'Sustain/base.html' %}
+
+{% load static %}
+
+{% block content %}
+    <!-- 
+    File: create_multiple_choice_question.html
+    Description: This page displays the form to create a new multiple choice question
+    Author: Will
+    -->
+
+    <link rel="stylesheet" href="{% static 'css/create_tasks.css' %}">
+
+    <main>
+        <div class="container">
+            <h1>Create a New Multiple Choice Challenge</h1>
+            <form action="#" method="post">
+                {% csrf_token %}
+                
+                {{ form.as_p }}
+                
+                <button type="submit" style="background-color: #0B6623 !important;">Create Challenge</button>
+            </form>
+        </div>
+    </main>
+{% endblock %}
