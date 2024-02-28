@@ -32,6 +32,7 @@
                     <th>Choices</th>
                     <th>Answer</th>
                     <th>Points Value</th>
+                    <th style="color: red;">Remove</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,17 +45,15 @@
                     <td><ol><li>{{ question.choice1 }}</li><li>{{ question.choice2 }}</li><li>{{ question.choice3 }}</li><li>{{ question.choice4 }}</li></ol></td>
                     <td>{{ question.correct_answer }}</td>
                     <td>{{ question.points }}
-                    {% if user.is_superuser %}
                     <td>
-                        <!-- Red "X" button for superuser to delete codes -->
-                        <form action="#" method="post" style="display: inline;">
+                        <!-- Red "X" button for superuser to delete questions -->
+                        <form action="{% url 'delete_multiple_choice_question' question.id %}" method="post" style="display: inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">
                                 <i class="fas fa-times"></i>
                             </button>
                         </form>
                     </td>
-                    {% endif %}
                 </tr>
                 {% empty %}
                 <tr>

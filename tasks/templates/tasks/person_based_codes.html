@@ -33,7 +33,7 @@
                 <th>Code</th>
                 <th>Points Value</th>
                 {% if user.is_superuser %}
-                <th>Action</th>
+                <th style="color: red;">Remove</th>
                 {% endif %}
             </tr>
         </thead>
@@ -44,7 +44,7 @@
                 <td>{{ code.location }}</td>
                 <td>{{ code.expertise }}</td>
                 <td>{{ code.code }}</td>
-                <td>{{ code.points }}
+                <td>{{ code.points }}</td>
                 {% if user.is_superuser %}
                 <td>
                     <!-- Red "X" button for superuser to delete codes -->
