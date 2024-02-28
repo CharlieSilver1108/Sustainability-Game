@@ -1,5 +1,5 @@
 from django import forms
-from .models import Task, Task_Type, MultipleChoiceTask, PersonBasedCode
+from .models import Task, Task_Type, MultipleChoiceTask, PersonBasedCode, LocationBasedTask
 from django.contrib.auth.models import User
 
 class FindTask(forms.ModelForm):
@@ -28,3 +28,9 @@ class PersonBasedCodeForm(forms.ModelForm):
     class Meta:
         model = PersonBasedCode
         fields = ['name', 'location', 'expertise', 'points']
+
+class LocationBasedTaskForm(forms.ModelForm):
+    
+    class Meta:
+        model = LocationBasedTask
+        fields = ['title', 'description', 'points', 'longitude', 'latitude']

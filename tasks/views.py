@@ -1,10 +1,12 @@
 import random
 
 from django.shortcuts import render, redirect
+from django.core import serializers
+import json
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Task, Task_Type, PersonBasedCode, UserCodeRelation, MultipleChoiceTask
-from .forms import FindTask, CompleteTask, MultipleChoiceQuestionForm, Task_Type, MultipleChoiceTaskForm, PersonBasedCodeForm
+from .models import *
+from .forms import *
 from django.contrib import messages
 
 def task_view(request):
@@ -231,3 +233,57 @@ def submit_code(request):
             messages.error(request, "Invalid code.")
         return redirect('person_based_codes')  # Redirect to the same page or to a success page
     return redirect('person_based_codes')
+
+def location_page(request):
+    existing_waypoints_qs = LocationBasedTask.objects.all()
+    existing_waypoints_json = serializers.serialize('json', existing_waypoints_qs)
+    
+    visited_waypoints_qs = UserLocationRelation.objects.filter(user=request.user).select_related('location_based_task')
+    visited_waypoints = [relation.location_based_task for relation in visited_waypoints_qs]
+
+    # Serialize existing waypoints to JSON for JavaScript
+    existing_waypoints_for_js = json.dumps([{
+        "latitude": wp.latitude,
+        "longitude": wp.longitude,
+        "title": wp.title,
+        "description": wp.description,
+        "id": wp.id,
+        "visited": wp in visited_waypoints  # Add a visited flag
+    } for wp in existing_waypoints_qs])
+
+    return render(request, 'tasks/location.html', {
+        'form': LocationBasedTaskForm,
+        'existing_waypoints': existing_waypoints_for_js,
+        'is_superuser': request.user.is_superuser
+    })
+    
+def upload_waypoint(request):
+    if request.method == 'POST':
+        form = LocationBasedTaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print('success')
+            return redirect('location')
+        else:
+            print('form not valid')
+            print(form.errors)
+        
+        return redirect('location')
+
+def complete_waypoint(request, waypoint_id):
+    
+    if request.method == 'POST':
+        # check they have not already completed this waypoint, if so do nothing
+        if UserLocationRelation.objects.filter(user=request.user, location_based_task=waypoint_id).exists():
+            return redirect('location')
+        
+        waypoint = LocationBasedTask.objects.get(id=waypoint_id)
+        UserLocationRelation.objects.create(user=request.user, location_based_task=waypoint)
+        
+        user = request.user
+        profile = user.profile
+        
+        profile.points += waypoint.points
+        profile.save()
+        
+        return redirect('location')

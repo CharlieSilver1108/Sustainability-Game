@@ -42,6 +42,18 @@ class PersonBasedCode(models.Model):
     expertise = models.CharField(max_length=30)
     points = models.IntegerField(default=0)
     
+class LocationBasedTask(models.Model):
+    
+    longitude = models.FloatField()
+    latitude = models.FloatField()
+    
+    title = models.CharField(max_length=30)
+    description = models.CharField(max_length=200)
+    points = models.IntegerField(default=0)
+    
+# currently have a join table for each one, may be able to create an abstract class to handle this
+    
+# join table between the user and the person based code so we can track what codes they've used/people visited
 class UserCodeRelation(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     person_based_code = models.ForeignKey(PersonBasedCode, on_delete=models.CASCADE)
@@ -50,3 +62,13 @@ class UserCodeRelation(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.person_based_code}"
+    
+# join table between the user the location based tasks that they have completed
+class UserLocationRelation(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    location_based_task = models.ForeignKey(LocationBasedTask, on_delete=models.CASCADE)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.user} - {self.location_based_task}"
