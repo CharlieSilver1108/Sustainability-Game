@@ -199,7 +199,7 @@ def MCQchallenge(request, code):
             return redirect('qr_explain')
 
     else:                                                       # if the form has not been submit, display the question
-        description = mark_safe(challenge.description)
+        description = mark_safe(challenge.description)          # ensures the site is not susceptible to XSS, while allowing the description field to store HTML code
         return render(request, 'tasks/MCQchallenge.html', {
             "location": challenge.location,
             "description": description,
