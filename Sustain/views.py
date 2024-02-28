@@ -9,8 +9,13 @@ def index(request):
     return render(request, 'Sustain/index.html', {})
 
 
+# ------- Greg START -------
 def learning(request):
     return render(request, 'Sustain/learning.html', {})
+# ------- Greg END -------
 
+
+# ------- Charlie START -------
 def how_to_play(request):
     return render(request, 'Sustain/how_to_play.html', {})
+# ------- Charlie END -------

@@ -1,11 +1,24 @@
+<!-- 
+File: navbar.html
+Description: This is the navbar, which is included into 'base.html'. It allows a centralised stored for the navbar, meaning that any update will be reflected across teh whole site without having to update every page individually.
+              The navbar is dynamic, and resizes according to the screen size, for example the nav-link items go into a dropdown menu for small screens but are displayed across the top for large screens
+              The navbar contents/styling also update depending on the user: logged-out, logged-in, admin
+Author: Charlie
+-->
+
+
 {% load static %}
 
 {%if user.is_superuser%}
+  <!-- if the user is an admmin, the navbar colour is the same as the default django admin portal -->
   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #417690;">
 {% else %}
+  <!-- if the user is not an admmin, the navbar colour is the green theme -->
   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0B6623;">
 {% endif %}
+  <!-- Includes the logo, which when clicked redirects to the home page -->
   <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'img/logo.png' %}" class="img-fluid" style="max-width: 160px; padding-right: 15px;"></a>
+  <!-- If the screen cannot display all the menu items, they are collapsed into a toggleable dropdown menu -->
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -13,6 +26,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       
+      <!-- Publically Available Links -->
       <li class="nav-item">
         <a class="nav-link" href="#">Leaderboard</a>
       </li>
@@ -21,13 +35,14 @@
         <a class="nav-link" href="{% url 'learning' %}">Learning</a>
       </li>
 
+      <!-- Admin Links -->
       {%if user.is_superuser%}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
-              <a class="dropdown-item" href="{% url 'create_task_page' %}">Create new tasks</a>
-              <a class="dropdown-item text-muted" href="{% url 'person_based_codes' %}">Person Based Task</a>
+              <a class="dropdown-item" href="{% url 'multiple_choice_questions' %}">MCQ Challenge</a>
+              <a class="dropdown-item" href="{% url 'person_based_codes' %}">Person Based Challenge</a>
 
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{% url 'admin:index' %}">Admin Portal</a>
@@ -40,13 +55,16 @@
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Challenges</a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
+            <!-- Logged-In Links -->
             {% if user.is_authenticated %}
               <a class="dropdown-item" href="{% url 'qr_explain' %}">QR Challenges</a>
               <a class="dropdown-item" href="#">GPS Challenges</a>
               <a class="dropdown-item" href="#">People Challenges</a>
-            {% endif %}
 
+              
               <div class="dropdown-divider"></div>
+            {% endif %}
+              <!-- Publically Available Links -->
               <a class="dropdown-item text-muted" href="{% url 'how_to_play' %}">How To Play</a>
 
           </div>
@@ -58,6 +76,7 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
           {% if user.is_authenticated %}
+            <!-- Logged-in Links -->
             <a class="dropdown-item" href="{% url 'profile_user' %}">Profile</a>
 
             <a class="dropdown-item" href="{% url 'update_password' %}">Change Password</a>
@@ -66,6 +85,7 @@
             <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a>               
           {% else %}
+                <!-- Publically Available Link -->
                 <a class="dropdown-item" href="{% url 'login_user' %}">Login</a>
           {% endif %}
         </div>

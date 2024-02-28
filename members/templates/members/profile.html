@@ -3,6 +3,11 @@
 {% load static %}
 
 {% block content %}
+    <!-- 
+    File: profile.html
+    Description: This page displays the user profile, with the option to update or delete the account. The page displays the user's data (if stored), or the option to add it (if not stored)
+    Author: Will, Charlie (front-end extras)
+    -->
     
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 
@@ -40,6 +45,7 @@
             <div class="user-detail">
                 <h3>Details</h3>
                 <ul>
+                    <!-- Displays whichever combination of firstname and surname exists (Charlie) -->
                     {% if user.first_name %}
                         {% if user.last_name %}
                             <li>Name: {{user.first_name}} {{user.last_name}}</li>
@@ -82,8 +88,10 @@
         </div>
         <div class="additional-details">
             <h3>Additional Details</h3>
-            <p>When more functionality has been added I want to display things like the user's total points here and their position on the leaderboard </p>
+            <p>When more functionality has been added I want to display things like the user's position on the leaderboard </p>
             
+
+            <!-- Under a thematic break, displays two buttons: edit profile, and delete profile (Charlie) -->
             <hr style="border-top: 1px solid #ccc;">
             <a class="float-left" href="{% url 'update_user' %}">
                 <button type="button" class="btn" style="background: #0d7a2e; color: white;"><small>Edit Profile</small></button>

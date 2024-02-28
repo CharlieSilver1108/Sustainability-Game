@@ -3,7 +3,12 @@
 {% load static %}
 
 {% block content %}
-    
+    <!-- 
+    File: profileViewer.html
+    Description: This page displays another user's profile using a URL paramater for the username. The page displays only the data which is stored, and skips the data which is not
+    Author: Charlie
+    -->    
+
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 
     <style>
@@ -38,6 +43,7 @@
             <div class="user-detail">
                 <h3>Details</h3>
                 <ul>
+                    <!-- Displays whichever combination of firstname and surname exists -->
                     {% if userToView.first_name %}
                         {% if userToView.last_name %}
                             <li>Name: {{userToView.first_name}} {{userToView.last_name}}</li>

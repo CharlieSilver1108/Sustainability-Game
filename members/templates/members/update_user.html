@@ -1,109 +1,110 @@
 {% extends 'Sustain/base.html' %}
 
 {% block content %}
+    <!-- 
+    File: update_user.html
+    Description: This page allows the user to update their (or add extra) information to their profile. It combines two forms from forms.py into the same template so that both the 'User' model and the 'Profile' model can be updated atomically
+    Author: Charlie
+    -->
 
 
     <title>Update Profile</title>
 
-    <div id="layoutAuthentication">
-        <div id="layoutAuthentication_content">
-            <main>
+    <main>
 
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-5">
-                            <form method="POST" action="{% url 'update_user' %}">
-                                {% csrf_token %}
-                                <div class="card shadow-lg border-0 rounded-lg mt-4">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-2">Update Profile</h3></div>
-                                    <div class="card-body small">
-                                        {% if form1.errors or form2.errors %}
-                                            <div class="alert alert-warning fade show text-center mb-3" role="alert">
-                                                <p>There was an error with your form, please try again</p>
-                                            </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    <form method="POST" action="{% url 'update_user' %}">
+                        {% csrf_token %}
+                        <div class="card shadow-lg border-0 rounded-lg mt-4">
+                            <div class="card-header"><h3 class="text-center font-weight-light my-2">Update Profile</h3></div>
+                            <div class="card-body small">
+                                {% if form1.errors or form2.errors %}
+                                    <div class="alert alert-warning fade show text-center mb-3" role="alert">
+                                        <p>There was an error with your form, please try again</p>
+                                    </div>
+                                {% endif %}
+
+                                <div class="login">
+                                    <small class="form-text text-muted">
+                                        {% if form1.errors %}
+                                            <br>
+                                            <ul>
+                                                {% for field in form1 %}
+                                                    {% for error in field.errors %}
+                                                        <li>{{ field.label }}: {{ error }}</li>
+                                                    {% endfor %}
+                                                {% endfor %}
+                                            </ul>
                                         {% endif %}
+                                        {% if form2.errors %}
+                                            <br>
+                                            <ul>
+                                                {% for field in form2 %}
+                                                    {% for error in field.errors %}
+                                                        <li>{{ field.label }}: {{ error }}</li>
+                                                    {% endfor %}
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </small>
 
-                                        <div class="login">
-                                            <small class="form-text text-muted">
-                                                {% if form1.errors %}
-                                                    <br>
-                                                    <ul>
-                                                        {% for field in form1 %}
-                                                            {% for error in field.errors %}
-                                                                <li>{{ field.label }}: {{ error }}</li>
-                                                            {% endfor %}
-                                                        {% endfor %}
-                                                    </ul>
-                                                {% endif %}
-                                                {% if form2.errors %}
-                                                    <br>
-                                                    <ul>
-                                                        {% for field in form2 %}
-                                                            {% for error in field.errors %}
-                                                                <li>{{ field.label }}: {{ error }}</li>
-                                                            {% endfor %}
-                                                        {% endfor %}
-                                                    </ul>
-                                                {% endif %}
-                                            </small>
-
-                                            <div class="form-floating mb-3">
-                                                <label for="{{ form.username.id_for_label }}">Username:</label>
-                                                {{ form1.username }}
-                                                <small class="form-text text-muted">
-                                                    {{ form1.username.help_text }}
-                                                </small>
-                                            </div>
-
-                                            <div class="form-floating mb-3">
-                                                <label for="{{ form.firstName.id_for_label }}">First Name:</label>
-                                                {{ form1.first_name }}
-                                                <small class="form-text text-muted">
-                                                    {{ form1.firstName.help_text }}
-                                                </small>
-                                            </div>
-
-                                            <div class="form-floating mb-3">
-                                                <label for="{{ form.lastName.id_for_label }}">Surname:</label>
-                                                {{ form1.last_name }}
-                                                <small class="form-text text-muted">
-                                                    {{ form1.lastName.help_text }}
-                                                </small>
-                                            </div>
-                                            
-                                            <div class="form-floating mb-3">
-                                                <label for="{{ form.email.id_for_label }}">Email:</label>
-                                                {{ form1.email }}
-                                                <small class="form-text text-muted">
-                                                    {{ form1.email.help_text }}
-                                                </small>
-                                            </div>
-                                            
-                                            <div class="form-floating mb-3">
-                                                <label for="{{ form2.pronouns.id_for_label }}">Pronouns:</label>
-                                                {{ form2.pronouns }}
-                                            </div>
-
-                                            <div class="form-floating mb-3">
-                                                <label for="{{ bio_form.bio.id_for_label }}">Bio:</label>
-                                                {{ bio_form.bio }}
-                                            </div>
-
-                                        </div>
+                                    <div class="form-floating mb-3">
+                                        <label for="{{ form.username.id_for_label }}">Username:</label>
+                                        {{ form1.username }}
+                                        <small class="form-text text-muted">
+                                            {{ form1.username.help_text }}
+                                        </small>
                                     </div>
-                                    <div class="card-footer py-2">
-                                        <div class="d-flex align-items-center justify-content-between mt-2 mb-0">
-                                            <a class="text-muted"><small>Note: These details will be stored, see our privacy policy for details</small></a>
-                                            <button type="submit" id="submitButton" class="btn" style="background-color:#0B6623; color: white;" value="Submit">Update</button>
-                                        </div>
+
+                                    <div class="form-floating mb-3">
+                                        <label for="{{ form.firstName.id_for_label }}">First Name:</label>
+                                        {{ form1.first_name }}
+                                        <small class="form-text text-muted">
+                                            {{ form1.firstName.help_text }}
+                                        </small>
                                     </div>
+
+                                    <div class="form-floating mb-3">
+                                        <label for="{{ form.lastName.id_for_label }}">Surname:</label>
+                                        {{ form1.last_name }}
+                                        <small class="form-text text-muted">
+                                            {{ form1.lastName.help_text }}
+                                        </small>
+                                    </div>
+                                    
+                                    <div class="form-floating mb-3">
+                                        <label for="{{ form.email.id_for_label }}">Email:</label>
+                                        {{ form1.email }}
+                                        <small class="form-text text-muted">
+                                            {{ form1.email.help_text }}
+                                        </small>
+                                    </div>
+                                    
+                                    <div class="form-floating mb-3">
+                                        <label for="{{ form2.pronouns.id_for_label }}">Pronouns:</label>
+                                        {{ form2.pronouns }}
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+                                        <label for="{{ bio_form.bio.id_for_label }}">Bio:</label>
+                                        {{ bio_form.bio }}
+                                    </div>
+
                                 </div>
-                            </form>
+                            </div>
+                            <div class="card-footer py-2">
+                                <div class="d-flex align-items-center justify-content-between mt-2 mb-0">
+                                    <a class="text-muted"><small>Note: These details will be stored, see our privacy policy for details</small></a>
+                                    <button type="submit" id="submitButton" class="btn" style="background-color:#0B6623; color: white;" value="Submit">Update</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </main>
+            </div>
         </div>
-    </div>
+    </main>
 
 {% endblock %}
