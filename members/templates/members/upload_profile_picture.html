@@ -3,57 +3,58 @@
 
 
 {% block content %}
+    <!-- 
+    File: upload_profile_picture.html
+    Description: This is the page which allows the user to upload a new profile picture for their profile
+    Author: Liam (back-end), Charlie (front-end)
+    -->
+
     <title>Update Profile Picture</title>
 
-    <div id="layoutAuthentication">
-        <div id="layoutAuthentication_content">
-            <main>
+    <main>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="card shadow-lg border-0 rounded-lg mt-4">
+                            <div class="card-header"><h3 class="text-center font-weight-light my-2">Update Profile Picture</h3></div>
+                            <div class="card-body small">
+                                {% if form.errors %}
+                                    <div class="alert alert-warning fade show text-center mb-3" role="alert">
+                                        <p>There was an error with your form, please try again</p>
+                                    </div>
+                                {% endif %}
 
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-5">
-                            <form method="POST" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <div class="card shadow-lg border-0 rounded-lg mt-4">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-2">Update Profile Picture</h3></div>
-                                    <div class="card-body small">
+                                <div class="login">
+                                    <small class="form-text text-muted">
                                         {% if form.errors %}
-                                            <div class="alert alert-warning fade show text-center mb-3" role="alert">
-                                                <p>There was an error with your form, please try again</p>
-                                            </div>
+                                            <br>
+                                            <ul>
+                                                {% for field in form %}
+                                                    {% for error in field.errors %}
+                                                        <li>{{ field.label }}: {{ error }}</li>
+                                                    {% endfor %}
+                                                {% endfor %}
+                                            </ul>
                                         {% endif %}
+                                    </small>
 
-                                        <div class="login">
-                                            <small class="form-text text-muted">
-                                                {% if form.errors %}
-                                                    <br>
-                                                    <ul>
-                                                        {% for field in form %}
-                                                            {% for error in field.errors %}
-                                                                <li>{{ field.label }}: {{ error }}</li>
-                                                            {% endfor %}
-                                                        {% endfor %}
-                                                    </ul>
-                                                {% endif %}
-                                            </small>
-
-                                            {{ form.as_p }}
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="card-footer py-2">
-                                        <div class="d-flex align-items-center justify-content-between mt-2 mb-0">
-                                            <a class="text-muted"><small>Note: These details will be stored, see our privacy policy for details</small></a>
-                                            <button type="submit" id="submitButton" class="btn" style="background-color:#0B6623; color: white;" value="Submit">Update</button>
-                                        </div>
-                                    </div>
+                                    {{ form.as_p }}
+                                    
                                 </div>
-                            </form>
+                            </div>
+                            <div class="card-footer py-2">
+                                <div class="d-flex align-items-center justify-content-between mt-2 mb-0">
+                                    <a class="text-muted"><small>Note: These details will be stored, see our privacy policy for details</small></a>
+                                    <button type="submit" id="submitButton" class="btn" style="background-color:#0B6623; color: white;" value="Submit">Update</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </main>
+            </div>
         </div>
-    </div>
+    </main>
 
 {% endblock %}

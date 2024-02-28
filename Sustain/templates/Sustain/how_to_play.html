@@ -1,0 +1,64 @@
+{% extends 'Sustain/base.html' %}
+
+{% block content %}
+    <!-- 
+    File: how_to_play.html
+    Description: This is the game instruction page for the Sustain website. The page is divided into a sidebar and main content. The sidebar contains links to external resources, while the main content includes information about the process of playing the game.
+    Author: Charlie
+    -->
+    <title>How To Play</title>
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+
+            <!-- Main content -->
+            <!-- This section contains the main content of the How To Play Page. It includes information about the different challenge types, how to complete them, and how they benefit from it. -->
+            <div class="col-12 col-md-8 mx auto">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <!-- Welcome message and brief introduction -->
+                                <h1 class="card-title mb-4">How To Play</h1>
+                                <p class="card-text small">The game is very simple: The more you learn about sustainability, the more points you earn, and the higher you will be on the leaderboard!</p>
+                            </div>
+                            
+                            <div class="card-body">
+                                <!-- Section about challenges -->
+                                <h4 class="card-title">Challenge Types</h4>
+                                    <ul>
+                                        <li>
+                                            <h5 class="mt-1">QR Challenge:</h5>
+                                            <ul>
+                                                <li>Go to one of the locations listed <a href="{% url 'qr_explain' %}">here</a></li>
+                                                <li>Find the QR code</li>
+                                                <li>Scan it</li>
+                                                <li>You be directed to a page containing the challenge</li>
+                                                <li>Complete the challenge to earn points!</li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <h5 class="mt-4">GPS Challenge</h5>
+                                            <p>The GPS Challenge...</p>
+                                        </li>
+                                        <li>
+                                            <h5 class="mt-4">People Challenge</h5>
+                                            <p>The People Challenge...</p>
+                                        </li>
+                                    </ul>
+                                
+                                
+                                <hr style="border-top: 1px solid #ccc;">
+                                <!-- Section about rewards -->
+                                <h4 class="card-title">Reward</h4>
+                                    <p>Completing a challenge rewards you with points to add your score. The bigger the challenge, the more points you'll earn! Complete many challenges to accumulate a high score and try to reach the top of the leaderboard!</p>
+                                    <p>We wish you luck!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

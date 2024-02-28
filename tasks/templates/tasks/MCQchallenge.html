@@ -1,0 +1,79 @@
+{% extends 'Sustain/base.html' %}
+
+{% block content %}
+    <!-- 
+    File: MCQchallenge.html
+    Description: This page receives a unique code from the URL, and loads the corresponding challenge from the database
+                    The code will be acquirable by scanning a QR code, found in a location listed in 'qr_explain.html'
+                    In future, each challenge will contain information regarding sustainability, relating to the location in which the QR code will be placed
+                    The page currently contains a question, a multiple choice answer selection, and displays the number of points the challenge is worth
+    Author: Charlie
+    -->
+
+    <title>Challenge!</title>
+
+    <style>
+        /* In future, use this to develop the UI for the MCQ, currently it is a radio checkbox */
+        .highlight {
+          background-color: #0B6623;
+        }
+    </style>
+
+    <main>
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="card shadow-lg border-0 rounded-lg mt-4">
+                            <div class="card-header"><h3 class="text-center my-2">{{ question }}</h3></div>
+
+                            <div class="card-body small">
+                                {% if description %}
+                                    <p class="card-title small text-muted">{{ description }}</p>
+                                {% endif %}
+                                {% if form.errors %}
+                                    <div class="alert alert-warning fade show text-center mb-3" role="alert">
+                                        <p>There was an error, please try again</p>
+                                    </div>
+                                {% endif %}
+
+                                <div class="login">
+                                    
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="choice" value="1" id="defaultCheck1">
+                                        <label class="form-check-label" for="defaultCheck1" name="choice">{{ choice1 }}</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="choice" value="2" id="defaultCheck2">
+                                        <label class="form-check-label" for="defaultCheck2">{{ choice2 }}</label>
+                                    </div>
+                                    
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="choice" value="3" id="defaultCheck3">
+                                        <label class="form-check-label" for="defaultCheck3">{{ choice3 }}</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="choice" value="4" id="defaultCheck4">
+                                        <label class="form-check-label" for="defaultCheck4">{{ choice4 }}</label>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="card-footer py-2">
+                                <div class="d-flex align-items-center justify-content-between mt-2 mb-0">
+                                    <a class="text-muted">This task is worth {{ points }} points!</a>
+                                    <button type="submit" id="submitButton" class="btn" style="background-color:#0B6623; color: white;" value="Submit">Submit Answer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}
