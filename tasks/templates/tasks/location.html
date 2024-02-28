@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Location Example</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <style>
+        #mapid { height: 800px; width: 800px; }
+        .hidden { display: none; } /* Ensure this class actually hides elements */
+    </style>
+</head>
+<body>
+    <h2>Map and Location Example</h2>
+    {% if user.is_superuser %}
+        <p>Click on the map to add a new location task.</p>
+    {% else %}
+        <p>Get close to a location task to complete it.</p>
+    {% endif %}
+    <div id="mapid"></div>
+    
+    <!-- Preload the form in a hidden div -->
+    <div id="formContainer" class="hidden">
+        <!-- Assuming you are using Django template tags for CSRF and URL -->
+        <form action="{% url 'create_waypoints' %}" method="post">
+            {% csrf_token %}
+            <!-- Hidden inputs for latitude and longitude -->
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
+            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            
+            <!-- Input for the title -->
+            <div class="form-group">
+                <label for="task-title">Task Title:</label>
+                <input type="text" class="form-control" id="task-title" name="title" placeholder="Enter task title" required>
+            </div>
+            
+            <!-- Input for the description -->
+            <div class="form-group">
+                <label for="task-description">Task Description:</label>
+                <textarea class="form-control" id="task-description" name="description" rows="4" placeholder="Enter task description" required></textarea>
+            </div>
+            
+            <!-- Input for the points -->
+            <div class="form-group">
+                <label for="task-points">Points:</label>
+                <input type="number" class="form-control" id="task-points" name="points" placeholder="Enter points value" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Save Location Task</button>
+        </form>
+    </div>
+
+    <script>
+        var mymap = L.map('mapid');
+    
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            return mymap.distance([lat1, lon1], [lat2, lon2]);
+        }
+        
+        function checkProximityToWaypoints(userLat, userLon, waypoints) {
+            var threshold = 100; // Distance threshold in meters
+    
+            waypoints.forEach(function(waypoint) {
+                if (!waypoint.visited) { // Check only for not visited waypoints
+                    var distance = calculateDistance(userLat, userLon, waypoint.latitude, waypoint.longitude);
+                    if (distance < threshold) {
+                        console.log("Close to:", waypoint.title); // Log or alert the user
+                        alert ("Well done, you have completed: " + waypoint.title + " - " + waypoint.description);
+                        submitWaypointCompletion(waypoint.id); // Submit waypoint ID to endpoint
+                    }
+                }
+            });
+        }
+
+        function getCsrfToken() {
+            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        }        
+        
+        function submitWaypointCompletion(waypointId) {
+            const csrftoken = getCsrfToken(); // Get CSRF token from meta tag
+
+            fetch(`/challenges/location/${waypointId}/complete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken, // Include CSRF token in the request header
+                    // Include CSRF token as needed, e.g., 'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({ /* Your data here, if needed */ }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Waypoint completion submitted!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    
+        function addWaypointMarker(waypoint) {
+            var marker = L.marker([waypoint.latitude, waypoint.longitude]).addTo(mymap);
+            var visitedStatus = waypoint.visited ? 'Visited' : 'Not Visited';
+            var popupContent = "<b>" + waypoint.title + "</b><br/>" + waypoint.description + "<br/><b>Status:</b> " + visitedStatus;            marker.bindPopup(popupContent);
+        }
+    
+        function renderExistingWaypoints(waypoints) {
+            waypoints.forEach(function(waypoint) {
+                addWaypointMarker(waypoint);
+            });
+        }
+    
+        var isSuperuser = {{ is_superuser|yesno:"true,false" }};
+
+        function initMap(latitude, longitude, waypoints) {
+            mymap.setView([latitude, longitude], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 18,
+            }).addTo(mymap);
+    
+            L.marker([latitude, longitude]).addTo(mymap)
+                .bindPopup("You are here").openPopup();
+    
+            if (isSuperuser) {
+                mymap.on('click', function(e) {
+                    var popupContent = document.getElementById('formContainer').innerHTML;
+                    
+                    var popup = L.popup()
+                        .setLatLng(e.latlng)
+                        .setContent(popupContent)
+                        .openOn(mymap);
+        
+                    // Ensure the popup is open and content inserted before setting values
+                    setTimeout(function() {
+                        document.getElementById('latitude').value = e.latlng.lat;
+                        document.getElementById('longitude').value = e.latlng.lng;
+                    }, 10); // Small delay to ensure DOM updates
+                });
+            }
+    
+            renderExistingWaypoints(waypoints);
+        }
+        var existing_waypoints = JSON.parse('{{ existing_waypoints|safe }}');
+
+        function getLocationAndInitMap() {
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var userLat = position.coords.latitude;
+                    var userLon = position.coords.longitude;
+
+                    initMap(userLat, userLon, existing_waypoints);
+
+                    checkProximityToWaypoints(userLat, userLon, existing_waypoints);
+                });
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+                // Fallback location, also render existing waypoints
+                initMap(51.505, -0.09, existing_waypoints); // Default to London as an example
+                checkProximityToWaypoints(defaultLat, defaultLon, existing_waypoints);
+            }
+        }
+    
+        getLocationAndInitMap();
+    </script>
+    
+</body>
+</html>

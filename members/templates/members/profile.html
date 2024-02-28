@@ -28,7 +28,7 @@
             <div class="square-container">
                 <a href="{% url 'update_profile_picture' %}">
                     {% if user.profile.profile_picture %}
-                        <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="max-width: 180px; height: width; object-fit: contain;">
+                        <img src="{{ user.profile.profile_picture.url }}" alt="Add Profile Picture" class="rounded-circle" style="max-width: 180px; height: auto; object-fit: contain;">
                     {% else %}
                         <img src="img/default.jpg" alt="Profile Picture" class="rounded-circle" style="max-width: 180px;">
                     {% endif %}

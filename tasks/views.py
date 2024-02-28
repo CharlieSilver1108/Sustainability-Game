@@ -1,19 +1,28 @@
 import random
 
 from django.shortcuts import render, redirect
+from django.core import serializers
+import json
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Task, Task_Type, PersonBasedCode, UserCodeRelation
-from .forms import FindTask, CompleteTask, MultipleChoiceQuestionForm, Task_Type, MultipleChoiceTaskForm, PersonBasedCodeForm
+from .models import Task, Task_Type, PersonBasedCode, UserCodeRelation, UserLocationRelation
+from .forms import FindTask, CompleteTask, MultipleChoiceTaskForm, PersonBasedCodeForm, LocationBasedTask, LocationBasedTaskForm
 from django.contrib import messages
 
+# ------- CODING BY LUKE HALES -------
+
+# this view will display all the tasks which are currently active, and which ones the user has available
 def task_view(request):
+    # lists all the tasks that are currently held in the database
     allTasks = Task.objects.all()
+    # gets the instance of the user, and the subsequent profile attached to it
     user = request.user
     profile = user.profile
 
+    # creates an array of all the ids of the tasks that the user currently has active
     currentTaskIDs=[]
 
+    # checks each task attribute in the profile class and adds the id to the array if a task is present
     if profile.taskOne:
         currentTaskIDs.append(profile.taskOne.id)
     if profile.taskTwo:
@@ -21,10 +30,15 @@ def task_view(request):
     if profile.taskThree:
         currentTaskIDs.append(profile.taskThree.id)
 
+    # creates a list of all tasks, excluding the current tasks
     availableTasks = allTasks.exclude(pk__in=currentTaskIDs)
+    # creates a list of all the current tasks based on the ids
     currentTasks = Task.objects.filter(id__in=currentTaskIDs)
 
+    # returns all the data to the page for it to be used
     return render(request, 'tasks/tasks.html', {'currentTasks': currentTasks,'availableTasks': availableTasks, 'profile': profile})
+
+# this view adds tasks to the profile if there is space available
 
 def create_task_page(request):
     return render(request, 'tasks/create_tasks.html', {})
@@ -46,17 +60,22 @@ def create_task(request):
 
 def add_task(request):
     if request.method == 'POST':
+        # uses the FindTask form in order to get the ID of the task to add
         form = FindTask(request.POST)
         if form.is_valid():
+            # gets the instance of the user, and the subsequent profile attached to it
             user = request.user
             profile = user.profile
+            # gets the ID of the task from the form
             task_id = form.cleaned_data['id']
             
+            # ensures that the ID returned is a valid task
             try:
                 task = Task.objects.get(id=task_id)
             except Task.DoesNotExist:
                 return redirect('task_view')
 
+            # finds the next available empty task slot and places the task in there
             if not profile.taskOne:
                 profile.taskOne = task
             elif not profile.taskTwo:
@@ -66,19 +85,25 @@ def add_task(request):
             else:
                 pass
 
+            # save the profile and then refreshes the task page
             profile.save()
             return redirect('task_view')
     else:
         return render(request, 'tasks/tasks.html', {})
 
+# this view removes a specified task from the user's set of current tasks
 def remove_task(request):
     if request.method == 'POST':
+        # uses the FindTask form in order to get the ID of the task to delete
         form = FindTask(request.POST)
         if form.is_valid():
+            # gets the instance of the user, and the subsequent profile attached to it
             user = request.user
             profile = user.profile
+            # gets the ID of the task from the form
             task_id = form.cleaned_data['id']
 
+            # checks that the task is not of type none and if the id of the task matches the ID of the task to be deleted
             if profile.taskOne and task_id == profile.taskOne.id:
                 profile.taskOne = None
             elif profile.taskTwo and task_id == profile.taskTwo.id:
@@ -86,27 +111,36 @@ def remove_task(request):
             elif profile.taskThree and task_id == profile.taskThree.id:
                 profile.taskThree = None
             else:
+                # theoretically this should never be used as the IDs passed through should only ever be one of the IDs stored in the user's profile 
                 pass
 
+            # save the profile and then refreshes the task page
             profile.save()
             return redirect('task_view')
     else:
         return render(request, 'tasks/tasks.html', {})
 
+# this view removes a specified task from the user's list of tasks and allocates them the correct number of points based on the task type
 def complete_task(request):
     if request.method == 'POST':
+        # uses the FindTask form in order to get the ID of the task and the answer the user has submitted
         form = CompleteTask(request.POST)
         if form.is_valid():
+            # gets the instance of the user, and the subsequent profile attached to it
             user = request.user
             profile = user.profile
+            # gets the answer the user has submitted and the ID of the task from the form
             task_answer = form.cleaned_data['answer']
             task_id = form.cleaned_data['id']
 
+            # ensures that the ID returned is a valid task
             try:
                 task = Task.objects.get(id=task_id)
             except Task.DoesNotExist:
                 return redirect('task_view')
 
+            # checks that the task is not of type none, if the id of the task matches the ID of the task to be completed
+            # if the conditions are met then the correct number of points are added to the user's profile
             if profile.taskOne and task_id == profile.taskOne.id and task_answer == task.answer:
                 profile.points += task.task_type.points
                 profile.taskOne = None
@@ -119,11 +153,13 @@ def complete_task(request):
             else:
                 pass
 
+            # save the profile and then refreshes the task page
             profile.save()
             return redirect('task_view')
     else:
         return render(request, 'tasks/tasks.html', {})
-    
+# ------- END -------
+
 def qr_explain(request):
     return render(request, 'tasks/qr_explain.html', {})
 
@@ -231,3 +267,57 @@ def submit_code(request):
             messages.error(request, "Invalid code.")
         return redirect('person_based_codes')  # Redirect to the same page or to a success page
     return redirect('person_based_codes')
+
+def location_page(request):
+    existing_waypoints_qs = LocationBasedTask.objects.all()
+    existing_waypoints_json = serializers.serialize('json', existing_waypoints_qs)
+    
+    visited_waypoints_qs = UserLocationRelation.objects.filter(user=request.user).select_related('location_based_task')
+    visited_waypoints = [relation.location_based_task for relation in visited_waypoints_qs]
+
+    # Serialize existing waypoints to JSON for JavaScript
+    existing_waypoints_for_js = json.dumps([{
+        "latitude": wp.latitude,
+        "longitude": wp.longitude,
+        "title": wp.title,
+        "description": wp.description,
+        "id": wp.id,
+        "visited": wp in visited_waypoints  # Add a visited flag
+    } for wp in existing_waypoints_qs])
+
+    return render(request, 'tasks/location.html', {
+        'form': LocationBasedTaskForm,
+        'existing_waypoints': existing_waypoints_for_js,
+        'is_superuser': request.user.is_superuser
+    })
+    
+def upload_waypoint(request):
+    if request.method == 'POST':
+        form = LocationBasedTaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print('success')
+            return redirect('location')
+        else:
+            print('form not valid')
+            print(form.errors)
+        
+        return redirect('location')
+
+def complete_waypoint(request, waypoint_id):
+    
+    if request.method == 'POST':
+        # check they have not already completed this waypoint, if so do nothing
+        if UserLocationRelation.objects.filter(user=request.user, location_based_task=waypoint_id).exists():
+            return redirect('location')
+        
+        waypoint = LocationBasedTask.objects.get(id=waypoint_id)
+        UserLocationRelation.objects.create(user=request.user, location_based_task=waypoint)
+        
+        user = request.user
+        profile = user.profile
+        
+        profile.points += waypoint.points
+        profile.save()
+        
+        return redirect('location')
