@@ -32,7 +32,8 @@ urlpatterns = [
     # ------- Charlie START -------
     path('qr_explain', views.qr_explain, name='qr_explain'),
     path('MCQchallenge/<str:code>', views.MCQchallenge, name='MCQchallenge'),     #retrieves a string parameter from the URL
-    path('multiple_choice_questions', views.multiple_choice_questions, name='multiple_choice_questions')
+    path('multiple_choice_questions', views.multiple_choice_questions, name='multiple_choice_questions'),
+    path('multiple_choice_questions/delete/<int:question_id>', views.delete_multiple_choice_question, name='delete_multiple_choice_question'),  #retrieves an integer parameter from the URL
     # ------- Charlie END -------
 ]
 
