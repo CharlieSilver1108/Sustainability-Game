@@ -4,6 +4,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from tasks.models import Task, Task_Type
 
+# ------- CODING BY LUKE HALES -------
+
+# this class is an extension of the users class that is provided by Django
+# the class holds the current tasks a user has, as well as the number of points that the user has 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     taskOne = models.ForeignKey(Task, related_name='taskOne', on_delete=models.CASCADE, null=True, blank=True)
@@ -17,11 +21,14 @@ class Profile(models.Model):
     def __str__(self):
         return str(self.user)
 
+# this receiver function creates a new profile whenever a new user has been created
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-
+# this receiver function updates the profile of the user whenever a change is made
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+
+# ------- END -------

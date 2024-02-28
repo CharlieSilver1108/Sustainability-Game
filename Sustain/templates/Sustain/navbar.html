@@ -21,6 +21,10 @@
         <a class="nav-link" href="{% url 'learning' %}">Learning</a>
       </li>
 
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'person_based_codes' %}">Person Based Task</a>
+      </li>
+
       {%if user.is_superuser%}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
@@ -35,38 +39,23 @@
         </li>
       {% endif %}
 
-      
+
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Challenges</a>
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
-            {% if user.is_authenticated %}
-              <a class="dropdown-item" href="{% url 'qr_explain' %}">QR Challenges</a>
-              <a class="dropdown-item" href="#">GPS Challenges</a>
-              <a class="dropdown-item" href="#">People Challenges</a>
-            {% endif %}
-
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item text-muted" href="{% url 'how_to_play' %}">How To Play</a>
-
-          </div>
-        </li>
-
-
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-
           {% if user.is_authenticated %}
-            <a class="dropdown-item" href="{% url 'profile_user' %}">Profile</a>
-
+            {% if user.is_superuser %}
+              <a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
+            {% endif %}
+            
             <a class="dropdown-item" href="{% url 'update_password' %}">Change Password</a>
             <a class="dropdown-item text-muted" href="{% url 'delete_user' %}">Delete Account</a>
 
             <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'logout_user' %}">Logout</a>               
           {% else %}
-                <a class="dropdown-item" href="{% url 'login_user' %}">Login</a>
+            <a class="dropdown-item" href="{% url 'login_user' %}">Login</a>
           {% endif %}
         </div>
       </li>
