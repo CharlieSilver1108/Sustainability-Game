@@ -160,6 +160,19 @@ def create_multiple_choice_questions(request):
 
 
 # ------- Charlie START -------
+
+# delete_multiple_choice_question removes the question, which is passed into the function, from the database
+def delete_multiple_choice_question(request, question_id):
+    if request.method == "POST":
+        question = MultipleChoiceChallenge.objects.get(id=question_id)
+        question.delete()
+        messages.success(request, "Question successfully deleted.")
+        return redirect('multiple_choice_questions')
+    else:
+        messages.error(request, "Question not found.")
+        return redirect('multiple_choice_questions')
+    
+
 # qr_explain displays the locations of the QR codes to the user
 def qr_explain(request):
     questions = MultipleChoiceChallenge.objects.all()
