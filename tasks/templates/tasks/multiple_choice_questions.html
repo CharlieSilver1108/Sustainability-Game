@@ -38,7 +38,7 @@
             <tbody>
                 {% for question in multiple_choice_questions %}
                 <tr>
-                    <td>{{ question.code }}</td>
+                    <td><a href="{% url 'MCQchallenge' question.code %}">{{ question.code }}</a></td>
                     <td>{{ question.location }}</td>
                     <td>{{ question.description }}</td>
                     <td>{{ question.question }}</td>

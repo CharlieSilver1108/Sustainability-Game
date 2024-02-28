@@ -30,7 +30,7 @@ class Task(models.Model):
 class MultipleChoiceChallenge(models.Model):
     code = models.CharField(max_length=30)
     location = models.CharField(max_length=30)      # The location which the task is associated with (and the QR code will be)
-    description = models.CharField(max_length=200, default = 'This is a multiple choice task', blank = True)
+    description = models.TextField(max_length=200, default = 'This is a multiple choice task', blank = True)
     question = models.CharField(max_length=300)
     choice1 = models.CharField(max_length=30)
     choice2 = models.CharField(max_length=30)

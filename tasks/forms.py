@@ -28,7 +28,7 @@ class CompleteTask(forms.ModelForm):
 #MultipleChoiceTaskForm is used when an admin creates a new task
 class MultipleChoiceTaskForm(forms.ModelForm):
     location = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
-    description = forms.CharField(required=False, max_length=500, widget=forms.TextInput(attrs={'class':'form-control'}))
+    description = forms.CharField(required=False, max_length=500, widget=forms.Textarea(attrs={'class':'form-control'}))
     question = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
     choice1 = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
     choice2 = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
