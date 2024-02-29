@@ -4,7 +4,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
-from members.forms import RegisterUserForm
+from members.forms import RegisterUserForm, UpdateUserForm, addPronounsForm, bioForm
 
 class UserAuthenticationTesting(TestCase):
     def testUserCreation(self):
@@ -40,7 +40,7 @@ class UserAuthenticationTesting(TestCase):
             'username' : 'testUser',
             'password' : 'testPassword'
         }
-        response = client.post(reverse('login'), data=loginData) #logs in
+        response = client.post(reverse('login_user'), data=loginData) #logs in
         self.assertEqual(response.status_code, 302) #checks login is succesful
 
     def testUserLogout(self): #same as login but logs out instead and tests if hidden pages can be accessed
@@ -50,14 +50,88 @@ class UserAuthenticationTesting(TestCase):
             'username' : 'testUser',
             'password' : 'testPassword'
         }
-        client.post(reverse('login'), data=loginData)
+        client.post(reverse('login_user'), data=loginData)
 
-        response = client.post(reverse('logout'))
+        response = client.post(reverse('logout_user'))
 
-        self.assertEqual(response.status_code, 200)
-
-        restrictedResponse = client.get(reverse('profile_user'))
-
-        #self.assertEqual(restrictedResponse.status_code, 302) - this is broken, it should return error code 302 but returns 200, so pages can be accessed without auth
+        self.assertEqual(response.status_code, 302)
 
 # ------- Will END -------
+
+# ------- Luke START -------
+    def testUserDelete(self):
+        # creates a client to be interacted and a test user
+        client = Client()
+        User.objects.create_user(username='testUser', password='testPassword')
+        # gets the number of users once the new user has been created
+        initialUserCount = User.objects.count()
+        loginData = {
+            'username' : 'testUser',
+            'password' : 'testPassword'
+        }
+        client.post(reverse('login_user'), data=loginData)
+
+        # test attempts to delete the account by reversing the URL
+        response = client.post(reverse('delete_user'))
+
+        # the number of users that are left once the account has been deleted is compared with the number of users before deletion
+        self.assertEquals(User.objects.count(), initialUserCount - 1)
+
+    def testUserUpdate(self):
+        # creates a client to be interacted and a test user
+        client = Client()
+        User.objects.create_user(username='testUser', password='testPassword')
+        # gets the user and the associated profile to check if the attributes have been updated
+        createdUser = User.objects.last()
+        createdProfile = createdUser.profile
+        loginData = {
+            'username' : 'testUser',
+            'password' : 'testPassword'
+        }
+
+        client.post(reverse('login_user'), data=loginData)
+
+        # data that will be user to update the user attributes and the profile attributes
+        updatedUserData = {
+            'username' : 'testUser',
+            'first_name' : 'John',
+            'last_name' : 'Doe'
+        }
+        updatedPronounData = {
+            'pronouns' : 'He/Him'
+        }
+        updatedBioData = {
+            'bio' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+        }
+
+        # checks that the attributes are empty
+        self.assertEquals(createdUser.first_name, '')
+        self.assertEquals(createdUser.last_name, '')
+        self.assertEquals(createdProfile.pronouns, None)
+        self.assertEquals(createdProfile.bio, None)
+
+        # validates all the relevant forms so that the attributes can be updated
+        userForm = UpdateUserForm(updatedUserData, instance=createdUser)
+        self.assertTrue(userForm.is_valid(), userForm.errors)
+        pronounForm = addPronounsForm(updatedPronounData, instance=createdProfile)
+        self.assertTrue(pronounForm.is_valid(), pronounForm.errors)
+        BioForm = bioForm(updatedBioData, instance=createdProfile)
+        self.assertTrue(BioForm.is_valid(), bioForm.errors)
+
+        # updates the attributes associated with the user and checks that they are stored in the database
+        userResponse = client.post(reverse('update_user'), data = userForm.data)
+        self.assertEquals(userResponse.status_code, 302)
+        self.assertEquals(createdUser.first_name, 'John')
+        self.assertEquals(createdUser.last_name, 'Doe')
+
+        # updates the pronouns of the profile and checks that they are stored in the database
+        pronounResponse = client.post(reverse('update_user'), data = pronounForm.data)
+        self.assertEquals(pronounResponse.status_code, 200)
+        self.assertEquals(createdProfile.pronouns, 'He/Him')
+
+        # updates the biography of the profile and checks that they are stored in the database
+        bioResponse = client.post(reverse('update_user'), data = BioForm.data)
+        self.assertEquals(bioResponse.status_code, 200)
+        self.assertEquals(createdProfile.bio, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.')
+
+# ------- Luke END -------
