@@ -3,6 +3,11 @@
 {% load static %}
 
 {% block content %}
+    <!-- 
+    File: profile.html
+    Description: This page displays the user profile, with the option to update or delete the account. The page displays the user's data (if stored), or the option to add it (if not stored)
+    Author: Will, Charlie (front-end extras)
+    -->
     
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 
@@ -19,7 +24,7 @@
           height: 100%;
           object-fit:fill;
         }
-      </style>
+    </style>
 
     <title>Your Profile</title>
 
@@ -28,7 +33,7 @@
             <div class="square-container">
                 <a href="{% url 'update_profile_picture' %}">
                     {% if user.profile.profile_picture %}
-                        <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="max-width: 180px; height: width; object-fit: contain;">
+                        <img src="{{ user.profile.profile_picture.url }}" alt="Add Profile Picture" class="rounded-circle" style="max-width: 180px; height: auto; object-fit: contain;">
                     {% else %}
                         <img src="img/default.jpg" alt="Profile Picture" class="rounded-circle" style="max-width: 180px;">
                     {% endif %}
@@ -40,6 +45,7 @@
             <div class="user-detail">
                 <h3>Details</h3>
                 <ul>
+                    <!-- Displays whichever combination of firstname and surname exists (Charlie) -->
                     {% if user.first_name %}
                         {% if user.last_name %}
                             <li>Name: {{user.first_name}} {{user.last_name}}</li>
@@ -47,19 +53,23 @@
                             <li>First Name: {{user.first_name}}</li>
                         {% endif %}
                     {% else %}
-                        <li>Surname: {{user.last_name}}</li>
+                        {% if user.last_name %}
+                            <li>Surname: {{user.last_name}}</li>
+                        {% else %}
+                            <li><a href="{% url 'update_user' %}">Complete your profile</a> by adding your name</li>
+                        {% endif %}
                     {% endif %}
                 
-                    {%if user.email%}
-                        <li>Email: {{user.email}}</li>
-                    {%else%}
-                        <li><a href="{% url 'update_user' %}">Complete your profile</a> by adding your email</li>
-                    {%endif%}
-
                     {%if user.profile.pronouns %}
                         <li>Pronouns: {{user.profile.pronouns}}</li>
                     {%else%}
                         <li><a href="{% url 'update_user' %}">Complete your profile</a> by adding your pronouns</li>
+                    {%endif%}
+
+                    {%if user.email%}
+                        <li>Email: {{user.email}}</li>
+                    {%else%}
+                        <li><a href="{% url 'update_user' %}">Complete your profile</a> by adding your email</li>
                     {%endif%}
                 </ul>
             </div>
@@ -78,7 +88,11 @@
         </div>
         <div class="additional-details">
             <h3>Additional Details</h3>
-            <p>When more functionality has been added I want to display things like the user's total points here and their position on the leaderboard </p>
+            <p>When more functionality has been added I want to display things like the user's position on the leaderboard </p>
+            
+
+            <!-- Under a thematic break, displays two buttons: edit profile, and delete profile (Charlie) -->
+            <hr style="border-top: 1px solid #ccc;">
             <a class="float-left" href="{% url 'update_user' %}">
                 <button type="button" class="btn" style="background: #0d7a2e; color: white;"><small>Edit Profile</small></button>
             </a>

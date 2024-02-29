@@ -1,3 +1,11 @@
+<!-- 
+File: base.html
+Description: This contains the base html resources required for each page on the site, every other page uses the 'extend base.html' tag
+              It contains the links for CSS and Javascript, and includes the navbar and footer
+              It allows the code to be centralised to this page, and any updates only have to be changed on this page to affect every other page on the site
+Author: Charlie
+-->
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -17,6 +25,7 @@
 
   </head>
 
+  <!-- Includes the navbar template, for centralisation -->
   {% include 'Sustain/navbar.html' %}
 
   <body id="mainContent" style="background: #f4f4f4;">
@@ -30,7 +39,7 @@
   </body>
 
 
-
+  <!-- Footer: any changes affect the whole site -->
   <footer class="py-4 bg-light mt-auto" style="font-size: smaller; padding: 5px; position: fixed; bottom: 0; width: 100%; height: auto; justify-content: space-between;" id="footer">
       <div class="text-muted float-left text-left col-6">Copyright &copy; ScrumBuddies 2024</div>
       <div class="float-right text-right col-6" style="display: flex; flex-direction: column;">

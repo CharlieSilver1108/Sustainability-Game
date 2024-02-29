@@ -1,0 +1,79 @@
+{% extends 'Sustain/base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- 
+    File: multiple_choice_questions.html
+    Description: This page is an admin access page which displays all the MCQs currently stored in the database
+                    It includes a button for creating a new MCQ, and next to each question there is a button to remove the entry
+    Author: Charlie
+    -->
+
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
+
+    <title>Multiple Choice Questions</title>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Multiple Choice Questions</h1>
+        {% if user.is_superuser %}
+            <!-- Green "+" button to create a new questions -->
+            <a href="{% url 'create_multiple_choice_question' %}" class="btn btn-success mb-3 float-right">
+                <i class="fas fa-plus"></i> Add New
+            </a>
+        {% endif %}
+
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>URL Code</th>
+                    <th>Location</th>
+                    <th>Description</th>
+                    <th>Question</th>
+                    <th>Choices</th>
+                    <th>Answer</th>
+                    <th>Points Value</th>
+                    <th style="color: red;">Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in multiple_choice_questions %}
+                <tr>
+                    <td><a href="{% url 'MCQchallenge' question.code %}">{{ question.code }}</a></td>       <!-- Links the admin to each MCQ challenge's page -->
+                    <td>{{ question.location }}</td>
+                    <td>{{ question.description }}</td>
+                    <td>{{ question.question }}</td>
+                    <td><ol><li>{{ question.choice1 }}</li><li>{{ question.choice2 }}</li><li>{{ question.choice3 }}</li><li>{{ question.choice4 }}</li></ol></td>
+                    <td>{{ question.correct_answer }}</td>
+                    <td>{{ question.points }}
+                    <td>
+                        <!-- Red "X" button for superuser to delete questions -->
+                        <form action="{% url 'delete_multiple_choice_question' question.id %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No questions found.</td>
+                </tr>
+                {% endfor %}
+                
+                <!-- Display messages -->
+                <div class="container">
+                    {% if messages %}
+                    <div class="alert-messages">
+                        {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

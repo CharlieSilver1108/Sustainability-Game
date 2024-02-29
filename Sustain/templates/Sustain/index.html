@@ -2,7 +2,22 @@
 
 
 {% block content %}
+    <!-- 
+    File: index.html
+    Description: This is the landing/home page for the Sustain website.
+                    Currently, this page only displays any message that has been passed, but in future the page will be developed further.
+    Author: Charlie
+    -->
+
     <title>Home</title>
+    
+    {% if messages %}
+        <div class="alert alert-warning fade show text-center" role="alert">    
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
 
     <h1>Hello, world. You're at the Sustain index</h1>
 
