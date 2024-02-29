@@ -6,3 +6,4 @@ ScrumBuddies/__pycache__/
 myEnv/
 db.sqlite3
 img/profile_pictures/
+.DS_Store
