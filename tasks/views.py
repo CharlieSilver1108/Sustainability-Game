@@ -181,6 +181,12 @@ def MCQchallenge(request, code):
             "choice4": challenge.choice4,
             "points": challenge.points,
         })
+    
+
+# people_explain displays the locations of the QR codes to the user
+def person_explain(request):
+    people = PersonBasedCodeChallenge.objects.all()
+    return render(request, 'tasks/person_explain.html', {'people':people})
 
 # ------- Charlie END -------
 
@@ -196,19 +202,20 @@ def submit_code(request):
             person_based_code = PersonBasedCodeChallenge.objects.get(code=code)
             # Check if the code is already added by the user
             if UserCodeRelation.objects.filter(user=request.user, person_based_code=person_based_code).exists():
-                messages.error(request, "You have already added this code.")
+                messages.error(request, "You have already added this code!")
             else:
                 UserCodeRelation.objects.create(user=request.user, person_based_code=person_based_code)
                 
                 user = request.user
                 profile = user.profile
                 profile.points += person_based_code.points
+                profile.save()
                 
-                messages.success(request, "Code added successfully.")
+                messages.success(request, "Code added successfully!")
         except PersonBasedCodeChallenge.DoesNotExist:
-            messages.error(request, "Invalid code.")
-        return redirect('person_based_codes')  # Redirect to the same page or to a success page
-    return redirect('person_based_codes')
+            messages.error(request, "Invalid code!")
+        return redirect('person_explain')  # Redirect to the same page or to a success page
+    return render(request, 'tasks/PersonChallenge.html')
 
 
 def location_page(request):

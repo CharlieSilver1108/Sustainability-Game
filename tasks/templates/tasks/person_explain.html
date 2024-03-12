@@ -1,0 +1,81 @@
+{% extends 'Sustain/base.html' %}
+
+{% block content %}
+    <!-- 
+    File: person_explain.html
+    Description: This is the page containing the locations of the people with codes. The people are listed from the database. The page also contains the instructions for the challenge.
+    Author: Charlie
+    -->
+    <title>People Challenge Page</title>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 mx auto">
+                {% if messages %}
+                    <div class="alert alert-warning fade show text-center" role="alert">    
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="card-title mb-4">Welcome to the People Challenge Page!</h1>
+                        <p class="card-text small"></p>
+                    </div>
+
+                    <div class="card-body">
+                        <h3 class="card-title mt-1">How It Works:</h3>
+                            <ul>
+                                <li>Go to one of the locations below</li>
+                                <li>Find the person</li>
+                                <li>Have a discussion with them about your proposed idea</li>
+                                <li>You will be given a code</li>
+                                <li>Submit the code to earn points!</li>
+                            </ul>
+
+                        <hr style="border-top: 1px solid #bbb;">
+
+
+                        <h4 class="card-title mt-1">People:</h4>
+                        <!-- Table displaying the locations of all people currently stored in the database, and their points -->
+                        <table class="table table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Location</th>
+                                    <th>Name</th>
+                                    <th>Expertise</th>
+                                    <th>Points</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for person in people %}
+                                <tr>
+                                    <td>{{ person.location }}</td>
+                                    <td>{{ person.name }}</td>
+                                    <td>{{ person.expertise }}</td>                                    
+                                    <td>{{ person.points }}
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No People found.</td>
+                                </tr>
+                                {% endfor %}
+                                
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="card-footer text-center py-2">
+                        <div class="d-flex align-items-center justify-content-between mt-2 mb-0">
+                            <a></a>
+                            <a href="{% url 'submit_code' %}" id="submitButton" class="btn" style="background-color:#0B6623; color: white;">Submit Code</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

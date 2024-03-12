@@ -58,8 +58,8 @@ Author: Charlie
             <!-- Logged-In Links -->
             {% if user.is_authenticated %}
               <a class="dropdown-item" href="{% url 'qr_explain' %}">QR Challenges</a>
+              <a class="dropdown-item" href="{% url 'person_explain' %}">People Challenges</a>
               <a class="dropdown-item" href="/challenges/location">GPS Challenges</a>
-              <a class="dropdown-item" href="/challenges/person_based_codes">People Challenges</a>
 
               
               <div class="dropdown-divider"></div>

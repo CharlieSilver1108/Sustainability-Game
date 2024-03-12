@@ -18,13 +18,14 @@ urlpatterns = [
     path('location/<int:waypoint_id>/complete', views.complete_waypoint, name='waypoint'),
     path('location/upload_waypoint', views.upload_waypoint, name='create_waypoints'),
 
-    path('person_based_codes/submit', views.submit_code, name='submit_code'),
+    path('person_challenge/submit', views.submit_code, name='submit_code'),
     # ------- Liam END -------
 
 
     # ------- Charlie START -------
     path('qr_explain', views.qr_explain, name='qr_explain'),
     path('MCQchallenge/<str:code>', views.MCQchallenge, name='MCQchallenge'),     #retrieves a string parameter from the URL
+    path('person_explain', views.person_explain, name='person_explain'),
     # ------- Charlie END -------
 ]
 
