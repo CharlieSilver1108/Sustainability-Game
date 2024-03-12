@@ -159,14 +159,24 @@ def MCQchallenge(request, code):
         choice = request.POST['choice']                         # gets the user's choice from the form input
         correct_answer = challenge.correct_answer
         if (str(correct_answer) == choice):                     # checks if the user was correct
-            messages.success(request, 'Correct Answer!')
-            user = request.user
-            profile = user.profile
-            profile.points += challenge.points                  # if they were correct, add the points to their profile
-            profile.save()
-            return redirect('profile_user')
+
+            # Check if the code is already added by the user
+            if UserMCQRelation.objects.filter(user=request.user, MCQ_task=challenge).exists():
+                messages.error(request, "You have already completed this challenge!")
+                return redirect('qr_explain')
+            else:
+                UserMCQRelation.objects.create(user=request.user, MCQ_task=challenge)
+                
+                messages.success(request, 'Correct Answer!')
+                user = request.user
+
+                profile = user.profile
+                profile.points += challenge.points                  # if they were correct, add the points to their profile
+                profile.save()
+                return redirect('qr_explain')
+        
         else:
-            messages.success(request, 'Incorrect Answer!')      # if not, redirect them to the explanation page
+            messages.error(request, 'Incorrect Answer!')      # if not, redirect them to the explanation page
             return redirect('qr_explain')
 
     else:                                                       # if the form has not been submit, display the question
