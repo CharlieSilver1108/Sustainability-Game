@@ -68,25 +68,17 @@ def person_based_codes(request):
 def create_person_based_code(request):
     if request.method == 'POST':
         form = PersonBasedCodeForm(request.POST)
-        # Generate a unique 4-digit code
-        unique_code = generate_unique_person_code()
-    
-        # Create a PersonBasedCode instance but don't save it yet            
-        person_based_code = form.save(commit=False)
+
+        unique_code = generate_unique_person_code()         # Generate a unique 4-digit code
+        person_based_code = form.save(commit=False)         # Create a PersonBasedCode instance but don't save it yet            
+        person_based_code.code = unique_code                # Assign the unique code to the instance
+        person_based_code.save()                            # Now save the instance to the database
         
-        # Assign the unique code to the instance
-        person_based_code.code = unique_code
-        
-        # Now save the instance to the database
-        person_based_code.save()
-        
-        # Redirect to 'task_view' or appropriate URL name after successful save
-        return redirect('person_based_codes')
+        return redirect('person_based_codes')               # Redirect to 'task_view' or appropriate URL name after successful save
     else:
         form = PersonBasedCodeForm()
     
-    # Render the empty or invalid form
-    return render(request, 'gamekeepers/create_person_based_code.html', {'form': form})
+    return render(request, 'gamekeepers/create_person_based_code.html', {'form': form})    # Render the empty or invalid form
 
 
 def generate_unique_person_code():

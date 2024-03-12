@@ -40,6 +40,15 @@ class MultipleChoiceChallenge(models.Model):
     points = models.IntegerField(default=0, null=True, blank=True)
     def __str__(self):
         return self.code
+    
+
+class UserMCQRelation(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    MCQ_task = models.ForeignKey(MultipleChoiceChallenge, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.user} - {self.location_based_task}"
 # ------- Charlie END -------
 
 
