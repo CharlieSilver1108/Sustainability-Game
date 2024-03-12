@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 
 import random
-from tasks.models import MultipleChoiceChallenge, PersonBasedCodeChallenge, UserCodeRelation
+from tasks.models import *
+from members.models import *
 from .forms import *
 
 from django.contrib import messages
@@ -53,6 +54,23 @@ def delete_multiple_choice_question(request, question_id):
 def multiple_choice_questions(request):
     questions = MultipleChoiceChallenge.objects.all()
     return render(request, 'gamekeepers/multiple_choice_questions.html', {'multiple_choice_questions':questions})
+
+def accounts(request):
+    gamekeepers = User.objects.filter(is_superuser=True)
+    users = User.objects.filter(is_superuser=False)
+    return render(request, 'gamekeepers/accounts.html', {'gamekeepers':gamekeepers, 'users':users})
+
+def remove_account(request, username):
+    if request.method == "POST":
+        account = User.objects.get(username=username)
+        # account.profile.delete()
+        account.delete()
+        messages.success(request, "Account successfully deleted.")
+    else:
+        messages.error(request, "Account not able to be deleted.")
+    
+    return redirect('accounts')
+    
     
 # ------- Charlie END -------
 

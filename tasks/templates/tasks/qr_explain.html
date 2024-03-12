@@ -39,34 +39,43 @@
 
                         <h4 class="card-title mt-1">Locations:</h4>
                         <!-- Table displaying the locations of all challenges currently stored in the database, and their points -->
-                        <table class="table table-bordered">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Location</th>
-                                    <th>Description</th>
-                                    <th>Points</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for question in multiple_choice_questions %}
-                                <tr>
-                                    <td>{{ question.location }}</td>
-                                    <td>{{ question.description | safe }}</td>       <!-- Renders the HTML description, safely -->
-                                    <td>{{ question.points }}
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="5" class="text-center">No questions found.</td>
-                                </tr>
-                                {% endfor %}
-                                
-                            </tbody>
-                        </table>
+                        <div class="table-responsive" style="overflow-x: auto;">
+                            <table id="myTable" class="table table-bordered">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Location</th>
+                                        <th>Description</th>
+                                        <th>Points</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for question in multiple_choice_questions %}
+                                    <tr>
+                                        <td>{{ question.location }}</td>
+                                        <td>{{ question.description | safe }}</td>       <!-- Renders the HTML description, safely -->
+                                        <td>{{ question.points }}
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">No questions found.</td>
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
 
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Adds Datatables to the table -->
+    <script>
+        $(document).ready( function () {
+            $('#myTable').DataTable();
+        } );
+    </script>
 
 {% endblock %}
