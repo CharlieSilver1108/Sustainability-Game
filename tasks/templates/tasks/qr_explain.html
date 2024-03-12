@@ -23,7 +23,7 @@
                                 <li>Go to one of the locations below</li>
                                 <li>Find the QR code</li>
                                 <li>Scan it</li>
-                                <li>You be directed to a page containing the challenge</li>
+                                <li>You will be directed to a page containing the challenge</li>
                                 <li>Complete the challenge to earn points!</li>
                             </ul>
 
@@ -44,7 +44,7 @@
                                 {% for question in multiple_choice_questions %}
                                 <tr>
                                     <td>{{ question.location }}</td>
-                                    <td>{{ question.description }}</td>
+                                    <td>{{ question.description | safe }}</td>       <!-- Renders the HTML description, safely -->
                                     <td>{{ question.points }}
                                 </tr>
                                 {% empty %}
