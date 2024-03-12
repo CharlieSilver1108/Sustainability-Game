@@ -15,12 +15,10 @@
 
     <div class="container mt-5">
         <h1 class="mb-4">Multiple Choice Questions</h1>
-        {% if user.is_superuser %}
             <!-- Green "+" button to create a new questions -->
             <a href="{% url 'create_multiple_choice_question' %}" class="btn btn-success mb-3 float-right">
                 <i class="fas fa-plus"></i> Add New
             </a>
-        {% endif %}
 
         <table class="table table-bordered">
             <thead class="thead-dark">
@@ -32,6 +30,7 @@
                     <th>Choices</th>
                     <th>Answer</th>
                     <th>Points Value</th>
+
                     <th style="color: red;">Remove</th>
                 </tr>
             </thead>
@@ -44,7 +43,7 @@
                     <td>{{ question.question }}</td>
                     <td><ol><li>{{ question.choice1 }}</li><li>{{ question.choice2 }}</li><li>{{ question.choice3 }}</li><li>{{ question.choice4 }}</li></ol></td>
                     <td>{{ question.correct_answer }}</td>
-                    <td>{{ question.points }}
+                    <td>{{ question.points }}    
                     <td>
                         <!-- Red "X" button for superuser to delete questions -->
                         <form action="{% url 'delete_multiple_choice_question' question.id %}" method="post" style="display: inline;">
