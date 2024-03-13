@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from html.parser import HTMLParser
+from members.models import *
 
 
 # Create your views here.
@@ -18,4 +19,16 @@ def learning(request):
 # ------- Charlie START -------
 def how_to_play(request):
     return render(request, 'Sustain/how_to_play.html', {})
+
+
+def leaderboard(request):
+    all_profiles = Profile.objects.order_by('-points')
+    top_ten = all_profiles[:10]
+
+    if request.user.is_authenticated:
+        current_user = Profile.objects.get(user=request.user)
+        current_user_position = list(all_profiles).index(current_user) + 1
+        return render(request, 'Sustain/leaderboard.html', {'top_ten':top_ten, 'current_user_position':current_user_position})
+    else:
+        return render(request, 'Sustain/leaderboard.html', {'top_ten':top_ten})
 # ------- Charlie END -------

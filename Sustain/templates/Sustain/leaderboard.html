@@ -1,0 +1,103 @@
+{% extends 'Sustain/base.html' %}
+
+{% block content %}
+    <!-- 
+    File: leaderboard.html
+    Description: This is the leaderboard page for the Sustain website. It prints the top 10 players, and if the user is logged in displays their position also.
+    Author: Charlie
+    -->
+    <title>Leaderboard</title>
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+
+            <!-- Main content -->
+            <div class="col-12 col-md-8 mx auto">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <!-- Title and introduction -->
+                                <h1 class="card-title mb-4">Leaderboard</h1>
+                                <p class="card-text small">These are the top 10 players! Earn more points to move up the leaderboard!</p>
+                            </div>
+                            
+                            <div class="card-body">
+                                <!-- Section about challenges -->
+                                <h4 class="card-title">Top 10</h4>
+                                    <!-- The top 10 players -->
+                                    <table id="myTable" class="table table-bordered">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th style="width: 10%;">Position</th>
+                                                <th style="width: 20%;">Player</th>
+                                                <th style="width: 55%;">Bio</th>
+                                                <th style="width: 15%;">Points</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for profile in top_ten %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td><a style="text-decoration: none; color: inherit;" href="{% url 'profile_viewer' profile.user.username %}">  <!-- Links the user to each player's profile -->
+                                                            {% if profile.profile_picture %}
+                                                                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="max-width: 30px; height: width; object-fit: contain;">
+                                                            {% else %}
+                                                                <img src="img/default.jpg" alt="Profile Picture" class="rounded-circle" style="max-width: 180px;">
+                                                            {% endif %}
+                                                            {{ profile.user.username }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ profile.bio }}</td>
+                                                    <td>{{ profile.points }}</td>
+                                                </tr>
+                                            {% empty %}
+                                                <tr>
+                                                    <td colspan="5" class="text-center">No Players Found.</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    
+                                
+
+                                {% if user.is_authenticated %}
+                                    <hr style="border-top: 1px solid #ccc;">
+                                    
+                                    <!-- The user's position -->
+                                    <h4 class="card-title">Your Position</h4>
+                                        <table class="table table-bordered">
+                                            <thead class="thead-dark" style="display:none;">
+                                                <tr>
+                                                    <th>Position</th>
+                                                    <th>Player</th>
+                                                    <th>Bio</th>
+                                                    <th>Points</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width: 10%;">{{ current_user_position }}</td>
+                                                    <td>
+                                                        {% if user.profile.profile_picture %}
+                                                            <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="max-width: 30px; height: width; object-fit: contain;">
+                                                        {% else %}
+                                                            <img src="img/default.jpg" alt="Profile Picture" class="rounded-circle" style="max-width: 180px;">
+                                                        {% endif %}
+                                                        {{ user.username }}
+                                                    </td>
+                                                    <td style="width: 55%;">{{ user.profile.bio }}</td>
+                                                    <td style="width: 15%;">{{ user.profile.points }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

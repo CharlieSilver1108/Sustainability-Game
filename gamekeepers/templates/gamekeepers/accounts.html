@@ -1,0 +1,149 @@
+{% extends 'Sustain/base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- 
+    File: accounts.html
+    Description: This page is an admin access page which displays all the admin accounts and all the user accounts currently stored in the database
+                    It includes a button for creating a new admin, and next to each user there is a button to remove the account
+    Author: Charlie
+    -->
+
+    <title>Accounts</title>
+
+
+    <div id="gamekeepers" class="container mt-5">
+        <h1 class="mb-4">Gamekeepers Accounts</h1>
+            <button id="viewUserAccounts" class="text-white btn float-left" style="background-color: #0B6623 !important;">View User Accounts</button>
+
+            <!-- Green "+" button to create a new questions -->
+            <a href="#" class="btn btn-success mb-3 float-right">
+                <i class="fas fa-plus"></i> Add New
+            </a>
+
+        <table id="gamekeepersTable" class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+
+                    <th style="color: red;">Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for account in gamekeepers %}
+                    <tr>
+                        <td><a href="{% url 'profile_viewer' account.username %}">{{ account.username }}</a></td>       <!-- Links the admin to each accounts's profile -->
+                        <td>{{ account.first_name }}</td>
+                        <td>{{ account.last_name }}</td>
+                        <td>{{ account.email }}</td>
+                        <td>
+                            <!-- Red "X" button for superuser to delete accounts -->
+                            <form action="#" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No Gamekeeper Accounts Found.</td>
+                    </tr>
+                {% endfor %}
+                
+                <!-- Display messages -->
+                <div class="container">
+                    {% if messages %}
+                    <div class="alert-messages">
+                        {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="users" class="container mt-5" style="display: none;">
+        <h1 class="mb-4">User Accounts</h1>
+        <button id="viewGamekeeperAccounts" class="text-white btn float-left mb-3" style="background-color: #0B6623 !important;">View Gamekeeper Accounts</button>
+
+        <table id="usersTable" class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Points</th>
+
+                    <th style="color: red;">Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for account in users %}
+                    <tr>
+                        <td><a href="{% url 'profile_viewer' account.username %}">{{ account.username }}</a></td>       <!-- Links the admin to each accounts's profile -->
+                        <td>{{ account.first_name }}</td>
+                        <td>{{ account.last_name }}</td>
+                        <td>{{ account.email }}</td>
+                        <td>{{ account.profile.points }}</td>
+                        <td>
+                            <!-- Red "X" button for superuser to delete accounts -->
+                            <form action="{% url 'remove_account' account.username %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No User Accounts Found.</td>
+                    </tr>
+                {% endfor %}
+                
+                <!-- Display messages -->
+                <div class="container">
+                    {% if messages %}
+                    <div class="alert-messages">
+                        {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Adds Datatables to the tables -->
+    <script>
+        $(document).ready( function () {
+            $('#gamekeepersTable').DataTable();
+            $('#usersTable').DataTable();
+    
+            // Function to toggle between admin accounts and user accounts
+            $('#viewGamekeeperAccounts').click(function() {
+                $('#gamekeepers').toggle();
+                $('#users').toggle();
+            });
+
+            $('#viewUserAccounts').click(function() {
+                $('#gamekeepers').toggle();
+                $('#users').toggle();
+            });
+        });
+    </script>
+    
+{% endblock %}

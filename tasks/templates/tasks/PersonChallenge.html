@@ -1,0 +1,58 @@
+{% extends 'Sustain/base.html' %}
+
+{% block content %}
+    <!-- 
+    File: PersonChallenge.html
+    Description: This page displays a textInput, for the user to submit a code to earn points
+    Author: Charlie
+    -->
+
+    <title>Challenge!</title>
+
+    <main>
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    {% if messages %}
+                        <div class="alert alert-warning fade show text-center" role="alert">    
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="card shadow-lg border-0 rounded-lg mt-4">
+                            <div class="card-header"><h3 class="text-center my-2">Submit a Person Code</h3></div>
+
+                            <div class="card-body small">
+                                {% if form.errors %}
+                                    <div class="alert alert-warning fade show text-center mb-3" role="alert">
+                                        <p>There was an error, please try again</p>
+                                    </div>
+                                {% endif %}
+
+                                <div class="login">
+                                    
+                                    <div class="mb-3">
+                                        <label for="textInput" class="form-label">Code Input</label>
+                                        <input type="text" class="form-control" id="textInput" placeholder="Enter code" name="code">
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="card-footer py-2">
+                                <div class="d-flex align-items-center justify-content-between mt-2 mb-0">
+                                    <a class="text-muted">Earn your points!</a>
+                                    <button type="submit" id="submitButton" class="btn" style="background-color:#0B6623; color: white;" value="Submit">Submit Answer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}

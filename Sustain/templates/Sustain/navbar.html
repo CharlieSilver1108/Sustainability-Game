@@ -9,13 +9,13 @@ Author: Charlie
 
 {% load static %}
 
-{%if user.is_superuser%}
-  <!-- if the user is an admmin, the navbar colour is the same as the default django admin portal -->
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #417690;">
-{% else %}
-  <!-- if the user is not an admmin, the navbar colour is the green theme -->
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0B6623;">
-{% endif %}
+  {%if user.is_superuser%}
+    <!-- if the user is an admmin, the navbar colour is the same as the default django admin portal -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #417690;">
+  {% else %}
+    <!-- if the user is not an admmin, the navbar colour is the green theme -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0B6623;">
+  {% endif %}
   <!-- Includes the logo, which when clicked redirects to the home page -->
   <a class="navbar-brand" href="{% url 'index' %}"><img src="{% static 'img/logo.png' %}" class="img-fluid" style="max-width: 160px; padding-right: 15px;"></a>
   <!-- If the screen cannot display all the menu items, they are collapsed into a toggleable dropdown menu -->
@@ -28,7 +28,7 @@ Author: Charlie
       
       <!-- Publically Available Links -->
       <li class="nav-item">
-        <a class="nav-link" href="#">Leaderboard</a>
+        <a class="nav-link" href="{% url 'leaderboard' %}">Leaderboard</a>
       </li>
 
       <li class="nav-item">
@@ -45,6 +45,9 @@ Author: Charlie
               <a class="dropdown-item" href="{% url 'person_based_codes' %}">Person Based Challenge</a>
 
               <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'accounts' %}">Accounts</a>
+
+              <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{% url 'admin:index' %}">Admin Portal</a>
           </div>
         </li>
@@ -58,9 +61,8 @@ Author: Charlie
             <!-- Logged-In Links -->
             {% if user.is_authenticated %}
               <a class="dropdown-item" href="{% url 'qr_explain' %}">QR Challenges</a>
+              <a class="dropdown-item" href="{% url 'person_explain' %}">People Challenges</a>
               <a class="dropdown-item" href="/challenges/location">GPS Challenges</a>
-              <a class="dropdown-item" href="/challenges/person_based_codes">People Challenges</a>
-
               
               <div class="dropdown-divider"></div>
             {% endif %}
