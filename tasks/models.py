@@ -48,7 +48,7 @@ class UserMCQRelation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"{self.user} - {self.location_based_task}"
+        return self.user.username
 # ------- Charlie END -------
 
 
@@ -62,6 +62,9 @@ class PersonBasedCodeChallenge(models.Model):
     location = models.CharField(max_length=30)
     expertise = models.CharField(max_length=30)
     points = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return self.code
     
 class LocationBasedTask(models.Model):
     longitude = models.FloatField()

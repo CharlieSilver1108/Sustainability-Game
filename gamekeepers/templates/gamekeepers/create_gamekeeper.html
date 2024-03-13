@@ -3,21 +3,21 @@
 
 {% block content %}
     <!-- 
-    File: register.html
-    Description: This is the page allowing the user to create a new account. It verifies the user's inputs and, if successful, creates a new database entry for the user's account
+    File: create_gamekeeper.html
+    Description: This is the page allowing a superuser to create a new gamekeeper account. It verifies the user's inputs and, if successful, creates a new database entry for the gamekeeper's account
     Author: Charlie
     -->
 
-    <title>Register</title>
+    <title>Register Gamekeeper</title>
     
     <main>
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-5">
-                    <form method="POST" action="{% url 'register_user' %}">
+                    <form method="POST" action="{% url 'create_gamekeeper' %}">
                         {% csrf_token %}
                         <div class="card shadow-lg border-0 rounded-lg mt-4">
-                            <div class="card-header"><h3 class="text-center font-weight-light my-2">Register</h3></div>
+                            <div class="card-header"><h3 class="text-center font-weight-light my-2">Register Gamekeeper</h3></div>
                             <div class="card-body small">
                                 {% if form.errors %}
                                     <div class="alert alert-warning fade show text-center mb-3" role="alert">
