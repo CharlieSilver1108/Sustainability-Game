@@ -10,5 +10,6 @@ urlpatterns = [
     
     # ------- Charlie START -------
     path("how_to_play", views.how_to_play, name= "how_to_play"),
+    path("leaderboard", views.leaderboard, name="leaderboard")
     # ------- Charlie END -------
 ]

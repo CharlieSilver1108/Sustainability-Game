@@ -71,7 +71,7 @@
         </table>
     </div>
 
-    <div id="users" class="container mt-5">
+    <div id="users" class="container mt-5" style="display: none;">
         <h1 class="mb-4">User Accounts</h1>
         <button id="viewGamekeeperAccounts" class="text-white btn float-left mb-3" style="background-color: #0B6623 !important;">View Gamekeeper Accounts</button>
 
@@ -94,7 +94,7 @@
                         <td>{{ account.first_name }}</td>
                         <td>{{ account.last_name }}</td>
                         <td>{{ account.email }}</td>
-                        <td>{{ account.points }}</td>
+                        <td>{{ account.profile.points }}</td>
                         <td>
                             <!-- Red "X" button for superuser to delete accounts -->
                             <form action="{% url 'remove_account' account.username %}" method="post" style="display: inline;">
@@ -132,24 +132,18 @@
         $(document).ready( function () {
             $('#gamekeepersTable').DataTable();
             $('#usersTable').DataTable();
-
-            // Initially hide the user accounts table
-            $('#users').hide();
-
+    
             // Function to toggle between admin accounts and user accounts
-            $('#viewUserAccounts').on('click', function () {
-                // Toggle visibility of admin accounts table
-                $('#gamekeepers').hide();
-                // Toggle visibility of user accounts table
-                $('#users').show();
+            $('#viewGamekeeperAccounts').click(function() {
+                $('#gamekeepers').toggle();
+                $('#users').toggle();
             });
-            $('#viewGamekeeperAccounts').on('click', function () {
-                // Toggle visibility of admin accounts table
-                $('#gamekeepers').show();
-                // Toggle visibility of user accounts table
-                $('#users').hide();
+
+            $('#viewUserAccounts').click(function() {
+                $('#gamekeepers').toggle();
+                $('#users').toggle();
             });
-        } );
+        });
     </script>
     
 {% endblock %}
