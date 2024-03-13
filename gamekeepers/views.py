@@ -70,6 +70,17 @@ def remove_account(request, username):
         messages.error(request, "Account not able to be deleted.")
     
     return redirect('accounts')
+
+def create_gamekeeper(request):
+    if request.method == "POST":    # if form has been submit
+        form = RegisterGamekeeperForm(request.POST)   # this form template is in forms.py
+        if form.is_valid():
+            form.save()            # saves data into database
+            messages.success(request, "Gamekeeper Successfully Registered")
+            return redirect('accounts')
+    else:
+        form = RegisterGamekeeperForm()
+    return render(request, 'gamekeepers/create_gamekeeper.html', {'form':form})
     
     
 # ------- Charlie END -------

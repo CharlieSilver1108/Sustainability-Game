@@ -109,6 +109,8 @@ def profile_viewer(request, username=None):
 def privacy_policy(request):        
     return render(request, 'members/privacy_policy.html', {})
 
+# ------- Charlie END -------
+
 
 
 # ------- Will START -------

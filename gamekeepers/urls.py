@@ -30,6 +30,7 @@ urlpatterns = [
     path('multiple_choice_questions/delete/<int:question_id>', superuser_required(views.delete_multiple_choice_question), name='delete_multiple_choice_question'),  #retrieves an integer parameter from the URL
     path('accounts', superuser_required(views.accounts), name='accounts'),
     path('accounts/remove_account/<str:username>', superuser_required(views.remove_account), name='remove_account'),
+    path('create_gamekeeper', superuser_required(views.create_gamekeeper), name='create_gamekeeper'),
     # ------- Charlie END -------
 
 

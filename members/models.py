@@ -6,7 +6,7 @@ from tasks.models import Task, Task_Type
 from django.utils import timezone
 from datetime import timedelta
 
-# ------- Luke START (+ Charlie, Liam) -------
+# ------- Luke START (+ Charlie, Liam, Greg) -------
 
 # the Profile class is an extension of the User class that is provided by Django
 # the class holds the current tasks a user has, as well as the number of points that the user has 
@@ -40,6 +40,9 @@ class Badge(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=200)
     criteria = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
 
     def is_earned_by(self, profile):
         # Call the rule function associated with this badge
@@ -90,5 +93,6 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
+    User.profile.check_and_assign_badges()
 
 # ------- Luke END -------
