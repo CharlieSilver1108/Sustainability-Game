@@ -30,7 +30,7 @@
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th style="width: 10%;">Position</th>
-                                                <th style="width: 20%;">Username</th>
+                                                <th style="width: 20%;">Player</th>
                                                 <th style="width: 55%;">Bio</th>
                                                 <th style="width: 15%;">Points</th>
                                             </tr>
@@ -39,13 +39,21 @@
                                             {% for profile in top_ten %}
                                                 <tr>
                                                     <td>{{ forloop.counter }}</td>
-                                                    <td><a href="{% url 'profile_viewer' profile.user.username %}">{{ profile.user.username }}</a></td>       <!-- Links the user to each accounts's profile -->
+                                                    <td><a style="text-decoration: none; color: inherit;" href="{% url 'profile_viewer' profile.user.username %}">  <!-- Links the user to each player's profile -->
+                                                            {% if profile.profile_picture %}
+                                                                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="max-width: 30px; height: width; object-fit: contain;">
+                                                            {% else %}
+                                                                <img src="img/default.jpg" alt="Profile Picture" class="rounded-circle" style="max-width: 180px;">
+                                                            {% endif %}
+                                                            {{ profile.user.username }}
+                                                        </a>
+                                                    </td>
                                                     <td>{{ profile.bio }}</td>
                                                     <td>{{ profile.points }}</td>
                                                 </tr>
                                             {% empty %}
                                                 <tr>
-                                                    <td colspan="5" class="text-center">No User Accounts Found.</td>
+                                                    <td colspan="5" class="text-center">No Players Found.</td>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
@@ -62,7 +70,7 @@
                                             <thead class="thead-dark" style="display:none;">
                                                 <tr>
                                                     <th>Position</th>
-                                                    <th>Username</th>
+                                                    <th>Player</th>
                                                     <th>Bio</th>
                                                     <th>Points</th>
                                                 </tr>
@@ -70,7 +78,14 @@
                                             <tbody>
                                                 <tr>
                                                     <td style="width: 10%;">{{ current_user_position }}</td>
-                                                    <td style="width: 20%;">{{ user.username }}</td>
+                                                    <td>
+                                                        {% if user.profile.profile_picture %}
+                                                            <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="max-width: 30px; height: width; object-fit: contain;">
+                                                        {% else %}
+                                                            <img src="img/default.jpg" alt="Profile Picture" class="rounded-circle" style="max-width: 180px;">
+                                                        {% endif %}
+                                                        {{ user.username }}
+                                                    </td>
                                                     <td style="width: 55%;">{{ user.profile.bio }}</td>
                                                     <td style="width: 15%;">{{ user.profile.points }}</td>
                                                 </tr>
