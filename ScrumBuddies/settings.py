@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Sustain',
     'members',
     'tasks',
+    'gamekeepers',
 ]
 
 MIDDLEWARE = [

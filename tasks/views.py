@@ -68,6 +68,7 @@ def add_task(request):
     else:
         return render(request, 'tasks/tasks.html', {})
 
+
 # this view removes a specified task from the user's set of current tasks
 def remove_task(request):
     if request.method == 'POST':
@@ -141,39 +142,9 @@ def complete_task(request):
 
 
 
-# ------- Will START -------
-# create_multiple_choice_questions allows an admin to add a new question to the database
-def create_multiple_choice_questions(request):
-    if request.method == "POST":    # if form has been submit
-        form = MultipleChoiceTaskForm(request.POST)   # this form template is in forms.py
-        if form.is_valid():
-            unique_code = generate_unique_code()                # Generate a unique 4-digit code            
-            multiple_choice_code = form.save(commit=False)         # Create a PersonBasedCode instance but don't save it yet
-            multiple_choice_code.code = unique_code                # Assign the unique code to the instance
-            multiple_choice_code.save()                            # Now save the instance to the database
-            messages.success(request, "Question Created!")
-            return redirect('multiple_choice_questions')
-    else:
-        form = MultipleChoiceTaskForm()
-    return render(request, 'tasks/create_multiple_choice_question.html', {'form':form})
-# ------- Will END -------
-
-
 
 # ------- Charlie START -------
-
-# delete_multiple_choice_question removes the question, which is passed into the function, from the database
-def delete_multiple_choice_question(request, question_id):
-    if request.method == "POST":
-        question = MultipleChoiceChallenge.objects.get(id=question_id)
-        question.delete()
-        messages.success(request, "Question successfully deleted.")
-        return redirect('multiple_choice_questions')
-    else:
-        messages.error(request, "Question not found.")
-        return redirect('multiple_choice_questions')
-    
-
+   
 # qr_explain displays the locations of the QR codes to the user
 def qr_explain(request):
     questions = MultipleChoiceChallenge.objects.all()
@@ -188,14 +159,24 @@ def MCQchallenge(request, code):
         choice = request.POST['choice']                         # gets the user's choice from the form input
         correct_answer = challenge.correct_answer
         if (str(correct_answer) == choice):                     # checks if the user was correct
-            messages.success(request, 'Correct Answer!')
-            user = request.user
-            profile = user.profile
-            profile.points += challenge.points                  # if they were correct, add the points to their profile
-            profile.save()
-            return redirect('profile_user')
+
+            # Check if the code is already added by the user
+            if UserMCQRelation.objects.filter(user=request.user, MCQ_task=challenge).exists():
+                messages.error(request, "You have already completed this challenge!")
+                return redirect('qr_explain')
+            else:
+                UserMCQRelation.objects.create(user=request.user, MCQ_task=challenge)
+                
+                messages.success(request, 'Correct Answer!')
+                user = request.user
+
+                profile = user.profile
+                profile.points += challenge.points                  # if they were correct, add the points to their profile
+                profile.save()
+                return redirect('qr_explain')
+        
         else:
-            messages.success(request, 'Incorrect Answer!')      # if not, redirect them to the explanation page
+            messages.error(request, 'Incorrect Answer!')      # if not, redirect them to the explanation page
             return redirect('qr_explain')
 
     else:                                                       # if the form has not been submit, display the question
@@ -210,15 +191,12 @@ def MCQchallenge(request, code):
             "choice4": challenge.choice4,
             "points": challenge.points,
         })
+    
 
-# multiple_choice_questions ensures the user is a Game Keeper, and then displays the multiple choice questions which are in the database, with the option to create new ones
-def multiple_choice_questions(request):
-    if request.user.is_superuser:
-        questions = MultipleChoiceChallenge.objects.all()
-        return render(request, 'tasks/multiple_choice_questions.html', {'multiple_choice_questions':questions})
-    else:
-        messages.success(request, "You are not a Game Keeper!")
-        return redirect('index')
+# people_explain displays the locations of the QR codes to the user
+def person_explain(request):
+    people = PersonBasedCodeChallenge.objects.all()
+    return render(request, 'tasks/person_explain.html', {'people':people})
 
 # ------- Charlie END -------
 
@@ -226,59 +204,6 @@ def multiple_choice_questions(request):
     
 
 # ------- Liam START -------
-
-def create_person_based_code(request):
-    if request.method == 'POST':
-        form = PersonBasedCodeForm(request.POST)
-        # Generate a unique 4-digit code
-        unique_code = generate_unique_code()
-    
-        # Create a PersonBasedCode instance but don't save it yet            
-        person_based_code = form.save(commit=False)
-        
-        # Assign the unique code to the instance
-        person_based_code.code = unique_code
-        
-        # Now save the instance to the database
-        person_based_code.save()
-        
-        # Redirect to 'task_view' or appropriate URL name after successful save
-        return redirect('person_based_codes')
-    else:
-        form = PersonBasedCodeForm()
-    
-    # Render the empty or invalid form
-    return render(request, 'tasks/create_person_based_code.html', {'form': form})
-
-def generate_unique_code():
-    while True:
-        # Generate a random 4-digit code
-        code = str(random.randint(1000, 9999))
-        # Check if this code already exists in the database
-        if not PersonBasedCodeChallenge.objects.filter(code=code).exists():
-            return code
-        
-def person_based_codes(request):
-    # renders the person based codes html files
-    if request.user.is_superuser:
-        # For superusers, fetch all codes without filtering by user
-        codes = PersonBasedCodeChallenge.objects.all()
-    else:
-        # For regular users, fetch codes based on their submissions
-        codes_relations = UserCodeRelation.objects.filter(user=request.user).select_related('person_based_code')
-        codes = [relation.person_based_code for relation in codes_relations]
-        
-    return render(request, 'tasks/person_based_codes.html', {'person_based_codes': codes})
-
-def delete_person_based_code(request, code_id):
-    if request.method == "POST":
-        code = PersonBasedCodeChallenge.objects.get(id=code_id)
-        code.delete()
-        messages.success(request, "Person based code successfully deleted.")
-        return redirect('person_based_codes')
-    else:
-        messages.error(request, "Person based code not found.")
-        return redirect('person_based_codes')
     
 def submit_code(request):
     if request.method == 'POST':
@@ -287,19 +212,21 @@ def submit_code(request):
             person_based_code = PersonBasedCodeChallenge.objects.get(code=code)
             # Check if the code is already added by the user
             if UserCodeRelation.objects.filter(user=request.user, person_based_code=person_based_code).exists():
-                messages.error(request, "You have already added this code.")
+                messages.error(request, "You have already added this code!")
             else:
                 UserCodeRelation.objects.create(user=request.user, person_based_code=person_based_code)
                 
                 user = request.user
                 profile = user.profile
                 profile.points += person_based_code.points
+                profile.save()
                 
-                messages.success(request, "Code added successfully.")
+                messages.success(request, "Code added successfully!")
         except PersonBasedCodeChallenge.DoesNotExist:
-            messages.error(request, "Invalid code.")
-        return redirect('person_based_codes')  # Redirect to the same page or to a success page
-    return redirect('person_based_codes')
+            messages.error(request, "Invalid code!")
+        return redirect('person_explain')  # Redirect to the same page or to a success page
+    return render(request, 'tasks/PersonChallenge.html')
+
 
 def location_page(request):
     existing_waypoints_qs = LocationBasedTask.objects.all()
