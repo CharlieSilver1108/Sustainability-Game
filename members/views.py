@@ -97,10 +97,11 @@ def update_user(request):
 # profile_viewer receives a paramater from the URL corresponding to an existing User's username
 # it allows a user to view their friend's profile, for example
 def profile_viewer(request, username=None):
-    if username:
-        userToView = get_object_or_404(User, username=username)             # either returns a User object, or a 404 error saying the user doesn't exist
-        return render(request, 'members/profileViewer.html', {'userToView': userToView})
-    else:
+    try:
+        userToView = User.objects.get(username=username)             # either returns a User object, or a 404 error saying the user doesn't exist
+        user_position = list(Profile.objects.order_by('-points')).index(Profile.objects.get(user=userToView)) + 1
+        return render(request, 'members/profileViewer.html', {'userToView': userToView, 'user_position':user_position})
+    except:
         messages.success(request, "User not found!")         # if no parameter value is given, redirects to home page and displays message
         return redirect('index')
 
@@ -111,8 +112,9 @@ def privacy_policy(request):
 
 
 # ------- Will START -------
-def profile_user(request):
-    return render(request, 'members/profile.html', {'user': request.user})
+def profile_user(request):#
+    current_user_position = list(Profile.objects.order_by('-points')).index(Profile.objects.get(user=request.user)) + 1
+    return render(request, 'members/profile.html', {'user': request.user, 'user_position':current_user_position})
 # ------- Will END -------
 
 
