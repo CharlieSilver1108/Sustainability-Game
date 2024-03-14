@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'members',
     'tasks',
     'gamekeepers',
+    'pollution',
 ]
 
 MIDDLEWARE = [

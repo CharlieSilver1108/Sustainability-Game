@@ -17,6 +17,7 @@ class Profile(models.Model):
     taskTwo = models.ForeignKey(Task, related_name='taskTwo', on_delete=models.CASCADE, null=True, blank=True)
     taskThree = models.ForeignKey(Task, related_name='taskThree', on_delete=models.CASCADE, null=True, blank=True)
     points = models.IntegerField(default=0)
+    pointsToAttack = models.IntegerField(default=0)
     profile_picture = models.ImageField(upload_to='profile_pictures/', default='profile_pictures/default.png')  # -Liam-
     bio = models.TextField(max_length=500, null=True, blank=True)   # -Liam-
     pronouns = models.CharField(max_length=10 ,null=True, blank=True)   # -Charlie-
@@ -97,7 +98,7 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         profile = Profile.objects.create(user=instance)
         profile.save()
-
+        
 # this receiver function updates the profile of the user whenever a change is made
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
@@ -105,5 +106,3 @@ def save_user_profile(sender, instance, **kwargs):
     instance.profile.check_and_assign_badges()
 
 # ------- Luke END -------
-
-
