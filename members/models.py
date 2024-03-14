@@ -107,20 +107,3 @@ def save_user_profile(sender, instance, **kwargs):
 # ------- Luke END -------
 
 
-# from members.models import Badge, Profile
-# profile = Profile.objects.get(user__username='greg')
-# badges = Badge.objects.all()
-# for badge in badges:
-#     print(badge.name, badge.is_earned_by(profile))
-
-
-# from members.models import Badge  
-# badges = Badge.objects.all()
-# for badge in badges:
-#     print(badge.name, badge.description)
-    
-# from members.models import Profile, Badge, ProfileBadgeRelation  
-# profile = Profile.objects.get(user__username='greg')
-# badge = Badge.objects.get(name='1000_points')
-# relation = ProfileBadgeRelation.objects.create(profile=profile, badge=badge)
-# print(relation)
