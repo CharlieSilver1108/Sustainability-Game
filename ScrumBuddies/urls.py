@@ -27,4 +27,5 @@ urlpatterns = [
     path("challenges/", include("tasks.urls")),
     path("challenges/", include("django.contrib.auth.urls")),
     path("gamekeepers/", include("gamekeepers.urls")),
+    path("pollution/", include("pollution.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

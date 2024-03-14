@@ -1,0 +1,37 @@
+{% extends 'Sustain/base.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/custom.css' %}"> <!-- Ensure you have a custom.css in your static/css directory -->
+<div class="container mt-5">
+    <form action="{% url 'create_carbon_monster' %}" method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label for="person-name">Monster Name:</label>
+            <input type="text" class="form-control" id="monster-name" name="monster_name" placeholder="Enter the name of the Monster" required>
+            <div class="invalid-feedback">
+                Please enter a name.
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <select class="form-select" id="monster-type" name="monster_type" aria-label="Monster Type Select">
+                <option selected>Please select monster type</option>
+                <option value="Community-Based">Community-Based</option>
+                <option value="User-Based">User-Based</option>
+              </select>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="person-name">Monster Health:</label>
+            <input type="number" class="form-control" id="monster-health" name="health_points" placeholder="Enter the health of the Monster" required>
+            <div class="invalid-feedback">
+                Please enter a name.
+            </div>
+        </div>
+
+        <button type="submit" class="text-white btn" style="background-color: #0B6623 !important;">Create Entry</button>
+    </form>
+
+</div>
+{% endblock %}
