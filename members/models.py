@@ -88,11 +88,11 @@ class UserActivity(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         profile = Profile.objects.create(user=instance)
-        profile.check_and_assign_badges()
+        # profile.check_and_assign_badges()
 # this receiver function updates the profile of the user whenever a change is made
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
-    User.profile.check_and_assign_badges()
+    # User.profile.check_and_assign_badges()
 
 # ------- Luke END -------

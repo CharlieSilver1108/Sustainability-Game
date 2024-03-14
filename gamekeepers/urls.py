@@ -6,7 +6,7 @@ from django.http import HttpResponseForbidden
 
 # ------- Charlie START -------
 def superuser_required(view_func):
-    # Decorator for views that checks that the user is a superuser, redirecting to the login page if necessary.
+    # Decorator for views that checks that the user is a superuser, redirecting to the home page if necessary.
     def _checkuser(request, *args, **kwargs):
         if request.user.is_superuser:
             return view_func(request, *args, **kwargs)
