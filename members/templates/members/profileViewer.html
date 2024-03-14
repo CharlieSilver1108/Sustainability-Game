@@ -79,6 +79,16 @@
                 <h5>Leaderboard Position:</h5>
                 <p>{{ user_position }}</p>
             </div>
+            <div class="user-detail">
+                <h5>Badges:</h5>
+                <ul>
+                {% for relation in badges_with_dates %}
+                    <li>{{ relation.badge.name }} - {{ relation.created_at|date:"F j, Y" }}</li>
+                {% empty %}
+                    <li>No badges earned yet.</li>
+                {% endfor %}
+                </ul>
+            </div>
         </div>
         <div class="additional-details">
             <h3>Additional Details</h3>
