@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 
-import random
+import random, qrcode
+from django.core.files.base import ContentFile
+from io import BytesIO
 from tasks.models import *
 from members.models import *
 from .forms import *
@@ -17,8 +19,15 @@ def create_multiple_choice_questions(request):
         form = MultipleChoiceTaskForm(request.POST)   # this form template is in forms.py
         if form.is_valid():
             unique_code = generate_unique_MCQ_code()                # Generate a unique 4-digit code            
-            multiple_choice_code = form.save(commit=False)         # Create a PersonBasedCode instance but don't save it yet
+            multiple_choice_code = form.save(commit=False)         # Create a MCQCode instance but don't save it yet
             multiple_choice_code.code = unique_code                # Assign the unique code to the instance
+            url = request.scheme + '://' + request.get_host() + '/challenges/MCQchallenge/' + unique_code
+            qr_code = generate_qr_code(url)
+            multiple_choice_code.url = url
+            multiple_choice_code.qr_code = qr_code
+            img_bytes = qr_code.getvalue()
+            multiple_choice_code.qr_code_image.save(f'{unique_code}.png', ContentFile(img_bytes))
+
             multiple_choice_code.save()                            # Now save the instance to the database
             messages.success(request, "Question Created!")
             return redirect('multiple_choice_questions')
@@ -36,6 +45,24 @@ def generate_unique_MCQ_code():
         code = str(random.randint(1000, 9999))  # Generate a random 4-digit code
         if not MultipleChoiceChallenge.objects.filter(code=code).exists():  # Check if this code already exists in the database
             return code
+        
+
+def generate_qr_code(url):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+    img_bytes_io = BytesIO()
+    img.save(img_bytes_io, format='PNG')
+    return img_bytes_io
+
+
         
 
 # delete_multiple_choice_question removes the question, which is passed into the function, from the database
