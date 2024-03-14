@@ -18,7 +18,7 @@ def create_carbon_monster(request):
             form.save()
             return redirect('carbon_monsters')
     else:
-        form = CarbonMonsterForm()
+        form = CreateCarbonMonsterForm()
     return render(request, 'pollution/create_carbon_monster.html', {'form': form})
 
 def attack_carbon_monsters(request):
