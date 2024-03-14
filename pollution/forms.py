@@ -1,7 +1,8 @@
 from django import forms
 from .models import *
 
-class CarbonMonsterForm(forms.ModelForm):
+# ------- Luke START -------
+class CreateCarbonMonsterForm(forms.ModelForm):
     OPTIONS = (
         ('User-Based', 'User-Based'), 
         ('Community-Based', 'Community-Based')
@@ -12,3 +13,10 @@ class CarbonMonsterForm(forms.ModelForm):
     class Meta:
         model = CarbonMonster
         fields = ['monster_name', 'monster_type', 'health_points']
+
+class FindCarbonMonster(forms.ModelForm):
+    id = forms.IntegerField(widget=forms.HiddenInput)
+    class Meta:
+        model = CarbonMonster
+        fields = ['id']
+# ------- Luke END -------

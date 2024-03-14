@@ -1,0 +1,98 @@
+{% extends 'Sustain/base.html' %}
+
+
+{% block content %}
+
+    <title>Attack Carbon Monsters</title>
+    
+    <h2>Current points: {{ profile.points }}</h2>
+
+    <br>
+
+    <div id="communityBased" class="container mt-5">
+        <h1 class="mb-4">Community-Based Monsters</h1>
+            <button id="viewUserBased" class="text-white btn float-left" style="background-color: #0B6623 !important;">View User-Based Monsters</button>
+
+        <table id="communityBasedTable" class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Monster Name</th>
+                    <th>HP</th>
+                    <th>Attack</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for monster in communityBased %}
+                    <tr>
+                        <td>{{ monster.monster_name }}</td>
+                        <td>{{ monster.health_points }}</td>
+                        <td>
+                            <form method="POST" action="{% url 'damage_carbon_monsters' %}" style="display:inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{ monster.id }}">
+                                <button type="submit" class="btn btn-danger">Damage Monster</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No Monsters Found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="userBased" class="container mt-5" style="display: none;">
+        <h1 class="mb-4">User-Based Monsters</h1>
+            <button id="viewCommunityBased" class="text-white btn float-left" style="background-color: #0B6623 !important;">View Community-Based Monsters</button>
+
+        <table id="userBasedTable" class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Monster Name</th>
+                    <th>HP</th>
+                    <th>Attack</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for monsters in userBased %}
+                    <tr>
+                        <td>{{ monsters.monster_name }}</td>
+                        <td>{{ monsters.health_points }}</td>
+                        <td>
+                            <form method="POST" action="{% url 'damage_carbon_monsters' %}" style="display:inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{ monster.id }}">
+                                <button type="submit" class="btn btn-danger">Damage Monster</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No Monsters Found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready( function () {
+            $('#communityBasedTable').DataTable();
+            $('#userBasedTable').DataTable();
+    
+            // Function to toggle between admin accounts and user accounts
+            $('#viewCommunityBased').click(function() {
+                $('#communityBased').toggle();
+                $('#userBased').toggle();
+            });
+
+            $('#viewUserBased').click(function() {
+                $('#communityBased').toggle();
+                $('#userBased').toggle();
+            });
+        });
+    </script>
+
+{% endblock %}
