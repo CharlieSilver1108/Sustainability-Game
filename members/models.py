@@ -66,11 +66,11 @@ class Badge(models.Model):
         # Check if the profile has at least 500 points
         return profile.points >= 1000
     
-    def rule_three_days_in_a_row(self, profile): # Must be called 'three_days_in_a_row'
-        # Check if the user has activity records for each of the last three days
-        three_days_ago = timezone.now().date() - timedelta(days=3)
-        recent_activity = UserActivity.objects.filter(profile=profile, date__gte=three_days_ago)
-        return recent_activity.count() >= 3
+    # def rule_three_days_in_a_row(self, profile): # Must be called 'three_days_in_a_row'
+    #     # Check if the user has activity records for each of the last three days
+    #     three_days_ago = timezone.now().date() - timedelta(days=3)
+    #     recent_activity = UserActivity.objects.filter(profile=profile, date__gte=three_days_ago)
+    #     return recent_activity.count() >= 3
 
  # This model represents the relationship between a Profile and a Badge. 
  # It has a foreign key to both Profile and Badge, indicating which profile 
