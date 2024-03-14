@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from tasks.models import Task, Task_Type
 from django.utils import timezone
 from datetime import timedelta
+import logging
 
 # ------- Luke START (+ Charlie, Liam, Greg) -------
 
@@ -27,11 +28,14 @@ class Profile(models.Model):
         badges = Badge.objects.all() # Get all badges
         for badge in badges: 
             # If the badge is earned and not already assigned to the profile, assign it
-            if badge.is_earned_by(self) and badge not in self.badges.all():
+            if badge.is_earned_by(self):
                 self.badges.add(badge)
+                self.save()
     
     def __str__(self):
         return str(self.user)
+    
+
 
  # This model represents a badge that a user can earn. Each badge has a unique name, a description, 
  # and a criteria. The `is_earned_by` method checks if a profile has earned the badge by calling a 
@@ -49,7 +53,8 @@ class Badge(models.Model):
         # Call the rule function associated with this badge
         rule_function = getattr(self, f'rule_{self.name}', None)
         if rule_function is not None:
-            return rule_function(profile)
+            result = rule_function(profile)
+            return result
         return False
     
     ## Badge rule functions
@@ -57,12 +62,16 @@ class Badge(models.Model):
     def rule_500_points(self, profile): # When creating this the badge it must be called '500_points'
         # Check if the profile has at least 500 points
         return profile.points >= 500
+
+    def rule_1000_points(self, profile): # When creating this the badge it must be called '500_points'
+        # Check if the profile has at least 500 points
+        return profile.points >= 1000
     
-    def rule_three_days_in_a_row(self, profile): # Must be called 'three_days_in_a_row'
-        # Check if the user has activity records for each of the last three days
-        three_days_ago = timezone.now().date() - timedelta(days=3)
-        recent_activity = UserActivity.objects.filter(profile=profile, date__gte=three_days_ago)
-        return recent_activity.count() >= 3
+    # def rule_three_days_in_a_row(self, profile): # Must be called 'three_days_in_a_row'
+    #     # Check if the user has activity records for each of the last three days
+    #     three_days_ago = timezone.now().date() - timedelta(days=3)
+    #     recent_activity = UserActivity.objects.filter(profile=profile, date__gte=three_days_ago)
+    #     return recent_activity.count() >= 3
 
  # This model represents the relationship between a Profile and a Badge. 
  # It has a foreign key to both Profile and Badge, indicating which profile 
@@ -76,10 +85,9 @@ class ProfileBadgeRelation(models.Model):
     def __str__(self):
         return f"{self.profile} - {self.badge}"
     
- #   This model represents the relationship between a Profile and a Badge. 
- #   It has a foreign key to both Profile and Badge, indicating which profile 
- #   has earned which badge. The `created_at` field records when the badge was 
- #   awarded to the profile.    
+ # This model represents a user's activity. It has a foreign key to Profile, 
+ # indicating which user the activity belongs to. The `date` field records 
+ # when the activity occurred.
 class UserActivity(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
@@ -89,11 +97,12 @@ class UserActivity(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         profile = Profile.objects.create(user=instance)
-        # profile.check_and_assign_badges()
+        profile.save()
+        
 # this receiver function updates the profile of the user whenever a change is made
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
-    # User.profile.check_and_assign_badges()
+    instance.profile.check_and_assign_badges()
 
 # ------- Luke END -------
