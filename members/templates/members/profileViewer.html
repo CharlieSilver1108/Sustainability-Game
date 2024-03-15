@@ -80,10 +80,10 @@
                 <p>{{ user_position }}</p>
             </div>
             <div class="user-detail">
-                <h5>Badges:</h5>
+                <h5>Badges:{% if badge_count > 0 %} ({{ badge_count }}){% endif %}</h5>
                 <ul>
                 {% for relation in badges_with_dates %}
-                    <li>{{ relation.badge.name }} - {{ relation.created_at|date:"F j, Y" }}</li>
+                    <li>{{ relation.badge.name }} - {{ relation.created_at|date:"d/m/y" }}</li>
                 {% empty %}
                     <li>No badges earned yet.</li>
                 {% endfor %}

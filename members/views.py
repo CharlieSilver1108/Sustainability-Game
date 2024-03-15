@@ -1,4 +1,5 @@
 import requests
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -6,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 from .forms import RegisterUserForm, PasswordChangingForm, UpdateUserForm, ProfilePictureForm, addPronounsForm, bioForm
 from .models import Profile, ProfileBadgeRelation, Badge
 
@@ -101,7 +104,8 @@ def profile_viewer(request, username=None):
         userToView = User.objects.get(username=username)             # either returns a User object, or a 404 error saying the user doesn't exist
         user_position = list(Profile.objects.order_by('-points')).index(Profile.objects.get(user=userToView)) + 1
         badges_with_dates = ProfileBadgeRelation.objects.filter(profile=userToView.profile)
-        return render(request, 'members/profileViewer.html', {'userToView': userToView, 'user_position':user_position, 'badges_with_dates':badges_with_dates})
+        badge_count = badges_with_dates.count()     
+        return render(request, 'members/profileViewer.html', {'userToView': userToView, 'user_position':user_position, 'badges_with_dates':badges_with_dates, 'badge_count':badge_count})
     except:
         messages.success(request, "User not found!")         # if no parameter value is given, redirects to home page and displays message
         return redirect('index')
@@ -118,7 +122,8 @@ def privacy_policy(request):
 def profile_user(request):#
     current_user_position = list(Profile.objects.order_by('-points')).index(Profile.objects.get(user=request.user)) + 1
     badges_with_dates = ProfileBadgeRelation.objects.filter(profile=request.user.profile)
-    return render(request, 'members/profile.html', {'user': request.user, 'user_position':current_user_position, 'badges_with_dates':badges_with_dates})
+    badge_count = badges_with_dates.count()
+    return render(request, 'members/profile.html', {'user': request.user, 'user_position':current_user_position, 'badges_with_dates':badges_with_dates, 'badge_count':badge_count})
 # ------- Will END -------
 
 
