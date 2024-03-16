@@ -6,6 +6,7 @@ from .forms import *
 from django.contrib import messages
 
 # ------- Luke START -------
+
 def carbon_monsters(request):
     communityBased = CarbonMonster.objects.filter(monster_type="Community-Based")
     userBased = CarbonMonster.objects.filter(monster_type="User-Based")
@@ -13,12 +14,12 @@ def carbon_monsters(request):
 
 def create_carbon_monster(request):
     if request.method == 'POST':
-        form = CreateCarbonMonsterForm(request.POST)
+        form = CreateCarbonMonsterForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('carbon_monsters')
     else:
-        form = CarbonMonsterForm()
+        form = CreateCarbonMonsterForm()
     return render(request, 'pollution/create_carbon_monster.html', {'form': form})
 
 def attack_carbon_monsters(request):
@@ -40,17 +41,20 @@ def damage_carbon_monsters(request):
 
             try: 
                 monster = CarbonMonster.objects.get(id=monster_id)            
-            except:
+            except CarbonMonster.DoesNotExist:
                 return redirect('attack_carbon_monsters')
             
             monster.health_points -= profile.pointsToAttack
             profile.pointsToAttack = 0
 
-            monster.save()
+            if monster.health_points > 0:
+                monster.save()
+            else:
+                monster.delete()
+        
             profile.save()
             return redirect('attack_carbon_monsters')
-        else:
-            return render(request, 'pollution/attack_carbon_monsters.html', {})
-
+    else:
+        return render(request, 'pollution/attack_carbon_monsters.html', {})
 
 # ------- Luke END -------

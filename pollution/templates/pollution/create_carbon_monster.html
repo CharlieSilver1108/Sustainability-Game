@@ -4,10 +4,10 @@
 
 <link rel="stylesheet" href="{% static 'css/custom.css' %}"> <!-- Ensure you have a custom.css in your static/css directory -->
 <div class="container mt-5">
-    <form action="{% url 'create_carbon_monster' %}" method="post" class="needs-validation" novalidate>
+    <form action="{% url 'create_carbon_monster' %}" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group mb-3">
-            <label for="person-name">Monster Name:</label>
+            <label for="monster-name">Monster Name:</label>
             <input type="text" class="form-control" id="monster-name" name="monster_name" placeholder="Enter the name of the Monster" required>
             <div class="invalid-feedback">
                 Please enter a name.
@@ -23,10 +23,18 @@
         </div>
 
         <div class="form-group mb-3">
-            <label for="person-name">Monster Health:</label>
+            <label for="monster-health">Monster Health:</label>
             <input type="number" class="form-control" id="monster-health" name="health_points" placeholder="Enter the health of the Monster" required>
             <div class="invalid-feedback">
                 Please enter a name.
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="monster-image">Monster Image:</label>
+            <input type="file" class="form-control-file" id="monster-sprite" name="monster_sprite" accept="image/*" required>
+            <div class="invalid-feedback">
+                Please upload an image.
             </div>
         </div>
 
