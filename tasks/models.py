@@ -38,6 +38,8 @@ class MultipleChoiceChallenge(models.Model):
     choice4 = models.CharField(max_length=30)
     correct_answer = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(4)])
     points = models.IntegerField(default=0, null=True, blank=True)
+    url = models.URLField(max_length=200, null=True, blank=True)
+    qr_code_image = models.ImageField(upload_to='qr_codes/', null=True, blank=True)
     def __str__(self):
         return self.code
     
@@ -48,7 +50,7 @@ class UserMCQRelation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return f"{self.user} - {self.location_based_task}"
+        return self.user.username
 # ------- Charlie END -------
 
 
@@ -62,6 +64,9 @@ class PersonBasedCodeChallenge(models.Model):
     location = models.CharField(max_length=30)
     expertise = models.CharField(max_length=30)
     points = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return self.code
     
 class LocationBasedTask(models.Model):
     longitude = models.FloatField()

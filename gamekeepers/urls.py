@@ -6,7 +6,7 @@ from django.http import HttpResponseForbidden
 
 # ------- Charlie START -------
 def superuser_required(view_func):
-    # Decorator for views that checks that the user is a superuser, redirecting to the login page if necessary.
+    # Decorator for views that checks that the user is a superuser, redirecting to the home page if necessary.
     def _checkuser(request, *args, **kwargs):
         if request.user.is_superuser:
             return view_func(request, *args, **kwargs)
@@ -30,6 +30,7 @@ urlpatterns = [
     path('multiple_choice_questions/delete/<int:question_id>', superuser_required(views.delete_multiple_choice_question), name='delete_multiple_choice_question'),  #retrieves an integer parameter from the URL
     path('accounts', superuser_required(views.accounts), name='accounts'),
     path('accounts/remove_account/<str:username>', superuser_required(views.remove_account), name='remove_account'),
+    path('create_gamekeeper', superuser_required(views.create_gamekeeper), name='create_gamekeeper'),
     # ------- Charlie END -------
 
 

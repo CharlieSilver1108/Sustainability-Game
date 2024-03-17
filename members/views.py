@@ -7,7 +7,7 @@ from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .forms import RegisterUserForm, PasswordChangingForm, UpdateUserForm, ProfilePictureForm, addPronounsForm, bioForm
-from .models import Profile
+from .models import Profile, ProfileBadgeRelation, Badge
 
 # Create your views here.
 
@@ -100,7 +100,8 @@ def profile_viewer(request, username=None):
     try:
         userToView = User.objects.get(username=username)             # either returns a User object, or a 404 error saying the user doesn't exist
         user_position = list(Profile.objects.order_by('-points')).index(Profile.objects.get(user=userToView)) + 1
-        return render(request, 'members/profileViewer.html', {'userToView': userToView, 'user_position':user_position})
+        badges_with_dates = ProfileBadgeRelation.objects.filter(profile=userToView.profile)
+        return render(request, 'members/profileViewer.html', {'userToView': userToView, 'user_position':user_position, 'badges_with_dates':badges_with_dates})
     except:
         messages.success(request, "User not found!")         # if no parameter value is given, redirects to home page and displays message
         return redirect('index')
@@ -109,12 +110,15 @@ def profile_viewer(request, username=None):
 def privacy_policy(request):        
     return render(request, 'members/privacy_policy.html', {})
 
+# ------- Charlie END -------
+
 
 
 # ------- Will START -------
 def profile_user(request):#
     current_user_position = list(Profile.objects.order_by('-points')).index(Profile.objects.get(user=request.user)) + 1
-    return render(request, 'members/profile.html', {'user': request.user, 'user_position':current_user_position})
+    badges_with_dates = ProfileBadgeRelation.objects.filter(profile=request.user.profile)
+    return render(request, 'members/profile.html', {'user': request.user, 'user_position':current_user_position, 'badges_with_dates':badges_with_dates})
 # ------- Will END -------
 
 
