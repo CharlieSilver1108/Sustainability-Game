@@ -23,4 +23,5 @@ urlpatterns = [
     # ------- Liam START -------
     path('update_profile_picture', views.update_profile_picture, name='update_profile_picture'),
     # ------- Liam END -------
+
 ]
