@@ -1,0 +1,122 @@
+{% extends 'Sustain/base.html' %}
+{%load static%}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/fight_monsters.css' %}">
+</head>
+<body>
+    
+    <div class="notice">
+        Fight! Destroy this monster and help save the planet 
+    </div>
+    <div class="monster-name">
+        Name: {{monster.monster_name}}
+    </div>
+    <div class="health-bar" 
+         data-initial-health="{{ monster.initial_health_points }}" 
+         data-health="{{ monster.health_points }}">
+        <div class="health-remaining" style="width: 0%">
+            {{ monster.health_points }} / {{ monster.initial_health_points }}
+        </div>
+    </div>
+    <div class="image-box">
+        <img src="{% static 'img/muk.jpg' %}" alt="Image description">
+    </div>
+    <button class="fight-button">FIGHT</button>
+  
+    <div class="modal-bg" id="modal-bg">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <!-- Spinning wheel -->
+            Down arrow
+            <div class="wheel" id="wheel">
+                <div class="section">1x damage - green</div>
+                <div class="section">2x damage - red</div>
+                <div class="section">3x damage - blue</div>
+                <!-- Add more sections as needed -->
+            </div>
+            <button class="spin-button" onclick="spinWheel()">Spin</button>
+        </div>
+    </div>
+</body>
+  
+  <script>
+   document.addEventListener("DOMContentLoaded", function() {
+    // Function to update health bar width
+    function updateHealthBar() {
+        // Get the health bar element
+        var healthBar = document.querySelector('.health-bar');
+        
+        // Get initial health and current health from data attributes
+        var initialHealth = parseInt(healthBar.getAttribute('data-initial-health'));
+        var health = parseInt(healthBar.getAttribute('data-health'));
+       
+        // Calculate the percentage width based on the monster's health points
+        var percentageWidth = (health / initialHealth) * 100;
+       
+        // Set the width of the health bar dynamically
+        var healthRemaining = healthBar.querySelector('.health-remaining');
+        healthRemaining.style.width = percentageWidth + '%';
+    }
+
+    // Attach event listener to the fight button
+    var fightButton = document.querySelector('.fight-button');
+    fightButton.addEventListener('click', function() {
+        showModal();
+        // Here you can put the logic to update the monster's health
+        // For demonstration purposes, let's decrease the monster's health by 10
+        var healthBar = document.querySelector('.health-bar');
+        var currentHealth = parseInt(healthBar.getAttribute('data-health'));
+        currentHealth -= 10; // Decrease health by 10
+        healthBar.setAttribute('data-health', currentHealth); // Update data attribute
+        
+        // Call the function to update the health bar width
+        updateHealthBar();
+    });
+
+    // Call the function to update the health bar width initially
+    updateHealthBar();
+    });
+
+    function showModal() {
+        document.getElementById('modal-bg').style.display = 'block';
+    }
+    
+    function hideModal() {
+        document.getElementById('modal-bg').style.display = 'none';
+    }
+    
+    function spinWheel() {
+        var wheel = document.getElementById('wheel');
+        var sections = wheel.querySelectorAll('.section');
+
+        // Randomly select the winning section
+        var randomIndex = Math.floor(Math.random() * sections.length);
+        var winningSection = sections[randomIndex];
+
+        // Calculate rotation angle for the spinning animation
+        var totalSections = sections.length;
+        var angle = 360 / totalSections;
+        var rotationAngle = (randomIndex * angle) + 360 * 5; // Add extra rotations
+
+        // Apply rotation animation to the wheel
+        wheel.style.transition = 'transform 3s ease-in-out';
+        wheel.style.transform = 'rotate(' + rotationAngle + 'deg)';
+
+        // After spinning animation ends, show the winning outcome
+        setTimeout(function() {
+            alert('You inflicted <> damage: ' + winningSection.innerText);
+            // Optionally, you can perform further actions here, such as updating the UI or sending data to the server
+            hideModal(); // Hide the modal after spinning
+            }, 3000); // 3000ms = 3s, adjust accordingly
+        }
+
+        // Event listener for the fight button to show the modal
+        // document.getElementById('fight-button').addEventListener('click', function() {
+        //     showModal();
+        // });
+
+
+</script>
+</body>
+
+{% endblock %}
