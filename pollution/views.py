@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import *
 from .forms import *
@@ -28,7 +28,7 @@ def attack_carbon_monsters(request):
 
     communityBased = CarbonMonster.objects.filter(monster_type="Community-Based")
     userBased = CarbonMonster.objects.filter(monster_type="User-Based")
-    return render(request, 'pollution/attack_carbon_monsters.html', {'communityBased': communityBased, 'userBased': userBased, 'profile': profile})
+    return render(request, 'pollution/find_carbon_monsters.html', {'communityBased': communityBased, 'userBased': userBased, 'profile': profile})
 
 def damage_carbon_monsters(request):
     if request.method == 'POST':
@@ -42,7 +42,7 @@ def damage_carbon_monsters(request):
             try: 
                 monster = CarbonMonster.objects.get(id=monster_id)            
             except CarbonMonster.DoesNotExist:
-                return redirect('attack_carbon_monsters')
+                return redirect('find_carbon_monsters')
             
             monster.health_points -= profile.pointsToAttack
             profile.pointsToAttack = 0
@@ -53,8 +53,20 @@ def damage_carbon_monsters(request):
                 monster.delete()
         
             profile.save()
-            return redirect('attack_carbon_monsters')
+            return redirect('find_carbon_monsters')
     else:
-        return render(request, 'pollution/attack_carbon_monsters.html', {})
+        return render(request, 'pollution/find_carbon_monsters.html', {})
+    
+def fight_carbon_monsters(request):
+    monster_id = None
+    if request.method == 'POST':
+        form = FindCarbonMonster(request.POST)
+        if form.is_valid():
+            monster_id = form.cleaned_data['id']
+            monster = get_object_or_404(CarbonMonster, pk=monster_id)
+    return render(request, 'pollution/fight_carbon_monsters.html', {'monster_id': monster_id, 'monster': monster})
+    # else:
+        # return redirect('find_carbon_monsters')
+
 
 # ------- Luke END -------

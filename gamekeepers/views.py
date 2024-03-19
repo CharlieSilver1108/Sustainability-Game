@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 
-import random, qrcode
+import random
+import qrcode
 from django.core.files.base import ContentFile
 from io import BytesIO
 from tasks.models import *
