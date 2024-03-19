@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from .forms import RegisterUserForm, PasswordChangingForm, UpdateUserForm, ProfilePictureForm, addPronounsForm, bioForm
+from .forms import RegisterUserForm, PasswordChangingForm, UpdateUserForm, ProfilePictureForm, addPronounsForm, bioForm, TeamSelectionForm
 from .models import Profile, ProfileBadgeRelation, Badge
 
 # Create your views here.
@@ -118,13 +118,31 @@ def privacy_policy(request):
 
 
 
-# ------- Will START -------
-def profile_user(request):#
+# ------- Will + Greg START -------
+def profile_user(request):
     current_user_position = list(Profile.objects.order_by('-points')).index(Profile.objects.get(user=request.user)) + 1
     badges_with_dates = ProfileBadgeRelation.objects.filter(profile=request.user.profile)
     badge_count = badges_with_dates.count()
-    return render(request, 'members/profile.html', {'user': request.user, 'user_position':current_user_position, 'badges_with_dates':badges_with_dates, 'badge_count':badge_count})
-# ------- Will END -------
+
+    if request.user.profile.team is None:
+        if request.method == 'POST':
+            team_selection_form = TeamSelectionForm(request.POST, instance=request.user.profile)
+            if team_selection_form.is_valid():
+                team_selection_form.save()
+                return redirect('profile_user')
+        else:
+            team_selection_form = TeamSelectionForm(instance=request.user.profile)
+    else:
+        team_selection_form = None
+
+    return render(request, 'members/profile.html', {
+        'user': request.user, 
+        'user_position': current_user_position, 
+        'badges_with_dates': badges_with_dates, 
+        'badge_count': badge_count,
+        'team_selection_form': team_selection_form
+    })
+# ------- Will + Greg END -------
 
 
 # ------- Liam START -------
