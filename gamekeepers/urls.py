@@ -40,6 +40,12 @@ urlpatterns = [
     path('person_based_codes/delete/<int:code_id>', superuser_required(views.delete_person_based_code), name='delete_person_based_code'),
     # ------- Liam END -------
 
+    # ------- Greg START -------
+    path('badges', superuser_required(views.badges), name='badges'),
+    path('badges/create', superuser_required(views.create_badge), name='create_badge'),
+    path('badges/delete/<int:badge_id>', superuser_required(views.delete_badge), name='delete_badge'),
+
+    # ------- Greg END -------
 
 ]
 

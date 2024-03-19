@@ -9,6 +9,12 @@ Author: Charlie
 
 {% load static %}
 
+<style>
+  .navbar-nav {
+      align-items: center;
+  }
+  </style>
+
   {%if user.is_superuser%}
     <!-- if the user is an admmin, the navbar colour is the same as the default django admin portal -->
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #417690;">
@@ -49,6 +55,7 @@ Author: Charlie
 
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{% url 'accounts' %}">Accounts</a>
+              <a class="dropdown-item" href="{% url 'badges' %}">Badges</a>
 
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{% url 'admin:index' %}">Admin Portal</a>
@@ -80,7 +87,11 @@ Author: Charlie
 
 
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Account         
+          {% if user.is_authenticated %}
+            <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle ml-2" width="45" height="45">
+          {% endif %}</a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
           {% if user.is_authenticated %}
