@@ -37,10 +37,10 @@ class MultipleChoiceQuestionForm(forms.Form):
 
 
 # ------- Liam START -------
-# class PersonBasedCodeForm(forms.ModelForm):
-#     class Meta:
-#         model = PersonBasedCodeChallenge
-#         fields = ['name', 'location', 'expertise', 'points']
+class PersonBasedCodeForm(forms.ModelForm):
+    class Meta:
+        model = PersonBasedCodeChallenge
+        fields = ['name', 'location', 'expertise', 'points']
 
 class LocationBasedTaskForm(forms.ModelForm):
     class Meta:

@@ -60,16 +60,11 @@ class RegisterGamekeeperForm(UserCreationForm):
         self.fields['password1'].widget.attrs['class']= 'form-control'
         self.fields['password2'].widget.attrs['class']= 'form-control'
 
-    def save(self):
-        from django.contrib.auth.models import User
-        from django.core.management import call_command
-
-        user = User.objects.create_user(
-            username=self.cleaned_data['username'],
-            email=self.cleaned_data['email'],
-            password=self.cleaned_data['password1'],
-            is_superuser=True
-        )
-        call_command('createsuperuser', username=user.username, email=user.email)
+    def save(self, commit=True):
+        user = super(RegisterGamekeeperForm, self).save(commit=False)
+        user.is_superuser = True
+        if commit:
+            user.save()
+        return user
 
 # ------- Charlie END -------

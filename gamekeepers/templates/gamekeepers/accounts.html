@@ -14,8 +14,20 @@
 
     <div id="gamekeepers" class="container mt-5">
         <h1 class="mb-4">Gamekeepers Accounts</h1>
-            <button id="viewUserAccounts" class="text-white btn float-left" style="background-color: #0B6623 !important;">View User Accounts</button>
 
+        <!-- Display messages -->
+        <div class="container">
+            {% if messages %}
+            <div class="alert-messages">
+                {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <button id="viewUserAccounts" class="text-white btn float-left" style="background-color: #0B6623 !important;">View User Accounts</button>
             <!-- Green "+" button to create a new questions -->
             <a href="{% url 'create_gamekeeper' %}" class="btn btn-success mb-3 float-right">
                 <i class="fas fa-plus"></i> Add New
@@ -54,27 +66,25 @@
                         <td colspan="5" class="text-center">No Gamekeeper Accounts Found.</td>
                     </tr>
                 {% endfor %}
-                
-                <!-- Display messages -->
-                <div class="container">
-                    {% if messages %}
-                    <div class="alert-messages">
-                        {% for message in messages %}
-                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
-                            {{ message }}
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
             </tbody>
         </table>
     </div>
 
     <div id="users" class="container mt-5" style="display: none;">
         <h1 class="mb-4">User Accounts</h1>
+        <!-- Display messages -->
+        <div class="container">
+            {% if messages %}
+            <div class="alert-messages">
+                {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
         <button id="viewGamekeeperAccounts" class="text-white btn float-left mb-3" style="background-color: #0B6623 !important;">View Gamekeeper Accounts</button>
-
         <table id="usersTable" class="table table-bordered">
             <thead class="thead-dark">
                 <tr>
@@ -110,19 +120,6 @@
                         <td colspan="5" class="text-center">No User Accounts Found.</td>
                     </tr>
                 {% endfor %}
-                
-                <!-- Display messages -->
-                <div class="container">
-                    {% if messages %}
-                    <div class="alert-messages">
-                        {% for message in messages %}
-                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
-                            {{ message }}
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
             </tbody>
         </table>
     </div>
