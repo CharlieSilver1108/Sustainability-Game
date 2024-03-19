@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from tasks.models import *
+from members.models import Badge
 from django.contrib.auth.models import User
 
 
@@ -73,3 +74,12 @@ class RegisterGamekeeperForm(UserCreationForm):
         call_command('createsuperuser', username=user.username, email=user.email)
 
 # ------- Charlie END -------
+        
+# ------- Greg START -------
+        
+class BadgeForm(forms.ModelForm):
+    class Meta:
+        model = Badge
+        fields = ['name', 'description', 'criteria']
+
+# ------- Greg END -------

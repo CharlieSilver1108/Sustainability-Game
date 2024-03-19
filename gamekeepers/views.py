@@ -158,3 +158,31 @@ def delete_person_based_code(request, code_id):
         return redirect('person_based_codes')
 
 # ------- Liam END -------
+
+# ------- Greg START -------
+
+def badges(request):
+    badges = Badge.objects.all()
+    return render(request, 'gamekeepers/badges.html', {'badges': badges})
+    
+def create_badge(request):
+    if request.method == 'POST':
+        form = BadgeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Badge successfully created.")
+            return redirect('badges')  
+    else:
+        form = BadgeForm()
+    return render(request, 'gamekeepers/create_badge.html', {'form': form})
+
+def delete_badge(request, badge_id):
+    if request.method == "POST":
+        badge = Badge.objects.get(id=badge_id)
+        badge.delete()
+        messages.success(request, "Badge successfully deleted.")
+        return redirect('badges')
+    else:
+        messages.error(request, "Badge not found.")
+        return redirect('badges')
+
