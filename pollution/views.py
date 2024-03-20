@@ -1,13 +1,10 @@
-from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from members.models import *
 from .models import *
 from .forms import *
 from django.views.decorators.csrf import csrf_protect
+from django.db.models import Q
 from django.contrib import messages
-
-import random
 
 # ------- Luke START ------- (Adjusted by Will)
 
@@ -20,13 +17,7 @@ def create_carbon_monster(request):
     if request.method == 'POST':
         form = CreateCarbonMonsterForm(request.POST, request.FILES)
         if form.is_valid():
-            monster = form.save(commit=False)
-            monster.save()
-
-            if monster.type == "User-Based":
-                users = User.objects.all()
-                for user in users:
-                    CarbonMonsterRelation.objects.create(user=user, monster=monster, health_points=monster.initial_health_points)
+            form.save()
             return redirect('carbon_monsters')
     else:
         form = CreateCarbonMonsterForm()
@@ -89,7 +80,7 @@ def fight_carbon_monsters(request):
             monster = get_object_or_404(CarbonMonster, pk=monster_id)
     return render(request, 'pollution/fight_carbon_monsters.html', {'monster_id': monster_id, 'monster': monster})
     # else:
-        # return redirect('find_carbon_monsters')
+    #     return redirect('find_carbon_monsters')
 
 
 # ------- Luke END -------
