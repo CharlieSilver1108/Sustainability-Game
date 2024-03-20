@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from tasks.models import *
 from members.models import Badge
+from pollution.models import *
 from django.contrib.auth.models import User
 
 
@@ -61,17 +62,12 @@ class RegisterGamekeeperForm(UserCreationForm):
         self.fields['password1'].widget.attrs['class']= 'form-control'
         self.fields['password2'].widget.attrs['class']= 'form-control'
 
-    def save(self):
-        from django.contrib.auth.models import User
-        from django.core.management import call_command
-
-        user = User.objects.create_user(
-            username=self.cleaned_data['username'],
-            email=self.cleaned_data['email'],
-            password=self.cleaned_data['password1'],
-            is_superuser=True
-        )
-        call_command('createsuperuser', username=user.username, email=user.email)
+    def save(self, commit=True):
+        user = super(RegisterGamekeeperForm, self).save(commit=False)
+        user.is_superuser = True
+        if commit:
+            user.save()
+        return user
 
 # ------- Charlie END -------
         
@@ -83,3 +79,25 @@ class BadgeForm(forms.ModelForm):
         fields = ['name', 'description', 'criteria']
 
 # ------- Greg END -------
+
+# ------- Luke START -------
+class CreateCarbonMonsterForm(forms.ModelForm):
+    OPTIONS = (
+        ('User-Based', 'User-Based'), 
+        ('Community-Based', 'Community-Based')
+    )
+    monster_name = forms.CharField(required=True, max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}))
+    monster_type = forms.ChoiceField(choices=OPTIONS, required=True, widget=forms.Select(attrs={'class':'form-select'}))
+    health_points = forms.IntegerField(required=True, widget=forms.NumberInput(attrs={'class':'form-control'}))
+    monster_sprite = forms.ImageField(required=True, widget=forms.ClearableFileInput(attrs={'class': 'form-control-file'}))
+    class Meta:
+        model = CarbonMonster
+        fields = ['monster_name', 'monster_type', 'health_points', 'monster_sprite']
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        instance.health_points = self.cleaned_data['health_points']
+        instance.initial_health_points = self.cleaned_data['health_points']
+        if commit:
+            instance.save()
+        return instance
+# ------- Luke END -------
