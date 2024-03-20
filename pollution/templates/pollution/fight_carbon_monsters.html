@@ -1,6 +1,7 @@
 {% extends 'Sustain/base.html' %}
 {%load static%}
 {% block content %}
+{% csrf_token %}
 <link rel="stylesheet" href="{% static 'css/fight_monsters.css' %}">
 </head>
 <body>
@@ -21,56 +22,75 @@
     <div class="image-box">
         <img src="{% static 'img/muk.jpg' %}" alt="Image description">
     </div>
+    <!-- Input box for attack points -->
+
+    <div class = "notice">
+        <label for="attack-points">Your total points are : {{user.pointsToAttack}}</label>
+    </div> 
+
+    <div class = "notice">
+        
+        <label for="attack-points">How many points would you like to commit to this attack?</label>
+        <input type="number" id="attack-points" required>
+    </div>
+
+    
+   
     <button class="fight-button">FIGHT</button>
   
     <div class="modal-bg" id="modal-bg">
         <!-- Modal content -->
         <div class="modal-content">
             <!-- Spinning wheel -->
-            Down arrow
+            |
             <div class="wheel" id="wheel">
-                <div class="section">1x damage - green</div>
-                <div class="section">2x damage - red</div>
-                <div class="section">3x damage - blue</div>
+                <div class="section">green</div>
+                <div class="section">red</div>
+                <div class="section">blue</div>
                 <!-- Add more sections as needed -->
             </div>
-            <button class="spin-button" onclick="spinWheel()">Spin</button>
+            <button class="spin-button" onclick="spinWheel()">Spin</button> 
         </div>
     </div>
 </body>
   
   <script>
    document.addEventListener("DOMContentLoaded", function() {
+
+
+
     // Function to update health bar width
     function updateHealthBar() {
         // Get the health bar element
         var healthBar = document.querySelector('.health-bar');
-        
         // Get initial health and current health from data attributes
         var initialHealth = parseInt(healthBar.getAttribute('data-initial-health'));
         var health = parseInt(healthBar.getAttribute('data-health'));
-       
         // Calculate the percentage width based on the monster's health points
         var percentageWidth = (health / initialHealth) * 100;
-       
         // Set the width of the health bar dynamically
         var healthRemaining = healthBar.querySelector('.health-remaining');
         healthRemaining.style.width = percentageWidth + '%';
     }
 
     // Attach event listener to the fight button
-    var fightButton = document.querySelector('.fight-button');
-    fightButton.addEventListener('click', function() {
-        showModal();
-        // Here you can put the logic to update the monster's health
-        // For demonstration purposes, let's decrease the monster's health by 10
+        var fightButton = document.querySelector('.fight-button');
         var healthBar = document.querySelector('.health-bar');
         var currentHealth = parseInt(healthBar.getAttribute('data-health'));
+
+        fightButton.addEventListener('click', function() {
+        showModal();
+        
+        currentHealth = parseInt(healthBar.getAttribute('data-health'));
+        
+
         currentHealth -= 10; // Decrease health by 10
         healthBar.setAttribute('data-health', currentHealth); // Update data attribute
         
         // Call the function to update the health bar width
         updateHealthBar();
+
+       
     });
 
     // Call the function to update the health bar width initially
@@ -86,6 +106,7 @@
     }
     
     function spinWheel() {
+        
         var wheel = document.getElementById('wheel');
         var sections = wheel.querySelectorAll('.section');
 
@@ -98,24 +119,53 @@
         var angle = 360 / totalSections;
         var rotationAngle = (randomIndex * angle) + 360 * 5; // Add extra rotations
 
+        attackDamage = document.getElementById('attack-points').value;
         // Apply rotation animation to the wheel
+       
         wheel.style.transition = 'transform 3s ease-in-out';
         wheel.style.transform = 'rotate(' + rotationAngle + 'deg)';
+        doDamage(winningSection);
+
 
         // After spinning animation ends, show the winning outcome
         setTimeout(function() {
-            alert('You inflicted <> damage: ' + winningSection.innerText);
-            // Optionally, you can perform further actions here, such as updating the UI or sending data to the server
-            hideModal(); // Hide the modal after spinning
+          alert("Sections is:" + winningSection.textContent)
+           hideModal();
+      
             }, 3000); // 3000ms = 3s, adjust accordingly
         }
 
-        // Event listener for the fight button to show the modal
-        // document.getElementById('fight-button').addEventListener('click', function() {
-        //     showModal();
-        // });
 
 
+        function doDamage(winningSection){
+            //const csrfToken = cookies.get('csrftoken');
+            var formData = new FormData();
+            var csrfToken = '{{ csrf_token }}';
+            
+            //If it is green there is no need to change
+            if(winningSection.textContent == "red"){
+                attackDamage *=2;
+            }else if(winningSection.textContent == "blue"){
+                attackDamage *=3;
+            }
+            if(attackDamage <'{{user.pointsToAttack}}'){
+                formData.append('id', 2); // Use the monster ID from your template
+                formData.append('attackStrength', attackDamage);
+                formData.append('csrfmiddlewaretoken', csrfToken)
+            
+                fetch('damage_carbon_monsters', {
+                method: 'POST',
+                body: formData,    
+            })    
+            }else{
+                alert("Too little points")
+            }
+
+
+
+
+            
+        }
 </script>
 </body>
 
