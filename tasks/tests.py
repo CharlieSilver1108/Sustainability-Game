@@ -71,18 +71,21 @@ class TaskTesting(TestCase):
             'points' : '10'
         }
         
+        # creates the challenge from the test data
         form = PersonBasedCodeForm(PBCinput)
         creation = client.post(reverse('create_person_based_code'), data=form.data)
         createdTask = PersonBasedCodeChallenge.objects.last()
 
+        # ensures that the number of points the profile stores is initially 0
         self.assertEquals(createdProfile.points, 0)
-        # attempts to complete the question on the user's behalf
-        responseOne = client.post(reverse('submit_code', kwargs={'code': createdTask.code}))
+        # attempts to enter the code on the user's behalf
+        responseOne = client.post(reverse('submit_code'), data={'code' : createdTask.code})
         createdProfile.refresh_from_db()
         # compares the number of points with the initial number of points
-        self.assertEquals(createdProfile.points, 0)
-        responseTwo = client.post(reverse('submit_code', kwargs={'code': createdTask.code}))
+        self.assertEquals(createdProfile.points, 10)
+        # attempts to enter the code on the user's behalf to make sure that they cannot enter the code again
+        responseTwo = client.post(reverse('submit_code'), data={'code' : createdTask.code})
         createdProfile.refresh_from_db()
-        # compares the number of points with the initial number of points
+        # compares the number of points with the initial number of points to make sure that it has not increased
         self.assertEquals(createdProfile.points, 10)
 # ------- Luke END -------

@@ -12,11 +12,11 @@ class CarbonMonster(models.Model):
         return self.monster_name
     
 class CarbonMonsterRelation(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     monster = models.ForeignKey(CarbonMonster, on_delete=models.CASCADE)
     health_points = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
-        return self.user.username
+        return (self.user.username + self.monster.monster_name)
 
 # ------- Luke END -------

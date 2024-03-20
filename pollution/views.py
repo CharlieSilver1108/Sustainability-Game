@@ -11,31 +11,11 @@ import random
 
 # ------- Luke START ------- (Adjusted by Will)
 
-def carbon_monsters(request):
-    communityBased = CarbonMonster.objects.filter(monster_type="Community-Based")
-    userBased = CarbonMonster.objects.filter(monster_type="User-Based")
-    return render(request, 'pollution/carbon_monsters.html', {'communityBased': communityBased, 'userBased': userBased})
-
-def create_carbon_monster(request):
-    if request.method == 'POST':
-        form = CreateCarbonMonsterForm(request.POST, request.FILES)
-        if form.is_valid():
-            monster = form.save(commit=False)
-            monster.save()
-
-            if monster.type == "User-Based":
-                users = User.objects.all()
-                for user in users:
-                    CarbonMonsterRelation.objects.create(user=user, monster=monster, health_points=monster.initial_health_points)
-            return redirect('carbon_monsters')
-    else:
-        form = CreateCarbonMonsterForm()
-    return render(request, 'pollution/create_carbon_monster.html', {'form': form})
-
 def attack_carbon_monsters(request):
     user = request.user
     profile = user.profile
 
+    #gets 6 random monsters from each type of monster to display on the map
     communityBased = CarbonMonster.objects.filter(monster_type="Community-Based")
     communityBasedShuffled = communityBased.order_by('?')[:6]
 
