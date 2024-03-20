@@ -284,5 +284,11 @@ def complete_waypoint(request, waypoint_id):
         profile.save()
         
         return redirect('location')
+    
+def delete_waypoint(request, waypoint_id):
+    if request.user.is_superuser:
+        LocationBasedTask.objects.get(id=waypoint_id).delete()
+    
+    return redirect('location')
 
 # ------- Liam END -------
