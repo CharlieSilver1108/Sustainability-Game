@@ -28,7 +28,7 @@ class FindCarbonMonster(forms.ModelForm):
         model = CarbonMonster
         fields = ['id']
 # ------- Luke END -------
-
+        
 #--------Will--------
 class DamageCarbonMonster(forms.ModelForm): 
     id = forms.IntegerField(required=True)

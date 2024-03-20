@@ -9,12 +9,12 @@ from django.contrib import messages
 
 import random
 
-# ------- Luke START -------
+# ------- Luke START ------- (Adjusted by Will)
 
 def carbon_monsters(request):
-    community_based = CarbonMonster.objects.filter(monster_type="Community-Based")
-    user_based = CarbonMonster.objects.filter(monster_type="User-Based")
-    return render(request, 'pollution/carbon_monsters.html', {'communityBased': community_based, 'userBased': user_based})
+    communityBased = CarbonMonster.objects.filter(monster_type="Community-Based")
+    userBased = CarbonMonster.objects.filter(monster_type="User-Based")
+    return render(request, 'pollution/carbon_monsters.html', {'communityBased': communityBased, 'userBased': userBased})
 
 def create_carbon_monster(request):
     if request.method == 'POST':
@@ -36,16 +36,16 @@ def attack_carbon_monsters(request):
     user = request.user
     profile = user.profile
 
-    community_based = CarbonMonster.objects.filter(monster_type="Community-Based")
-    community_based_shuffled = community_based.order_by('?')[:6]
+    communityBased = CarbonMonster.objects.filter(monster_type="Community-Based")
+    communityBasedShuffled = communityBased.order_by('?')[:6]
 
-    user_based = CarbonMonster.objects.filter(monster_type="User-Based")
-    user_based_shuffled = user_based.order_by('?')[:6]
+    userBased = CarbonMonster.objects.filter(monster_type="User-Based")
+    userBasedShuffled = userBased.order_by('?')[:6]
 
     user_relations = CarbonMonsterRelation.objects.filter(
-        Q(monster__in=user_based_shuffled) & Q(user=user)
+        Q(monster__in=userBasedShuffled) & Q(user=user)
     )
-    return render(request, 'pollution/find_carbon_monsters.html', {'communityBasedShuffled': community_based_shuffled, 'userBasedShuffled': user_based_shuffled, 'userRelations': user_relations,'profile': profile})
+    return render(request, 'pollution/find_carbon_monsters.html', {'communityBasedShuffled': communityBasedShuffled, 'userBasedShuffled': userBasedShuffled, 'userRelations': user_relations,'profile': profile})
 
 @csrf_protect
 def damage_carbon_monsters(request):
