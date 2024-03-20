@@ -34,7 +34,7 @@ class UserAuthenticationTesting(TestCase):
     def testUserLogin(self):
         client = Client()
 
-        test_user = User.objects.create_user(username='testUser', password='testPassword') #creates new user
+        User.objects.create_user(username='testUser', password='testPassword') #creates new user
 
         loginData = { #data for login to user
             'username' : 'testUser',

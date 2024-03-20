@@ -6,41 +6,142 @@
     <title>Attack Carbon Monsters</title>
     
     <h2>Current points: {{ profile.pointsToAttack }}</h2>
+    
+    <div id="communityBased">
+        <button id="viewUserBased" class="text-white btn float-left" style="background-color: #0B6623 !important;">View User-Based Monsters</button>
 
-    <div class="text-center" style="position:relative">
-        <img src="../img/pollution/exeter_uni_map.jpg" alt="Map of Exeter Uni" class="img-fluid">
-        {% for monster in communityBased %}
-        <div class="container mt-5" style="width:5%; position:relative; z-index:10">
-            <div class="text-center">
-                {{ monster.health_points}} / {{ monster.initial_health_points }}
-                <form method="POST" action="{% url 'damage_carbon_monsters' %}" style="display:inline">
-                    {% csrf_token %}
-                    <input type="hidden" name="id" value="{{ monster.id }}">
-                    <button type="submit" style="background:none; border:none; padding:0; margin:0; cursor:pointer;">
-                        <img src="{{ monster.monster_sprite.url }}" alt="Monster" class="img-fluid">
-                    </button>
-                </form>
-                {{monster.monster_name}}
+        <div class="map-container" style="position:relative; width:100vw; height:100vh; display:flex; justify-content:center; align-items:center;">
+            <div class="map" style="position:relative; width:100vh; height:100vh; background-image:url('/img/pollution/exeter_uni_map.jpg'); background-repeat:no-repeat; background-size:cover; background-position:center;">
+                <div class="map-overlay">
+                    {% for monster in communityBasedShuffled %}
+                    <div class="card" style="width:4vw; position:absolute;">
+                        <form method="POST" action="{% url 'fight_carbon_monsters' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ monster.id }}">
+                            <button type="submit" style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
+                                <div class="text-center">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" style="height:1vh" role="progressbar" data-initial-health="{{ monster.initial_health_points }}" data-health="{{ monster.health_points }}" style="width:0%"></div>
+                                    <img src="{{ monster.monster_sprite.url }}" alt="Monster" class="card-img-top" style="max-width: 100%; height: auto;">
+                                    <div class="card-body" style="padding: 5px;">
+                                        <p class="card-text" style="font-size: 0.6vw;">{{ monster.monster_name }}</p>
+                                    </div>
+                                </div>
+                            </button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-        {% endfor %}
 
-        {% for monster in userBased %}
-        <div class="container mt-5" style="width:5%; position:relative; z-index:10">
-            <div class="text-center">
-                {{ monster.health_points}} / {{ monster.initial_health_points }}
-                <form method="POST" action="{% url 'fight_carbon_monsters' %}">
-                <!-- <form method="POST" action="{% url 'damage_carbon_monsters' %}" style="display:inline"> -->
-                    {% csrf_token %}
-                    <input type="hidden" name="id" value="{{ monster.id }}">
-                    <button type="submit" style="background:none; border:none; padding:0; margin:0; cursor:pointer;">
-                        <img src="{{ monster.monster_sprite.url }}" alt="Monster" class="img-fluid">
-                    </button>
-                </form>
-                {{monster.monster_name}}
-            </div>
-        </div>
-        {% endfor %}
     </div>
 
-{% endblock %} 
+    <div id="userBased" style="display: none;">
+        <button id="viewCommunityBased" class="text-white btn float-left" style="background-color: #0B6623 !important;">View Community-Based Monsters</button>
+
+        <div class="map-container" style="position:relative; width:100vw; height:100vh; display:flex; justify-content:center; align-items:center;">
+            <div class="map" style="position:relative; width:100vh; height:100vh; background-image:url('/img/pollution/exeter_uni_map.jpg'); background-repeat:no-repeat; background-size:cover; background-position:center;">
+                <div class="map-overlay">
+                    {% for monster in userRelations %}
+                    <div class="card" style="width:4vw; position:absolute;">
+                        <form method="POST" action="{% url 'fight_carbon_monsters' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ monster.monster.id }}">
+                            <button type="submit" style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
+                                <div class="text-center">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" style="height:1vh" role="progressbar" data-initial-health="{{ monster.monster.initial_health_points }}" data-health="{{ monster.health_points }}" style="width:0%"></div>
+                                    <img src="{{ monster.monster.monster_sprite.url }}" alt="Monster" class="card-img-top" style="max-width: 100%; height: auto;">
+                                    <div class="card-body" style="padding: 5px;">
+                                        <p class="card-text" style="font-size: 0.6vw;">{{ monster.monster.monster_name }}</p>
+                                    </div>
+                                </div>
+                            </button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+
+    <script>        
+        $(document).ready( function () {
+            function healthBars() {
+                var cards = document.querySelectorAll('.card');
+                cards.forEach((container) => {
+                    var healthBar = container.querySelector('.progress-bar');
+        
+                    var initialHealth = parseInt(healthBar.getAttribute('data-initial-health'));
+                    var health = parseInt(healthBar.getAttribute('data-health'));
+
+                    var percentageWidth = (health / initialHealth) * 100;
+                    healthBar.style.width = percentageWidth + '%';
+                });
+
+            }
+
+            function mapResize(isCommunityBasedVisible) {
+                var mapContainer = document.querySelector('.map-container');
+                var mapOverlay = document.querySelector('.map-overlay');
+
+                var widthScale = mapOverlay.offsetWidth / mapContainer.offsetWidth;
+                var heightScale = mapOverlay.offsetHeight / mapContainer.offsetHeight;
+
+                var cards;
+                if (isCommunityBasedVisible) {
+                    cards = document.querySelectorAll('#communityBased .card');
+                } else {
+                    cards = document.querySelectorAll('#userBased .card');
+                }
+
+                var i = 0;
+
+                cards.forEach((container) => {
+                    if (i == 0) {
+                        container.style.top = 10 + '%';
+                        container.style.left = 10 + '%';
+                    } else if (i == 1) {
+                        container.style.top = 10 + '%';
+                        container.style.left = 45 + '%';
+                    } else if (i == 2) {
+                        container.style.top = 15 + '%';
+                        container.style.left = 85 + '%';
+                    } else if (i == 3) {
+                        container.style.top = 40 + '%';
+                        container.style.left = 50 + '%';
+                    } else if (i == 4) {
+                        container.style.top = 30 + '%';
+                        container.style.left = 20 + '%';
+                    } else if (i == 5) {
+                        container.style.top = 45 + '%';
+                        container.style.left = 80 + '%';
+                    } 
+                    i +=1 ;
+                    console.log(i);
+                });
+
+            }
+            // Function to toggle between admin accounts and user accounts
+            $('#viewCommunityBased').click(function() {
+                $('#communityBased').show();
+                $('#userBased').hide();
+                mapResize(true);
+            });
+
+            $('#viewUserBased').click(function() {
+                $('#communityBased').hide();
+                $('#userBased').show();
+                mapResize(false);
+            });
+
+            mapResize(true);            
+            healthBars();
+            window.addEventListener('resize', function() {
+        mapResize($('#communityBased').is(':visible'));
+    });
+        });
+    </script>
+
+{% endblock %}

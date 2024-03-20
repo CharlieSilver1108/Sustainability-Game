@@ -186,3 +186,33 @@ def delete_badge(request, badge_id):
         messages.error(request, "Badge not found.")
         return redirect('badges')
 
+# ------- Greg END -------
+    
+
+# ------- Luke START -------
+
+def carbon_monsters(request):
+    # gets all the monsters in the database, splits them by type, and relays them back to the gamekeeper
+    communityBased = CarbonMonster.objects.filter(monster_type="Community-Based")
+    userBased = CarbonMonster.objects.filter(monster_type="User-Based")
+    return render(request, 'gamekeepers/carbon_monsters.html', {'communityBased': communityBased, 'userBased': userBased})
+
+def create_carbon_monster(request):
+    if request.method == 'POST':
+        # checks that the data passed is valid 
+        form = CreateCarbonMonsterForm(request.POST, request.FILES)
+        if form.is_valid():
+            monster = form.save(commit=False)
+            monster.save()
+
+            # if the type of monster is user-based, a relation is kept with every account so they can all do there own damage with each monster
+            if monster.monster_type == "User-Based":
+                users = User.objects.all()
+                for user in users:
+                    CarbonMonsterRelation.objects.create(user=user, monster=monster, health_points=monster.initial_health_points)
+            return redirect('carbon_monsters')
+    else:
+        form = CreateCarbonMonsterForm()
+    return render(request, 'gamekeepers/create_carbon_monster.html', {'form': form})
+
+# ------- Luke END -------
