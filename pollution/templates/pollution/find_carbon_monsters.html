@@ -13,7 +13,7 @@
         <div class="map-container" style="position:relative; width:100vw; height:100vh; display:flex; justify-content:center; align-items:center;">
             <div class="map" style="position:relative; width:100vh; height:100vh; background-image:url('/img/pollution/exeter_uni_map.jpg'); background-repeat:no-repeat; background-size:cover; background-position:center;">
                 <div class="map-overlay">
-                    {% for monster in communityBased %}
+                    {% for monster in communityBasedShuffled %}
                     <div class="card" style="width:4vw; position:absolute;">
                         <form method="POST" action="{% url 'fight_carbon_monsters' %}" style="display: inline;">
                             {% csrf_token %}
@@ -42,17 +42,17 @@
         <div class="map-container" style="position:relative; width:100vw; height:100vh; display:flex; justify-content:center; align-items:center;">
             <div class="map" style="position:relative; width:100vh; height:100vh; background-image:url('/img/pollution/exeter_uni_map.jpg'); background-repeat:no-repeat; background-size:cover; background-position:center;">
                 <div class="map-overlay">
-                    {% for monster in userBasedShuffled %}
+                    {% for monster in userRelations %}
                     <div class="card" style="width:4vw; position:absolute;">
                         <form method="POST" action="{% url 'fight_carbon_monsters' %}" style="display: inline;">
                             {% csrf_token %}
-                            <input type="hidden" name="id" value="{{ monster.id }}">
+                            <input type="hidden" name="id" value="{{ monster.monster.id }}">
                             <button type="submit" style="background: none; border: none; padding: 0; margin: 0; cursor: pointer;">
                                 <div class="text-center">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" style="height:1vh" role="progressbar" data-initial-health="{{ monster.initial_health_points }}" data-health="{{ monster.health_points }}" style="width:0%"></div>
-                                    <img src="{{ monster.monster_sprite.url }}" alt="Monster" class="card-img-top" style="max-width: 100%; height: auto;">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" style="height:1vh" role="progressbar" data-initial-health="{{ monster.monster.initial_health_points }}" data-health="{{ monster.health_points }}" style="width:0%"></div>
+                                    <img src="{{ monster.monster.monster_sprite.url }}" alt="Monster" class="card-img-top" style="max-width: 100%; height: auto;">
                                     <div class="card-body" style="padding: 5px;">
-                                        <p class="card-text" style="font-size: 0.6vw;">{{ monster.monster_name }}</p>
+                                        <p class="card-text" style="font-size: 0.6vw;">{{ monster.monster.monster_name }}</p>
                                     </div>
                                 </div>
                             </button>

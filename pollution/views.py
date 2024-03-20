@@ -1,7 +1,7 @@
-from django.core.cache import cache
-from django.utils.timezone import timedelta
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from members.models import *
 from .models import *
 from .forms import *
 
@@ -12,15 +12,21 @@ import random
 # ------- Luke START -------
 
 def carbon_monsters(request):
-    communityBased = CarbonMonster.objects.filter(monster_type="Community-Based")
-    userBased = CarbonMonster.objects.filter(monster_type="User-Based")
-    return render(request, 'pollution/carbon_monsters.html', {'communityBased': communityBased, 'userBased': userBased})
+    community_based = CarbonMonster.objects.filter(monster_type="Community-Based")
+    user_based = CarbonMonster.objects.filter(monster_type="User-Based")
+    return render(request, 'pollution/carbon_monsters.html', {'communityBased': community_based, 'userBased': user_based})
 
 def create_carbon_monster(request):
     if request.method == 'POST':
         form = CreateCarbonMonsterForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            monster = form.save(commit=False)
+            monster.save()
+
+            if monster.type == "User-Based":
+                users = User.objects.all()
+                for user in users:
+                    CarbonMonsterRelation.objects.create(user=user, monster=monster, health_points=monster.initial_health_points)
             return redirect('carbon_monsters')
     else:
         form = CreateCarbonMonsterForm()
@@ -30,12 +36,16 @@ def attack_carbon_monsters(request):
     user = request.user
     profile = user.profile
 
-    communityBased = CarbonMonster.objects.filter(monster_type="Community-Based")
-    communityBasedShuffled = communityBased.order_by('?')[:6]
+    community_based = CarbonMonster.objects.filter(monster_type="Community-Based")
+    community_based_shuffled = community_based.order_by('?')[:6]
 
-    userBased = CarbonMonster.objects.filter(monster_type="User-Based")
-    userBasedShuffled = userBased.order_by('?')[:6]
-    return render(request, 'pollution/find_carbon_monsters.html', {'communityBased': communityBased, 'userBasedShuffled': userBasedShuffled, 'profile': profile})
+    user_based = CarbonMonster.objects.filter(monster_type="User-Based")
+    user_based_shuffled = user_based.order_by('?')[:6]
+
+    user_relations = CarbonMonsterRelation.objects.filter(
+        Q(monster__in=user_based_shuffled) & Q(user=user)
+    )
+    return render(request, 'pollution/find_carbon_monsters.html', {'communityBasedShuffled': community_based_shuffled, 'userBasedShuffled': user_based_shuffled, 'userRelations': user_relations,'profile': profile})
 
 def damage_carbon_monsters(request):
     if request.method == 'POST':
