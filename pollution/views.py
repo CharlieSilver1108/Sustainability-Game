@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from members.models import *
 from .models import *
 from .forms import *
-
+from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 
 import random
@@ -47,32 +47,38 @@ def attack_carbon_monsters(request):
     )
     return render(request, 'pollution/find_carbon_monsters.html', {'communityBasedShuffled': community_based_shuffled, 'userBasedShuffled': user_based_shuffled, 'userRelations': user_relations,'profile': profile})
 
+@csrf_protect
 def damage_carbon_monsters(request):
     if request.method == 'POST':
-        form = FindCarbonMonster(request.POST)
+        form = DamageCarbonMonster(request.POST)
         if form.is_valid():
             user = request.user
             profile = user.profile
 
             monster_id = form.cleaned_data['id']
+            attackDamage = form.cleaned_data['attackStrength']
 
             try: 
                 monster = CarbonMonster.objects.get(id=monster_id)            
             except CarbonMonster.DoesNotExist:
                 return redirect('find_carbon_monsters')
             
-            monster.health_points -= profile.pointsToAttack
-            profile.pointsToAttack = 0
-
+            monster.health_points -= attackDamage
+            
             if monster.health_points > 0:
                 monster.save()
+                profile.save()
+                return redirect('find_carbon_monsters')
             else:
                 monster.delete()
-        
-            profile.save()
-            return redirect('find_carbon_monsters')
+                profile.save()
+                return redirect('find_carbon_monsters')
+        else:
+            print("This form is invalid")     
+            return redirect('find_carbon_monsters')   
     else:
-        return render(request, 'pollution/find_carbon_monsters.html', {})
+        form = FindCarbonMonster()
+        return render(request, 'pollution/find_carbon_monsters.html')
     
 def fight_carbon_monsters(request):
     monster_id = None
