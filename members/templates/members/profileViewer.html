@@ -24,6 +24,21 @@
           height: 100%;
           object-fit:fill;
         }
+        .team-blue {
+            color: blue;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        .team-green {
+            color: green;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        .team-red {
+            color: red;
+            font-weight: bold;
+            font-size: 20px;
+        }
     </style>
 
     <title>{{ userToView.username }}'s Profile</title>
@@ -37,7 +52,16 @@
                     <img src="img/default.jpg" alt="Profile Picture" class="rounded-circle" style="max-width: 180px;">
                 {% endif %}
             </div>
-            <h1 class="mt-2">{{ userToView.username }}</h1>                
+            <h1 class="mt-2">{{ userToView.username }}</h1>    
+            {% if userToView.profile.team %}
+                {% if userToView.profile.team.name == "Eco Pioneers" %}
+                    <p class="team-blue">{{ userToView.profile.team.name }}</p>
+                {% elif userToView.profile.team.name == "Green Guardians" %}
+                    <p class="team-green">{{ userToView.profile.team.name }}</p>
+                {% elif userToView.profile.team.name == "Recycle Rangers" %}
+                    <p class="team-red">{{ userToView.profile.team.name }}</p>
+                {% endif %}
+            {% endif %}          
         </div>
         <div class="profile-details">
             <div class="user-detail">

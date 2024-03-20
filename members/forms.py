@@ -90,3 +90,10 @@ class ProfilePictureForm(forms.ModelForm):
         fields = ['profile_picture']
 
 # ------- Liam END -------
+        
+# ------- Greg START -------
+
+class TeamSelectionForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['team']       
