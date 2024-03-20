@@ -28,6 +28,7 @@ urlpatterns = [
     # ------- Liam START -------
     path('location', views.location_page, name='location'),
     path('location/<int:waypoint_id>/complete', views.complete_waypoint, name='waypoint'),
+    path('location/<int:waypoint_id>/delete', views.delete_waypoint, name='delete_waypoint'),
     path('location/upload_waypoint', views.upload_waypoint, name='create_waypoints'),
 
     path('person_challenge/submit', user_required(views.submit_code), name='submit_code'),
