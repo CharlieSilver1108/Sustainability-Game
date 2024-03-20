@@ -1,13 +1,10 @@
-from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from members.models import *
 from .models import *
 from .forms import *
 from django.views.decorators.csrf import csrf_protect
-from django.contrib import messages
 
-import random
+from django.contrib import messages
 
 # ------- Luke START ------- (Adjusted by Will)
 
@@ -20,13 +17,7 @@ def create_carbon_monster(request):
     if request.method == 'POST':
         form = CreateCarbonMonsterForm(request.POST, request.FILES)
         if form.is_valid():
-            monster = form.save(commit=False)
-            monster.save()
-
-            if monster.type == "User-Based":
-                users = User.objects.all()
-                for user in users:
-                    CarbonMonsterRelation.objects.create(user=user, monster=monster, health_points=monster.initial_health_points)
+            form.save()
             return redirect('carbon_monsters')
     else:
         form = CreateCarbonMonsterForm()
@@ -37,15 +28,8 @@ def attack_carbon_monsters(request):
     profile = user.profile
 
     communityBased = CarbonMonster.objects.filter(monster_type="Community-Based")
-    communityBasedShuffled = communityBased.order_by('?')[:6]
-
     userBased = CarbonMonster.objects.filter(monster_type="User-Based")
-    userBasedShuffled = userBased.order_by('?')[:6]
-
-    user_relations = CarbonMonsterRelation.objects.filter(
-        Q(monster__in=userBasedShuffled) & Q(user=user)
-    )
-    return render(request, 'pollution/find_carbon_monsters.html', {'communityBasedShuffled': communityBasedShuffled, 'userBasedShuffled': userBasedShuffled, 'userRelations': user_relations,'profile': profile})
+    return render(request, 'pollution/find_carbon_monsters.html', {'communityBased': communityBased, 'userBased': userBased, 'profile': profile})
 
 @csrf_protect
 def damage_carbon_monsters(request):
