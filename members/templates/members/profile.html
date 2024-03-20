@@ -125,8 +125,8 @@
                         </div>
                     </form>
                 </div>
-                </div>
             </div>
+    </div>
     </div>
         <div class="profile-details">
             <div class="user-detail">
@@ -188,10 +188,9 @@
                 </ul>
             </div>
         <div class="additional-details">
-            <h3>Additional Details</h3>
-            <p>When more functionality has been added I want to display things like the user's position on the leaderboard </p>
+            <p>Joined Sustain on {{ user.date_joined|date:"d F Y" }}
+            </p>
             
-
             <!-- Under a thematic break, displays two buttons: edit profile, and delete profile (Charlie) -->
             <hr style="border-top: 1px solid #ccc;">
             <a class="float-left" href="{% url 'update_user' %}">
@@ -202,5 +201,6 @@
             </a>
         </div>
     </div>
+
     
 {% endblock %}
