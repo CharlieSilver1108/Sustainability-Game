@@ -1,9 +1,13 @@
+from django.core.cache import cache
+from django.utils.timezone import timedelta
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import *
 from .forms import *
 
 from django.contrib import messages
+
+import random
 
 # ------- Luke START -------
 
@@ -27,8 +31,11 @@ def attack_carbon_monsters(request):
     profile = user.profile
 
     communityBased = CarbonMonster.objects.filter(monster_type="Community-Based")
+    communityBasedShuffled = communityBased.order_by('?')[:6]
+
     userBased = CarbonMonster.objects.filter(monster_type="User-Based")
-    return render(request, 'pollution/find_carbon_monsters.html', {'communityBased': communityBased, 'userBased': userBased, 'profile': profile})
+    userBasedShuffled = userBased.order_by('?')[:6]
+    return render(request, 'pollution/find_carbon_monsters.html', {'communityBased': communityBased, 'userBasedShuffled': userBasedShuffled, 'profile': profile})
 
 def damage_carbon_monsters(request):
     if request.method == 'POST':
