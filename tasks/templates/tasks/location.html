@@ -1,15 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Location Example</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <meta name="csrf-token" content="{{ csrf_token }}">
-    <style>
-        #mapid { height: 800px; width: 800px; }
-        .hidden { display: none; } /* Ensure this class actually hides elements */
-    </style>
-</head>
+{% extends 'Sustain/base.html' %}
+
+{% block content %}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Location Example</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <meta name="csrf-token" content="{{ csrf_token }}">
+        <style>
+            #mapid { height: 800px; width: 800px; }
+            .hidden { display: none; } /* Ensure this class actually hides elements */
+        </style>
+    </head>
 <body>
     <h2>Map and Location Example</h2>
     {% if user.is_superuser %}
@@ -19,152 +22,217 @@
     {% endif %}
     <div id="mapid"></div>
     
-    <!-- Preload the form in a hidden div -->
     <div id="formContainer" class="hidden">
-        <!-- Assuming you are using Django template tags for CSRF and URL -->
         <form action="{% url 'create_waypoints' %}" method="post">
             {% csrf_token %}
-            <!-- Hidden inputs for latitude and longitude -->
             <input type="hidden" id="latitude" name="latitude">
             <input type="hidden" id="longitude" name="longitude">
-            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-            
-            <!-- Input for the title -->
             <div class="form-group">
                 <label for="task-title">Task Title:</label>
                 <input type="text" class="form-control" id="task-title" name="title" placeholder="Enter task title" required>
             </div>
-            
-            <!-- Input for the description -->
             <div class="form-group">
                 <label for="task-description">Task Description:</label>
                 <textarea class="form-control" id="task-description" name="description" rows="4" placeholder="Enter task description" required></textarea>
             </div>
-            
-            <!-- Input for the points -->
             <div class="form-group">
                 <label for="task-points">Points:</label>
                 <input type="number" class="form-control" id="task-points" name="points" placeholder="Enter points value" required>
             </div>
-            
             <button type="submit" class="btn btn-primary">Save Location Task</button>
         </form>
     </div>
 
-    <script>
-        var mymap = L.map('mapid');
-    
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            return mymap.distance([lat1, lon1], [lat2, lon2]);
-        }
+        <script>
+            var mymap = L.map('mapid');
         
-        function checkProximityToWaypoints(userLat, userLon, waypoints) {
-            var threshold = 100; // Distance threshold in meters
-    
-            waypoints.forEach(function(waypoint) {
-                if (!waypoint.visited) { // Check only for not visited waypoints
-                    var distance = calculateDistance(userLat, userLon, waypoint.latitude, waypoint.longitude);
-                    if (distance < threshold) {
-                        console.log("Close to:", waypoint.title); // Log or alert the user
-                        alert ("Well done, you have completed: " + waypoint.title + " - " + waypoint.description);
-                        submitWaypointCompletion(waypoint.id); // Submit waypoint ID to endpoint
-                    }
-                }
-            });
-        }
-
-        function getCsrfToken() {
-            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        }        
-        
-        function submitWaypointCompletion(waypointId) {
-            const csrftoken = getCsrfToken(); // Get CSRF token from meta tag
-
-            fetch(`/challenges/location/${waypointId}/complete`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken, // Include CSRF token in the request header
-                    // Include CSRF token as needed, e.g., 'X-CSRFToken': csrftoken
-                },
-                body: JSON.stringify({ /* Your data here, if needed */ }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                alert('Waypoint completion submitted!');
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        }
-    
-        function addWaypointMarker(waypoint) {
-            var marker = L.marker([waypoint.latitude, waypoint.longitude]).addTo(mymap);
-            var visitedStatus = waypoint.visited ? 'Visited' : 'Not Visited';
-            var popupContent = "<b>" + waypoint.title + "</b><br/>" + waypoint.description + "<br/><b>Status:</b> " + visitedStatus;            marker.bindPopup(popupContent);
-        }
-    
-        function renderExistingWaypoints(waypoints) {
-            waypoints.forEach(function(waypoint) {
-                addWaypointMarker(waypoint);
-            });
-        }
-    
-        var isSuperuser = {{ is_superuser|yesno:"true,false" }};
-
-        function initMap(latitude, longitude, waypoints) {
-            mymap.setView([latitude, longitude], 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                maxZoom: 18,
-            }).addTo(mymap);
-    
-            L.marker([latitude, longitude]).addTo(mymap)
-                .bindPopup("You are here").openPopup();
-    
-            if (isSuperuser) {
-                mymap.on('click', function(e) {
-                    var popupContent = document.getElementById('formContainer').innerHTML;
-                    
-                    var popup = L.popup()
-                        .setLatLng(e.latlng)
-                        .setContent(popupContent)
-                        .openOn(mymap);
-        
-                    // Ensure the popup is open and content inserted before setting values
-                    setTimeout(function() {
-                        document.getElementById('latitude').value = e.latlng.lat;
-                        document.getElementById('longitude').value = e.latlng.lng;
-                    }, 10); // Small delay to ensure DOM updates
-                });
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+                return mymap.distance([lat1, lon1], [lat2, lon2]);
             }
-    
-            renderExistingWaypoints(waypoints);
-        }
-        var existing_waypoints = JSON.parse('{{ existing_waypoints|safe }}');
-
-        function getLocationAndInitMap() {
             
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    var userLat = position.coords.latitude;
-                    var userLon = position.coords.longitude;
+            function checkProximityToWaypoints(userLat, userLon, waypoints) {
 
-                    initMap(userLat, userLon, existing_waypoints);
+                // skip the proximity check for superusers
+                if (isSuperuser) return;
 
-                    checkProximityToWaypoints(userLat, userLon, existing_waypoints);
+                var threshold = 100; // Distance threshold in meters
+        
+                waypoints.forEach(function(waypoint) {
+                    if (!waypoint.visited) { // Check only for not visited waypoints
+                        var distance = calculateDistance(userLat, userLon, waypoint.latitude, waypoint.longitude);
+                        if (distance < threshold) {
+                            console.log("Close to:", waypoint.title); // Log or alert the user
+                            alert ("Well done, you have completed: " + waypoint.title + " - " + waypoint.description);
+                            submitWaypointCompletion(waypoint.id); // Submit waypoint ID to endpoint
+                        }
+                    }
                 });
-            } else {
-                console.log("Geolocation is not supported by this browser.");
-                // Fallback location, also render existing waypoints
-                initMap(51.505, -0.09, existing_waypoints); // Default to London as an example
-                checkProximityToWaypoints(defaultLat, defaultLon, existing_waypoints);
             }
-        }
-    
-        getLocationAndInitMap();
-    </script>
-    
-</body>
-</html>
+
+            function getCsrfToken() {
+                return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            }        
+            
+            function submitWaypointCompletion(waypointId) {
+                const csrftoken = getCsrfToken(); // Get CSRF token from meta tag
+
+                fetch(`/challenges/location/${waypointId}/complete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken, // Include CSRF token in the request header
+                        // Include CSRF token as needed, e.g., 'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify({ /* Your data here, if needed */ }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    alert('Waypoint completion submitted!');
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            }
+        
+            function addWaypointMarker(waypoint) {
+                var marker = L.marker([waypoint.latitude, waypoint.longitude]).addTo(mymap);
+                var visitedStatus = waypoint.visited ? 'Visited' : 'Not Visited';
+                // Include a delete button in the popup for superusers
+                var deleteButtonHTML = isSuperuser ? `<button onclick="deleteWaypoint(event, ${waypoint.id})" class="delete-waypoint-btn">Delete</button>` : '';
+                var popupContent = `<b>${waypoint.title}</b><br/>${waypoint.description}<br/><b>Status:</b> ${visitedStatus}<br/>${deleteButtonHTML}`;
+                marker.bindPopup(popupContent);
+            
+                // Ensure Leaflet does not preventDefault on our custom button inside the popup
+                marker.getPopup().on('add', function() {
+                    // Use event delegation to handle button click
+                    this._container.addEventListener('click', function(e) {
+                        if (e.target && e.target.matches('.delete-waypoint-btn')) {
+                            // Prevent the map click event
+                            e.stopPropagation();
+                        }
+                    });
+                });
+            }
+            
+            // Adjust the deleteWaypoint function to accept the event and waypointId as arguments
+            function deleteWaypoint(event, waypointId) {
+                event.preventDefault(); // Prevent form submission if inside a form
+                var confirmDelete = confirm("Do you want to delete this waypoint?");
+                if (!confirmDelete) {
+                    return; // Stop the function if user cancels the deletion
+                }
+            
+                const csrftoken = getCsrfToken(); // Ensure you have a function to get CSRF token
+            
+                fetch(`/challenges/location/${waypointId}/delete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify({ id: waypointId }),
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Waypoint deleted successfully');
+                        location.reload(); // Reload the page or update the map to reflect changes
+                    } else {
+                        alert('Failed to delete waypoint');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the waypoint');
+                });
+            }
+        
+            function renderExistingWaypoints(waypoints) {
+                waypoints.forEach(function(waypoint) {
+                    addWaypointMarker(waypoint);
+                });
+            }
+        
+            var isSuperuser = {{ is_superuser|yesno:"true,false" }};
+
+            function initMap(latitude, longitude, waypoints) {
+                mymap.setView([latitude, longitude], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: 'Map data © OpenStreetMap contributors',
+                    maxZoom: 18,
+                }).addTo(mymap);
+        
+                L.marker([latitude, longitude]).addTo(mymap)
+                    .bindPopup("You are here").openPopup();
+        
+                if (isSuperuser) {
+                    mymap.on('click', function(e) {
+                        var popupContent = document.getElementById('formContainer').innerHTML;
+                        
+                        var popup = L.popup()
+                            .setLatLng(e.latlng)
+                            .setContent(popupContent)
+                            .openOn(mymap);
+            
+                        // Ensure the popup is open and content inserted before setting values
+                        setTimeout(function() {
+                            document.getElementById('latitude').value = e.latlng.lat;
+                            document.getElementById('longitude').value = e.latlng.lng;
+                        }, 10); // Small delay to ensure DOM updates
+                    });
+                }
+        
+                renderExistingWaypoints(waypoints);
+            }
+            var existing_waypoints = JSON.parse('{{ existing_waypoints|safe }}');
+
+            function getLocationAndInitMap() {
+                
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var userLat = position.coords.latitude;
+                        var userLon = position.coords.longitude;
+
+                        initMap(userLat, userLon, existing_waypoints);
+
+                        checkProximityToWaypoints(userLat, userLon, existing_waypoints);
+                    });
+                } else {
+                    console.log("Geolocation is not supported by this browser.");
+                    // Fallback location, also render existing waypoints
+                    initMap(51.505, -0.09, existing_waypoints); // Default to London as an example
+                    checkProximityToWaypoints(defaultLat, defaultLon, existing_waypoints);
+                }
+            }
+        
+            getLocationAndInitMap();
+            function getLocationAndUpdateWaypoints() {
+                console.log("Getting location and updating waypoints...");
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var userLat = position.coords.latitude;
+                        var userLon = position.coords.longitude;
+            
+                        // No need to reinitialize the map every time, so this is commented out
+                        // initMap(userLat, userLon, existing_waypoints); 
+            
+                        checkProximityToWaypoints(userLat, userLon, existing_waypoints);
+                    });
+                } else {
+                    console.log("Geolocation is not supported by this browser.");
+                    // Assuming defaultLat and defaultLon are defined globally or within scope
+                    // Fallback location, also check proximity for existing waypoints
+                    checkProximityToWaypoints(defaultLat, defaultLon, existing_waypoints);
+                }
+            }
+            
+            // Call the function immediately to ensure it runs once on page load
+            getLocationAndUpdateWaypoints();
+            
+            // Then set it to run every 15 seconds
+            setInterval(getLocationAndUpdateWaypoints, 15000);
+        </script>
+        
+    </body>
+    </html>
+{% endblock %}

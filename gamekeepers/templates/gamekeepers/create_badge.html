@@ -1,0 +1,55 @@
+{% extends 'Sustain/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+<div class="container mt-5">
+    <h1 class="mb-4">Create a New Badge</h1>
+    <p class="mb-4">Create badges to reward players for their achievements in the sustainability initiative. Note that the rule functionality of the badge must be created in the codebase, and then referenced here. For example the badge function 'rule_500_points' in the codebase is created by naming a badge here '500_points'. This naming convention must be followed.</p>
+    <form action="{% url 'create_badge' %}" method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label for="badge-name">Badge Name:</label>
+            <input type="text" class="form-control" id="badge-name" name="name" placeholder="Enter the name of the badge" required>
+            <div class="invalid-feedback">
+                Please enter a badge name.
+            </div>
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for="badge-description">Badge Description:</label>
+            <input type="text" class="form-control" id="badge-description" name="description" placeholder="Enter the description of the badge" required>
+            <div class="invalid-feedback">
+                Please enter a badge description.
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="badge-criteria">Badge Criteria:</label>
+            <input type="text" class="form-control" id="badge-criteria" name="criteria" placeholder="Enter the criteria for the badge" required>
+            <div class="invalid-feedback">
+                Please enter a badge criteria.
+            </div>
+        </div>
+        
+        <button type="submit" class="text-white btn" style="background-color: #0B6623 !important;">Create Badge</button>
+    </form>
+</div>
+<script>
+// JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    var forms = document.getElementsByClassName('needs-validation');
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
+{% endblock %}

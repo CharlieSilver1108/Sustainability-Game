@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from tasks.models import Task, Task_Type
@@ -23,6 +23,7 @@ class Profile(models.Model):
     pronouns = models.CharField(max_length=10 ,null=True, blank=True)   # -Charlie-
     badges = models.ManyToManyField('Badge', through='ProfileBadgeRelation') # -Greg-
     highest_position = models.IntegerField(null=True, blank=True) # -Greg-
+    team = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True) # -Greg-
     
 
     def check_and_assign_badges(self):

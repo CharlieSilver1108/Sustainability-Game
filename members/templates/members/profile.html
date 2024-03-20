@@ -6,7 +6,7 @@
     <!-- 
     File: profile.html
     Description: This page displays the user profile, with the option to update or delete the account. The page displays the user's data (if stored), or the option to add it (if not stored)
-    Author: Will, Charlie (front-end extras)
+    Author: Will, Charlie, Greg (front-end extras)
     -->
     
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
@@ -24,6 +24,46 @@
           height: 100%;
           object-fit:fill;
         }
+        .join-team-button {
+        background-color: #0d7a2e; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        display: block; /* make the button a block element */
+        margin-left: auto; /* left margin auto */
+        margin-right: auto; /* right margin auto */
+    }
+    .modal-content {
+        /* Add custom styles for the modal content here */
+        background-color: #0d7a2e; /* Green background */
+        color: white; /* White text */
+    }
+
+    .modal-header, .modal-footer {
+        /* Add custom styles for the modal header and footer here */
+        background-color: #0d7a2e; /* Darker green background */
+        color: white; /* White text */
+    }
+    .team-blue {
+        color: blue;
+        font-weight: bold;
+        font-size: 20px;
+    }
+    .team-green {
+        color: green;
+        font-weight: bold;
+        font-size: 20px;
+    }
+    .team-red {
+        color: red;
+        font-weight: bold;
+        font-size: 20px;
+    }
     </style>
 
     <title>Your Profile</title>
@@ -39,8 +79,55 @@
                     {% endif %}
                 </a>
             </div>
-            <h1 class="mt-2">{{ user.username }}</h1>                
+            <h1 class="mt-2">{{ user.username }}</h1>
+            {% if user.profile.team %}
+                {% if user.profile.team.name == "Eco Pioneers" %}
+                    <p class="team-blue">{{ user.profile.team.name }}</p>
+                {% elif user.profile.team.name == "Green Guardians" %}
+                    <p class="team-green">{{ user.profile.team.name }}</p>
+                {% elif user.profile.team.name == "Recycle Rangers" %}
+                    <p class="team-red">{{ user.profile.team.name }}</p>
+                {% endif %}
+            {% else %}
+                <button type="button" class="join-team-button" data-toggle="modal" data-target="#joinTeamModal">
+                    Join a Team
+                </button>
+            {% endif %}
         </div>
+    <div class="modal fade" id="joinTeamModal" tabindex="-1" role="dialog" aria-labelledby="joinTeamModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="joinTeamModalLabel">Join a Team</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>In Sustain, teams play a pivotal role in your journey as a player. Choosing your team is an important decision as it can't be changed later. Here's a brief overview of the teams:</p>
+
+                    <p>Eco Pioneers (Blue):<br>
+                    Eco Pioneers believe in the power of innovation. Its members trust that humans have the strength and will to pioneer sustainable solutions for the environment. They aim to enhance their natural power to make sustainable choices.</p>
+                    
+                    <p>Green Guardians (Green):<br>
+                    Green Guardians focus on protecting and preserving our environment. They believe that knowledge and wisdom are the keys to making sustainable choices and are curious about the science behind sustainability.</p>
+                    
+                    <p>Recycle Rangers (Red):<br>
+                    Recycle Rangers follow their instincts. They believe that humans have an innate connection to nature and are intrigued by the relationship between intuition and sustainable living.</p>
+                    
+                    <p>Team members can collaborate to earn points and show everyone that they're the most sustainable group around! Remember, your chosen team influences your interactions with other players. So choose wisely, and may your sustainability journey be legendary!</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ team_selection_form.as_p }}
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Join Team</button>
+                        </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+    </div>
         <div class="profile-details">
             <div class="user-detail">
                 <h3>Details</h3>
