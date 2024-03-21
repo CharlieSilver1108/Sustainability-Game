@@ -19,6 +19,53 @@
         </div>
     {% endif %}
 
-    <h1>Hello, world. You're at the Sustain index</h1>
+    <div class="text-center" style="margin-left:20vw; margin-right:20vw;">
+        <section id="introduction">
+            <h2>Backstory</h2>
+            <p>
+                In the quaint town of Exeter, nestled amidst the serene English countryside, Exeter University stood as a beacon of knowledge and enlightenment. However, tranquility was soon shattered by a strange phenomenon – carbon monsters began emerging from the shadows, wreaking havoc across the campus.
+                
+                The origins of these carbon monsters were shrouded in mystery. Some whispered of a botched experiment in the university's laboratories, while others speculated that they were a manifestation of the unchecked pollution plaguing the Earth. Regardless of their origins, these creatures were now a dire threat to both the university and the surrounding environment.</p>
+        </section>
+        <section id="groups">
+            <h2>Groups</h2>
+            <p>Amidst the chaos, three groups emerged, each with a shared mission to combat the carbon monsters and restore balance to Exeter University:</p>
+            <div class="group">
+                <h3 style="color: blue;">Eco Pioneers</h3>
+                <p>The Eco Pioneers are a group of passionate individuals committed to finding innovative solutions to environmental challenges. Armed with their knowledge of sustainable practices and cutting-edge technology, they are determined to confront the carbon monsters head-on.</p>
+            </div>
+            <div class="group">
+                <h3 style="color: green;">Green Guardians</h3>
+                <p>Comprising students, faculty members, and local activists, the Green Guardians are the frontline defenders of Exeter University's natural beauty. They patrol the campus tirelessly, employing eco-friendly weapons and tactics to repel the carbon monsters and protect their beloved surroundings.</p>
+            </div>
+            <div class="group">
+                <h3 style="color: red;">Recycle Rangers</h3>
+                <p>Born out of the university's recycling club, the Recycle Rangers are a group of resourceful individuals who see the potential in repurposing waste to fight the carbon menace. They scavenge for materials across the campus, fashioning makeshift weapons and traps from discarded items to trap and neutralize the carbon monsters.</p>
+            </div>
+        </section>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <button id="changeButton" style="display: block; margin: 0 auto;">Grow Tree</button>
+        <img id="image" style="display: block; margin: 0 auto;" src="../img/trees/tree1.png" alt="Tree 1">
+    </div>
+
+    <script>
+        const imageSources = ["../img/trees/tree1.png", "../img/trees/tree2.png", "../img/trees/tree3.png", "../img/trees/tree4.png", "../img/trees/tree5.png", "../img/trees/tree6.png"]; // Add more images as needed
+        var i = 0;
+        const image = document.getElementById("image");
+
+        function changePicture() {
+            if (i < 5) {
+                i += 1;
+                image.src = imageSources[i];
+            }
+        }
+
+        const button = document.getElementById("changeButton");
+        button.addEventListener("click", changePicture);
+    </script>
 
 {% endblock %}
