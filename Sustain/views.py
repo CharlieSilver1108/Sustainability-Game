@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.db.models import Sum
-from django.http import HttpResponse
-from html.parser import HTMLParser
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from members.models import *
 
 
@@ -14,16 +15,27 @@ def index(request):
 # ------- Greg START -------
 def learning(request):
     return render(request, 'Sustain/learning.html', {})
+
+def terms_and_conditions(request):
+    return render(request, 'Sustain/terms_and_conditions.html')
+
+@csrf_exempt
+def update_tree_grown(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            profile = request.user.profile
+            profile.tree_grown = True
+            profile.save()
+            profile.check_and_assign_badges()  # Check and assign badges
+            return JsonResponse({'status': 'success'})
+        else:
+            return JsonResponse({'status': 'failed', 'error': 'User not logged in'})
+    else:
+        return JsonResponse({'status': 'failed', 'error': 'Invalid request method'})
 # ------- Greg END -------
 
 
-# ------- Charlie START -------
-def how_to_play(request):
-    return render(request, 'Sustain/how_to_play.html', {})
-
-
-from django.db.models import Sum
-
+# ------- Charlie + Greg START -------
 def leaderboard(request):
     all_profiles = Profile.objects.order_by('-points')
     top_ten = all_profiles[:10]
@@ -69,5 +81,8 @@ def leaderboard(request):
             'green_guardians_points': green_guardians_points,
             'recycle_rangers_points': recycle_rangers_points,
         })
+
+def how_to_play(request):
+    return render(request, 'Sustain/how_to_play.html', {})
 
 # ------- Charlie END -------
