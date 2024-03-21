@@ -38,7 +38,7 @@ def damage_carbon_monsters(request):
 
             monster_id = form.cleaned_data['id'] #finds id of the monster from the form 
             attackDamage = form.cleaned_data['attackStrength'] #finds attack strength from the form 
-
+            pointsToAttack = form.cleaned_data['attackPointsUsed']
             try: 
                 monster = CarbonMonster.objects.get(id=monster_id)  #tries to find the monster that has 
             except CarbonMonster.DoesNotExist: # if the monster does not exist outputs error to terminal and redirects 
@@ -47,7 +47,7 @@ def damage_carbon_monsters(request):
             
             if(monster.monster_type == "Community-Based"): #occurs if monster is Community-Based 
                 monster.health_points -= attackDamage #removes health from the monster 
-                profile.pointsToAttack -= attackDamage # removes points from the user
+                profile.pointsToAttack -= pointsToAttack # removes points from the user
                 profile.save()
                 if monster.health_points > 0: # checks if the monster still has health 
                     monster.save() #saves the monster 
@@ -66,7 +66,7 @@ def damage_carbon_monsters(request):
                     return redirect('find_carbon_monsters')
                 
                 monsterRelation.health_points -= attackDamage # removes health from the monster
-                profile.pointsToAttack -= attackDamage # removes points from the user
+                profile.pointsToAttack -= pointsToAttack # removes points from the user
                 profile.save() # saves the profile
                 if monsterRelation.health_points > 0:  #If the monster still has health saves it 
                     monsterRelation.save()

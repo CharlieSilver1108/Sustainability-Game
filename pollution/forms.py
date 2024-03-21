@@ -13,6 +13,7 @@ class FindCarbonMonster(forms.ModelForm):
 class DamageCarbonMonster(forms.ModelForm): 
     id = forms.IntegerField(required=True)
     attackStrength = forms.IntegerField(required=True)
+    attackPointsUsed = forms.IntegerField(required=True)
     class Meta:
         model = CarbonMonsterRelation
-        fields = ['id', 'attackStrength']
+        fields = ['id', 'attackStrength', 'attackPointsUsed']
