@@ -1,3 +1,15 @@
+<!--
+  File: create_badge.html
+
+  Description: This file is used to create a new badge in the sustainability game.
+  It extends the 'Sustain/base.html' template and loads the static files.
+  The content of the page is wrapped inside the 'content' block.
+  The form allows admins to input the badge name, description, criteria, and upload an image for the badge.
+  The form submission is handled by the 'create_badge' URL.
+  The JavaScript code at the bottom of the file is used to disable form submissions if there are invalid fields.
+
+  Author: Greg
+-->
 {% extends 'Sustain/base.html' %}
 {% load static %}
 {% block content %}
@@ -5,7 +17,7 @@
 <div class="container mt-5">
     <h1 class="mb-4">Create a New Badge</h1>
     <p class="mb-4">Create badges to reward players for their achievements in the sustainability initiative. Note that the rule functionality of the badge must be created in the codebase, and then referenced here. For example the badge function 'rule_500_points' in the codebase is created by naming a badge here '500_points'. This naming convention must be followed.</p>
-    <form action="{% url 'create_badge' %}" method="post" class="needs-validation" novalidate>
+    <form action="{% url 'create_badge' %}" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group mb-3">
             <label for="badge-name">Badge Name:</label>
@@ -14,7 +26,7 @@
                 Please enter a badge name.
             </div>
         </div>
-        
+
         <div class="form-group mb-3">
             <label for="badge-description">Badge Description:</label>
             <input type="text" class="form-control" id="badge-description" name="description" placeholder="Enter the description of the badge" required>
@@ -30,6 +42,14 @@
                 Please enter a badge criteria.
             </div>
         </div>
+
+        <div class="form-group mb-3">
+          <label for="badge-image">Badge Image:</label>
+          <input type="file" class="form-control" id="badge-image" name="image" required>
+          <div class="invalid-feedback">
+              Please upload an image for the badge.
+          </div>
+      </div>
         
         <button type="submit" class="text-white btn" style="background-color: #0B6623 !important;">Create Badge</button>
     </form>

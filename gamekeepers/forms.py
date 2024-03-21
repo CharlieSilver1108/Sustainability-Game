@@ -76,7 +76,7 @@ class RegisterGamekeeperForm(UserCreationForm):
 class BadgeForm(forms.ModelForm):
     class Meta:
         model = Badge
-        fields = ['name', 'description', 'criteria']
+        fields = ['name', 'description', 'criteria', 'image']
 
 # ------- Greg END -------
 

@@ -1,6 +1,19 @@
 {% extends 'Sustain/base.html' %}
 {% load static %}
 {% block content %}
+  <!--
+  File: create_person_based_code.html
+
+  Description: This HTML file is used to create a new entry for sustainability champions in a game.
+  It extends the 'Sustain/base.html' template and loads the static files.
+  The form allows users to provide information about key individuals on campus who are known for their commitment to sustainability.
+  After submitting the form, the data is sent to the 'create_person_based_code' URL for processing.
+  The form includes fields for name, location, expertise, and the number of points the player should earn for meeting this person.
+  JavaScript is included to disable form submissions if there are invalid fields.
+
+  Author: Liam
+  -->
+
 <link rel="stylesheet" href="{% static 'css/custom.css' %}"> <!-- Ensure you have a custom.css in your static/css directory -->
 <div class="container mt-5">
     <h1 class="mb-4">Contribute to Sustainability: Create a New Entry</h1>

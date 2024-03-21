@@ -10,6 +10,7 @@
     -->
     
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <style>
         .square-container {
@@ -125,8 +126,8 @@
                         </div>
                     </form>
                 </div>
-                </div>
             </div>
+    </div>
     </div>
         <div class="profile-details">
             <div class="user-detail">
@@ -179,19 +180,21 @@
             </div>
             <div class="user-detail">
                 <h5>Badges:{% if badge_count > 0 %} ({{ badge_count }}){% endif %}</h5>
-                <ul>
+                <ul style="list-style-type: none; padding-left: 0;">
                     {% for relation in badges_with_dates %}
-                    <li>{{ relation.badge.name }} - {{ relation.created_at|date:"d/m/y" }}</li>
-                {% empty %}
+                    <li>
+                        <img src="{{ relation.badge.image.url }}" alt="{{ relation.badge.name }}" data-toggle="tooltip" data-placement="top" data-original-title="{{ relation.badge.description }}" class="rounded-circle mr-2" width="45" height="45">
+                        {{ relation.badge.name|title }} - {{ relation.created_at|date:"d/m/y" }}
+                    </li>
+                    {% empty %}
                     <li>No badges earned yet.</li>
-                {% endfor %}
+                    {% endfor %}
                 </ul>
             </div>
         <div class="additional-details">
-            <h3>Additional Details</h3>
-            <p>When more functionality has been added I want to display things like the user's position on the leaderboard </p>
+            <p>Joined Sustain on {{ user.date_joined|date:"d F Y" }}
+            </p>
             
-
             <!-- Under a thematic break, displays two buttons: edit profile, and delete profile (Charlie) -->
             <hr style="border-top: 1px solid #ccc;">
             <a class="float-left" href="{% url 'update_user' %}">
@@ -202,5 +205,12 @@
             </a>
         </div>
     </div>
+
+    <script>
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        })
+        </script>
+
     
 {% endblock %}

@@ -45,7 +45,6 @@ def damage_carbon_monsters(request):
                 print("Original monster not found")
                 return redirect('find_carbon_monsters')
             
-
             if(monster.monster_type == "Community-Based"): #occurs if monster is Community-Based 
                 monster.health_points -= attackDamage #removes health from the monster 
 

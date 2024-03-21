@@ -1,11 +1,25 @@
 {% extends 'Sustain/base.html' %}
 {% load static %}
 {% block content %}
+    <!--
+    File: create_carbon_monster.html
+    
+    Description: This HTML file is used for creating a carbon monster entry in the Sustainability Game.
+    It extends the 'Sustain/base.html' template and includes necessary static files.
+    The form allows users to input the name, type, health, and image of the carbon monster.
+    Upon submission, the form data is sent to the 'create_carbon_monster' URL.
 
-<link rel="stylesheet" href="{% static 'css/custom.css' %}"> <!-- Ensure you have a custom.css in your static/css directory -->
+    Author: Luke
+    -->
+
+<!-- CSS -->
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
 <div class="container mt-5">
     <form action="{% url 'create_carbon_monster' %}" method="post" class="needs-validation" novalidate enctype="multipart/form-data">
         {% csrf_token %}
+
+        <!-- Monster Name -->
         <div class="form-group mb-3">
             <label for="monster-name">Monster Name:</label>
             <input type="text" class="form-control" id="monster-name" name="monster_name" placeholder="Enter the name of the Monster" required>
@@ -14,14 +28,16 @@
             </div>
         </div>
 
+        <!-- Monster Type -->
         <div class="form-group mb-3">
             <select class="form-select" id="monster-type" name="monster_type" aria-label="Monster Type Select">
                 <option selected>Please select monster type</option>
                 <option value="Community-Based">Community-Based</option>
                 <option value="User-Based">User-Based</option>
-              </select>
+            </select>
         </div>
 
+        <!-- Monster Health -->
         <div class="form-group mb-3">
             <label for="monster-health">Monster Health:</label>
             <input type="number" class="form-control" id="monster-health" name="health_points" placeholder="Enter the health of the Monster" required>
@@ -30,6 +46,7 @@
             </div>
         </div>
 
+        <!-- Monster Image -->
         <div class="form-group mb-3">
             <label for="monster-image">Monster Image:</label>
             <input type="file" class="form-control-file" id="monster-sprite" name="monster_sprite" accept="image/*" required>
@@ -38,8 +55,9 @@
             </div>
         </div>
 
+        <!-- Submit Button -->
         <button type="submit" class="text-white btn" style="background-color: #0B6623 !important;">Create Entry</button>
     </form>
-
 </div>
+
 {% endblock %}

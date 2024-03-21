@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
 from members.forms import RegisterUserForm, UpdateUserForm, addPronounsForm, bioForm
+from members.models import Badge, Profile
 
 class UserAuthenticationTesting(TestCase):
     def testUserCreation(self):
@@ -135,3 +136,4 @@ class UserAuthenticationTesting(TestCase):
         self.assertEquals(createdProfile.bio, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.')
 
 # ------- Luke END -------
+        

@@ -173,6 +173,7 @@ def MCQchallenge(request, code):
                 profile = user.profile
                 profile.points += challenge.points                  # if they were correct, add the points to their profile
                 profile.pointsToAttack += challenge.points
+                profile.challenges_completed += 1
                 profile.save()
                 return redirect('qr_explain')
         
@@ -221,6 +222,7 @@ def submit_code(request):
                 profile = user.profile
                 profile.points += person_based_code.points
                 profile.pointsToAttack += person_based_code.points
+                profile.challenges_completed += 1
                 profile.save()
                 
                 messages.success(request, "Code added successfully!")
@@ -281,6 +283,7 @@ def complete_waypoint(request, waypoint_id):
         
         profile.points += waypoint.points
         profile.pointsToAttack += waypoint.points
+        profile.challenges_completed += 1
         profile.save()
         
         return redirect('location')

@@ -92,6 +92,47 @@
                                             </tbody>
                                         </table>
                                 {% endif %}
+                                <!-- Team Scores -->
+                                <hr style="border-top: 1px solid #ccc;">
+                                <h4 class="card-title">Team Scores</h4>
+                                <canvas id="teamScoreChart" style="width: 200px; height: 100px;"></canvas>
+                                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                                <script>
+                                    var ctx = document.getElementById('teamScoreChart').getContext('2d');
+                                    var myChart = new Chart(ctx, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: ['Eco Pioneers', 'Green Guardians', 'Recycle Rangers'],
+                                            datasets: [{
+                                                label: 'Points',
+                                                data: [Number("{{ eco_pioneers_points }}"), Number("{{ green_guardians_points }}"), Number("{{ recycle_rangers_points }}")],
+                                                backgroundColor: [
+                                                    'rgba(0, 0, 200, 1)',  // Blue for Eco Pioneers
+                                                    'rgba(0, 128, 0, 1)',  // Green for Green Guardians
+                                                    'rgba(200, 0, 0, 1)'   // Red for Recycle Rangers
+                                                ],
+                                                borderColor: [
+                                                    'rgba(0, 0, 200, 1)',  // Blue for Eco Pioneers
+                                                    'rgba(0, 128, 0, 1)',  // Green for Green Guardians
+                                                    'rgba(200, 0, 0, 1)'   // Red for Recycle Rangers
+                                                ],
+                                                borderWidth: 1
+                                            }]
+                                        },
+                                        options: {
+                                            plugins: {
+                                                legend: {
+                                                    display: false
+                                                }
+                                            },
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true
+                                                }
+                                            }
+                                        }
+                                    });
+                                </script>
                             </div>
                         </div>
                     </div>
