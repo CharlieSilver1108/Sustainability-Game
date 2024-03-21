@@ -101,7 +101,7 @@
         // Attach event listener to the fight button
         fightButton.addEventListener('click', function() {
             attackDamage = document.getElementById('attack-points').value;
-            if(attackDamage >'{{user.pointsToAttack}}'){ //checks if the user has points to attack 
+            if(attackDamage <'{{user.pointsToAttack}}'){ //checks if the user has points to attack 
                 showModal();      
             }
             else{
