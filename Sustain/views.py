@@ -64,6 +64,13 @@ def leaderboard(request):
         elif team['team__name'] == 'Recycle Rangers':
             recycle_rangers_points = team['total_points']
 
+    context = {
+        'top_ten': top_ten,
+        'eco_pioneers_points': eco_pioneers_points,
+        'green_guardians_points': green_guardians_points,
+        'recycle_rangers_points': recycle_rangers_points,
+    }
+
     if request.user.is_authenticated:
         current_user = Profile.objects.get(user=request.user)
         current_user_position = list(all_profiles).index(current_user) + 1
@@ -72,14 +79,12 @@ def leaderboard(request):
         team_profiles = Profile.objects.filter(team=current_user.team).order_by('-points')
         team_position = list(team_profiles).index(current_user) + 1
 
-        return render(request, 'Sustain/leaderboard.html', {
-            'top_ten': top_ten, 
+        context.update({
             'current_user_position': current_user_position,
             'team_position': team_position,
-            'eco_pioneers_points': eco_pioneers_points,
-            'green_guardians_points': green_guardians_points,
-            'recycle_rangers_points': recycle_rangers_points,
         })
+
+    return render(request, 'Sustain/leaderboard.html', context)
 
 def how_to_play(request):
     return render(request, 'Sustain/how_to_play.html', {})
