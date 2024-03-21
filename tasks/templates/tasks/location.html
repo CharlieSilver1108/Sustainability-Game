@@ -1,6 +1,23 @@
 {% extends 'Sustain/base.html' %}
 
 {% block content %}
+<!--
+    File: location.html
+
+    Description: This HTML file represents the location template for the Sustainability Game application.
+    It extends the 'Sustain/base.html' template and contains a map and location example.
+    The template includes a form for creating new location tasks, which is hidden by default.
+    If the user is a superuser, a message is displayed to click on the map to add a new location task.
+    Otherwise, a message is displayed to get close to a location task to complete it.
+    The map is rendered using Leaflet.js library, and the necessary CSS and JavaScript files are included from a CDN.
+    The JavaScript code in this template includes functions for calculating distance between two points,
+    checking proximity to waypoints, submitting waypoint completion, and adding waypoint markers on the map.
+    The form submission uses AJAX to send the data to the server and handle the response.
+    The template also includes conditional logic to display different content based on the user's superuser status.
+    Note: The template file path is provided for reference.
+
+    Author: Liam
+-->
     <!DOCTYPE html>
     <html>
     <head>

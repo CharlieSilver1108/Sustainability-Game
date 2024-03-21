@@ -51,6 +51,7 @@ def damage_carbon_monsters(request):
                 return redirect('find_carbon_monsters')
             else:
                 monster.delete()
+                profile.monsters_defeated += 1
                 profile.save()
                 return redirect('find_carbon_monsters')
         else:

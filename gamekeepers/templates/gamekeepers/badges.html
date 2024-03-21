@@ -2,6 +2,21 @@
 {% load static %}
 
 {% block content %}
+    <!--
+    File: badges.html
+
+    Description: This template is used to display a list of badges in the Sustainability Game web application.
+    It extends the 'Sustain/base.html' template and loads the static files.
+    The content block contains the HTML code for displaying the badges table.
+    The table includes columns for badge name, description, and a remove button for superusers to delete badges.
+    The table is populated with badge data using a for loop.
+    If no badges are found, a message is displayed indicating that no badges were found.
+    The template also includes a container for displaying alert messages.
+    The script at the end of the file initializes the DataTable plugin for the badges table.
+    
+    Author: Greg
+    -->
+
     <link href="{% static 'css/custom.css' %}" rel="stylesheet">
     <title>Badges</title>
     
