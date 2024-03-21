@@ -9,13 +9,13 @@ from django.contrib.auth.models import User
 # ------- Will START -------
 #MultipleChoiceTaskForm is used when an admin creates a new task
 class MultipleChoiceTaskForm(forms.ModelForm):
-    location = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
+    location = forms.CharField(required=True, max_length=30, widget=forms.TextInput(attrs={'class':'form-control'}))
     description = forms.CharField(required=False, max_length=500, widget=forms.Textarea(attrs={'class':'form-control'}))
-    question = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
-    choice1 = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
-    choice2 = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
-    choice3 = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
-    choice4 = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class':'form-control'}))
+    question = forms.CharField(required=True, max_length=2000, widget=forms.TextInput(attrs={'class':'form-control'}))
+    choice1 = forms.CharField(required=True, max_length=1000, widget=forms.TextInput(attrs={'class':'form-control'}))
+    choice2 = forms.CharField(required=True, max_length=1000, widget=forms.TextInput(attrs={'class':'form-control'}))
+    choice3 = forms.CharField(required=True, max_length=1000, widget=forms.TextInput(attrs={'class':'form-control'}))
+    choice4 = forms.CharField(required=True, max_length=1000, widget=forms.TextInput(attrs={'class':'form-control'}))
     OPTIONS = (
         (1, '1'),
         (2, '2'),
