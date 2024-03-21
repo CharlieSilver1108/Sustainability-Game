@@ -8,6 +8,23 @@
     -->
     <title>Leaderboard</title>
 
+    <style>
+        td.eco-pioneers {
+            background-color: blue; /* replace with the color for Eco Pioneers */
+            color: white;
+        }
+
+        td.green-guardians {
+            background-color: green; /* replace with the color for Green Guardians */
+            color: white;
+        }
+
+        td.recycle-rangers {
+            background-color: red; /* replace with the color for Recycle Rangers */
+            color: white;
+        }
+    </style>
+
     <div class="container-fluid">
         <div class="row justify-content-center">
 
@@ -66,31 +83,35 @@
                                     
                                     <!-- The user's position -->
                                     <h4 class="card-title">Your Position</h4>
-                                        <table class="table table-bordered">
-                                            <thead class="thead-dark" style="display:none;">
-                                                <tr>
-                                                    <th>Position</th>
-                                                    <th>Player</th>
-                                                    <th>Bio</th>
-                                                    <th>Points</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td style="width: 10%;">{{ current_user_position }}</td>
-                                                    <td>
-                                                        {% if user.profile.profile_picture %}
-                                                            <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="max-width: 30px; height: width; object-fit: contain;">
-                                                        {% else %}
-                                                            <img src="img/default.jpg" alt="Profile Picture" class="rounded-circle" style="max-width: 180px;">
-                                                        {% endif %}
-                                                        {{ user.username }}
-                                                    </td>
-                                                    <td style="width: 55%;">{{ user.profile.bio }}</td>
-                                                    <td style="width: 15%;">{{ user.profile.points }}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <table class="table table-bordered">
+                                        <thead class="thead-dark" style="display:none;">
+                                            <tr>
+                                                <th>Position</th>
+                                                <th>Player</th>
+                                                <th>Bio</th>
+                                                <th>Points</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 10%;">{{ current_user_position }}</td>
+                                                <td>
+                                                    {% if user.profile.profile_picture %}
+                                                        <img src="{{ user.profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle" style="max-width: 30px; height: width; object-fit: contain;">
+                                                    {% else %}
+                                                        <img src="img/default.jpg" alt="Profile Picture" class="rounded-circle" style="max-width: 180px;">
+                                                    {% endif %}
+                                                    {{ user.username }}
+                                                </td>
+                                                <td style="width: 55%;">{{ user.profile.bio }}</td>
+                                                <td style="width: 15%;">{{ user.profile.points }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="{{ user.profile.team.name|slugify }}" style="width: 10%;">{{ team_position }}</td>
+                                                <td colspan="3">Your position in the {{ user.profile.team.name }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 {% endif %}
                                 <!-- Team Scores -->
                                 <hr style="border-top: 1px solid #ccc;">

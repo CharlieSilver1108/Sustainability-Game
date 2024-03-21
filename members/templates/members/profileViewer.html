@@ -110,7 +110,7 @@
                     {% for relation in badges_with_dates %}
                     <li style="display: flex; align-items: center;">
                         <img src="{{ relation.badge.image.url }}" alt="{{ relation.badge.name }}" data-toggle="tooltip" data-placement="top" data-original-title="{{ relation.badge.description }}" class="rounded-circle mr-2" width="45" height="45">
-                        {{ relation.badge.name }} - {{ relation.created_at|date:"d/m/y" }}
+                        {{ relation.badge.name|title }} - {{ relation.created_at|date:"d/m/y" }}
                     </li>
                     {% empty %}
                     <li>No badges earned yet.</li>
