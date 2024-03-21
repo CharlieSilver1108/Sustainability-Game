@@ -62,13 +62,13 @@
                 <div class="section">blue</div>
             </div>
             <div class="message">
-                Green - Successful attack
+                Blue - Successful attack
             </div>
             <div class="message">
-                Red - Weakspot hit - 2x damage!
+                Green - Weakspot hit - 2x damage!
             </div>
             <div class="message">
-                Blue - Critical hit - 3x damage!
+                Red - Critical hit - 3x damage!
             </div>
             <button class="spin-button" onclick="spinWheel()">Spin</button> <!-- When the spin button is clicked the spinning wheel animation occurs -->
         </div>
@@ -76,6 +76,10 @@
     <div class = "modal-victory" id="modal-victory">
         <p id="modalText"></p>
         <button id="confirmButton" class="confirm-button">Confirm</button>
+    </div>
+    <div class = "modal-victory" id="modal-attackPoints">
+        <p id="modalAttackText"></p>
+        <button id="confirmButtonAttack" class="confirm-button">Confirm</button>
     </div>
 </body>
   
@@ -169,9 +173,9 @@
             var attackPointsUsed = attackDamage //saves the number of attack points used
 
             //If it is green there is no need to change - applies multiplications 
-            if(winningSection.textContent == "red"){
+            if(winningSection.textContent == "blue"){
                 attackDamage *=2;
-            }else if(winningSection.textContent == "blue"){
+            }else if(winningSection.textContent == "green"){
                 attackDamage *=3;
             }
             formData.append('id', '{{monster.id}}'); // Use the monster ID from your template
@@ -193,16 +197,27 @@
 
             }
             else{
-                setTimeout(function() {     //reloads the window
 
-                window.location.reload(); //updates health after animation has finished
-            }, 4000); 
+                var modal = document.getElementById("modal-attackPoints")
+                modal.style.display = "block"; //shows victory popup
+                var modalText = document.getElementById("modalAttackText"); //finds the text element and changes it to the below message 
+                modalText.textContent = "Monster Damaged! You've damaged the monster and inficted "+ attackDamage + " damage";
+
+            //     setTimeout(function() {     //reloads the window
+
+            //     window.location.reload(); //updates health after animation has finished
+            // }, 4000); 
             }
         }
-         var confirmBtn = document.getElementById("confirmButton"); //creates a button that will reload the page
+        var confirmBtn = document.getElementById("confirmButton"); //creates a button that will reload the page
             confirmBtn.addEventListener('click', function() {
                 window.location.reload();
             });      
+
+        var confirmBtnAttack = document.getElementById("confirmButtonAttack"); //creates a button that will reload the page
+            confirmBtnAttack.addEventListener('click', function() {
+                window.location.reload();
+            });  
 </script>
 </body>
 
