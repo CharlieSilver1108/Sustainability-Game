@@ -9,6 +9,21 @@
     Author: Charlie
     -->
 
+    <style>
+    .join-team-button {
+        background-color: #0d7a2e; /* Green */
+        border: none;
+        color: white;
+        padding: 7px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+    </style>
+
     <title>Home</title>
     
     {% if messages %}
@@ -46,26 +61,44 @@
         <br>
         <br>
         <br>
-        <br>
-        <br>
-        <button id="changeButton" style="display: block; margin: 0 auto;">Grow Tree</button>
+        <button id="changeButton" class="join-team-button">Grow Tree</button>
         <img id="image" style="display: block; margin: 0 auto;" src="../img/trees/tree1.png" alt="Tree 1">
-    </div>
+        <div id="badge" style="display: none;">Congratulations! You've earned a badge for growing the tree to its final state.</div>
+        <div id="notLoggedInMessage" style="display: none;">Thanks for growing the tree! Log in and try again to earn a badge.</div>
 
-    <script>
-        const imageSources = ["../img/trees/tree1.png", "../img/trees/tree2.png", "../img/trees/tree3.png", "../img/trees/tree4.png", "../img/trees/tree5.png", "../img/trees/tree6.png"]; // Add more images as needed
-        var i = 0;
-        const image = document.getElementById("image");
-
-        function changePicture() {
-            if (i < 5) {
-                i += 1;
-                image.src = imageSources[i];
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            const imageSources = ["../img/trees/tree1.png", "../img/trees/tree2.png", "../img/trees/tree3.png", "../img/trees/tree4.png", "../img/trees/tree5.png", "../img/trees/tree6.png"]; // Add more images as needed
+            var i = 0;
+            const image = document.getElementById("image");
+            const badge = document.getElementById("badge");
+            const notLoggedInMessage = document.getElementById("notLoggedInMessage"); 
+        
+            function changePicture() {
+                if (i < 5) {
+                    i += 1;
+                    image.src = imageSources[i];
+                }
+                if (i === 5) {
+                    $.post('/update_tree_grown/', function(data) {
+                        console.log('AJAX request was successful');  // This will print a message in your browser's console
+                        console.log(data);  // This will print the response data in your browser's console
+                        if (data.status === 'success') {
+                            badge.style.display = "block";
+                        } else {
+                            notLoggedInMessage.style.display = "block";
+                        }
+                    }).fail(function(jqXHR, textStatus, errorThrown) {
+                        console.log('AJAX request failed');  // This will print a message in your browser's console
+                        console.log('jqXHR:', jqXHR);
+                        console.log('textStatus:', textStatus);
+                        console.log('errorThrown:', errorThrown);
+                    });
+                }
             }
-        }
-
-        const button = document.getElementById("changeButton");
-        button.addEventListener("click", changePicture);
-    </script>
+        
+            const button = document.getElementById("changeButton");
+            button.addEventListener("click", changePicture);
+        </script>
 
 {% endblock %}

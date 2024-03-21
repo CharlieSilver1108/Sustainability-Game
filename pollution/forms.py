@@ -5,7 +5,7 @@ from .models import *
 class FindCarbonMonster(forms.ModelForm):
     id = forms.IntegerField(widget=forms.HiddenInput)
     class Meta:
-        model = CarbonMonster
+        model = CarbonMonsterRelation
         fields = ['id']
 # ------- Luke END -------
         
@@ -13,6 +13,7 @@ class FindCarbonMonster(forms.ModelForm):
 class DamageCarbonMonster(forms.ModelForm): 
     id = forms.IntegerField(required=True)
     attackStrength = forms.IntegerField(required=True)
+    attackPointsUsed = forms.IntegerField(required=True)
     class Meta:
-        model = CarbonMonster
-        fields = ['id', 'attackStrength']
+        model = CarbonMonsterRelation
+        fields = ['id', 'attackStrength', 'attackPointsUsed']

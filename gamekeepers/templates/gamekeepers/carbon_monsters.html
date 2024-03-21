@@ -1,7 +1,27 @@
 {% extends 'Sustain/base.html' %}
 
-
 {% block content %}
+    <!--
+    File: carbon_monsters.html
+    Description: This HTML template file is used to display the list of community-based and user-based monsters in the Sustainability Game.
+    It extends the 'Sustain/base.html' template.
+
+    The template consists of two sections:
+    1. Community-Based Monsters:
+        - Displays a table with the names and health points of community-based monsters.
+        - Provides a button to switch to the User-Based Monsters section.
+        - Provides a button to add a new monster.
+    2. User-Based Monsters:
+        - Displays a table with the names and health points of user-based monsters.
+        - Provides a button to switch to the Community-Based Monsters section.
+        - Provides a button to add a new monster.
+
+    The tables use the DataTables plugin for enhanced functionality.
+    The script section contains JavaScript code to initialize the DataTables plugin and handle the toggling between the two monster sections.
+    Note: The template uses Django template tags to dynamically populate the monster data from the server.
+
+    Author: Luke
+    -->
 
     <title>Carbon</title>
     

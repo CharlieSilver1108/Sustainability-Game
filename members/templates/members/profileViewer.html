@@ -10,6 +10,7 @@
     -->    
 
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <style>
         .square-container {
@@ -105,19 +106,27 @@
             </div>
             <div class="user-detail">
                 <h5>Badges:{% if badge_count > 0 %} ({{ badge_count }}){% endif %}</h5>
-                <ul>
-                {% for relation in badges_with_dates %}
-                    <li>{{ relation.badge.name }} - {{ relation.created_at|date:"d/m/y" }}</li>
-                {% empty %}
+                <ul style="list-style-type: none; padding-left: 0;">
+                    {% for relation in badges_with_dates %}
+                    <li style="display: flex; align-items: center;">
+                        <img src="{{ relation.badge.image.url }}" alt="{{ relation.badge.name }}" data-toggle="tooltip" data-placement="top" data-original-title="{{ relation.badge.description }}" class="rounded-circle mr-2" width="45" height="45">
+                        {{ relation.badge.name|title }} - {{ relation.created_at|date:"d/m/y" }}
+                    </li>
+                    {% empty %}
                     <li>No badges earned yet.</li>
-                {% endfor %}
+                    {% endfor %}
                 </ul>
             </div>
-        </div>
-        <div class="additional-details">
-            <h3>Additional Details</h3>
-            <p>When more functionality has been added I want to display things like the user's total points here and their position on the leaderboard </p>
+            <div>
+                <p>Joined Sustain on {{ userToView.date_joined|date:"d F Y" }}</p>
+            </div>
         </div>
     </div>
+
+    <script>
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        })
+        </script>
     
 {% endblock %}

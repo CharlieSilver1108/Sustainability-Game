@@ -2,6 +2,24 @@
 
 
 {% block content %}
+    <!--
+    File: tasks.html
+
+    Description: This HTML template file is used to display the tasks page of a sustainability game.
+    It extends the 'Sustain/base.html' template.
+    
+    The template includes the following sections:
+    - Current points: Displays the current points of the user's profile.
+    - Current Tasks To Complete: Displays a table of tasks that are currently assigned to the user.
+        - Each task is displayed with its name, description, and buttons to complete or remove the task.
+    - Next Tasks To Complete: Displays a table of tasks that are available for the user to add to their current tasks.
+        - Each task is displayed with its name, description, and a button to add the task.
+    - Complete Task Modal: A modal dialog that appears when the user clicks the "Complete Task" button.
+        - It displays a question related to the task and provides an input field for the user to enter their answer.
+        - The modal also includes buttons to submit the answer or close the modal.
+        
+    Author: Charlie
+    -->
     <title>Tasks</title>
 
     <div class="container-fluid">

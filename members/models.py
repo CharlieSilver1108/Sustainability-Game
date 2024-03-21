@@ -24,6 +24,9 @@ class Profile(models.Model):
     badges = models.ManyToManyField('Badge', through='ProfileBadgeRelation') # -Greg-
     highest_position = models.IntegerField(null=True, blank=True) # -Greg-
     team = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True) # -Greg-
+    challenges_completed = models.IntegerField(default=0) # -Greg-
+    monsters_defeated = models.IntegerField(default=0) # -Greg-
+    tree_grown = models.BooleanField(default=False) # -Greg-
     
 
     def check_and_assign_badges(self):
@@ -46,6 +49,7 @@ class Badge(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=200)
     criteria = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='badges/', null=True)
 
     def __str__(self):
         return self.name
@@ -69,8 +73,20 @@ class Badge(models.Model):
         return profile.points >= 1000
 
     def rule_top_10(self, profile):
-    # Check if the profile has ever been in the top 10
+        # Check if the profile has ever been in the top 10
         return profile.highest_position is not None and profile.highest_position <= 10
+    
+    def rule_sustainability_star(self, profile):
+        # Check if the user has completed at least sustainability tasks
+        return profile.challenges_completed >= 3
+    
+    def rule_monster_hunter(self, profile):
+        # Check if the user has defeated at least 5 monsters
+        return profile.monsters_defeated >= 5
+
+    def rule_tree_hugger(self, profile):  # When creating this badge it must be called 'tree_hugger'
+        # Check if the tree has been grown at least once
+        return profile.tree_grown
 
  # This model represents the relationship between a Profile and a Badge. 
  # It has a foreign key to both Profile and Badge, indicating which profile 
