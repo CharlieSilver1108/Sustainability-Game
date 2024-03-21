@@ -67,16 +67,15 @@ def leaderboard(request):
     if request.user.is_authenticated:
         current_user = Profile.objects.get(user=request.user)
         current_user_position = list(all_profiles).index(current_user) + 1
+
+        # Calculate the user's team position
+        team_profiles = Profile.objects.filter(team=current_user.team).order_by('-points')
+        team_position = list(team_profiles).index(current_user) + 1
+
         return render(request, 'Sustain/leaderboard.html', {
             'top_ten': top_ten, 
             'current_user_position': current_user_position,
-            'eco_pioneers_points': eco_pioneers_points,
-            'green_guardians_points': green_guardians_points,
-            'recycle_rangers_points': recycle_rangers_points,
-        })
-    else:
-        return render(request, 'Sustain/leaderboard.html', {
-            'top_ten': top_ten,
+            'team_position': team_position,
             'eco_pioneers_points': eco_pioneers_points,
             'green_guardians_points': green_guardians_points,
             'recycle_rangers_points': recycle_rangers_points,

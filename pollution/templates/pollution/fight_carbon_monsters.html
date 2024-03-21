@@ -7,8 +7,7 @@
     Description: This HTML file represents the template for the "Fight Carbon Monsters" page of the Sustainability Game. It extends the 'Sustain/base.html' template and includes static files for styling.
     The page displays a monster's name, health bar, image, and an input box for attack points. The user can commit a certain number of points to attack the monster by clicking the "FIGHT" button. After clicking the button, a modal with a spinning wheel appears, and the wheel randomly selects a winning section. The attack damage is calculated based on the winning section, and the health bar is updated accordingly.
     The file also includes JavaScript code to handle the functionality of the page, such as updating the health bar, showing and hiding the modal, spinning the wheel, and calculating the attack damage.
-    Note: The file contains Django template tags (e.g., {% extends %}, {% load %}, {% block %}, {% static %}, {{ variable }}) for rendering dynamic content and CSRF protection.
-
+    
     Author: Will
     -->
 {% csrf_token %}
@@ -71,7 +70,7 @@
             <div class="message">
                 Blue - Critical hit - 3x damage!
             </div>
-            <button class="spin-button" onclick="spinWheel()">Spin</button> <!-- WHen the spin button is clicked the spinning wheel animation occurs -->
+            <button class="spin-button" onclick="spinWheel()">Spin</button> <!-- When the spin button is clicked the spinning wheel animation occurs -->
         </div>
     </div>
     <div class = "modal-victory" id="modal-victory">
@@ -111,8 +110,13 @@
         // Attach event listener to the fight button
         fightButton.addEventListener('click', function() {
             attackDamage = document.getElementById('attack-points').value;
-            if(attackDamage <'{{user.pointsToAttack}}'){ //checks if the user has points to attack 
+            alert("Points to attack"+ '{{user.profile.pointsToAttack}}')
+            profileAttackPoints = '{{user.profile.pointsToAttack}}';
+            profileAttackPoints = Number(profileAttackPoints)
+            alert("Attack damage" + attackDamage)
+            if(attackDamage < profileAttackPoints){ //checks if the user has points to attack 
                 showModal();      
+                alert("Shown")
             }
             else{
                 alert("Insufficient points! Learn about sustainability to get more ");
