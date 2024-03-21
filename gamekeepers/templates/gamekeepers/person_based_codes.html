@@ -2,6 +2,28 @@
 {% load static %}
 
 {% block content %}
+    <!--
+    File: person_based_codes.html
+
+    Description: This HTML template file is used to display a table of person-based codes in the Sustainability Game web application.
+    It extends the 'Sustain/base.html' template and loads the static files.
+
+    The table displays the following columns for each person-based code:
+    - Name
+    - Location
+    - Expertise
+    - Code
+    - Points Value
+
+    The table also includes a "Add New" button to create a new person-based code, and a "Remove" button for superusers to delete codes.
+    The table is styled using the 'custom.css' file.
+    The table uses the DataTables library to provide sorting and searching functionality.
+    If there are no person-based codes found, a message is displayed.
+    Messages from the server are displayed using alert messages.
+    Note: This is a Django template file and contains Django template tags.
+
+    Author: Liam
+    -->
     <link href="{% static 'css/custom.css' %}" rel="stylesheet">
     <title>Person Based Codes</title>
     

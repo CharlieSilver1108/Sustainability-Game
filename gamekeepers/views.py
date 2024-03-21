@@ -162,29 +162,30 @@ def delete_person_based_code(request, code_id):
 # ------- Greg START -------
 
 def badges(request):
-    badges = Badge.objects.all()
-    return render(request, 'gamekeepers/badges.html', {'badges': badges})
-    
+    badges = Badge.objects.all()  # Get all badges
+    return render(request, 'gamekeepers/badges.html', {'badges': badges})  # Render badges
+
 def create_badge(request):
-    if request.method == 'POST':
-        form = BadgeForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Badge successfully created.")
-            return redirect('badges')  
+    if request.method == "POST":  # Check if POST request
+        form = BadgeForm(request.POST, request.FILES)  # Create form with POST data
+        print(form.errors)  # Print form errors
+        if form.is_valid():  # Validate form
+            form.save()  # Save if valid
+            messages.success(request, "Badge Successfully Created")  # Success message
+            return redirect('badges')  # Redirect to badges
     else:
-        form = BadgeForm()
-    return render(request, 'gamekeepers/create_badge.html', {'form': form})
+        form = BadgeForm()  # Create empty form for GET request
+    return render(request, 'gamekeepers/create_badge.html', {'form':form})  # Render form
 
 def delete_badge(request, badge_id):
-    if request.method == "POST":
-        badge = Badge.objects.get(id=badge_id)
-        badge.delete()
-        messages.success(request, "Badge successfully deleted.")
-        return redirect('badges')
+    if request.method == "POST":  # Check if POST request
+        badge = Badge.objects.get(id=badge_id)  # Get badge by id
+        badge.delete()  # Delete badge
+        messages.success(request, "Badge successfully deleted.")  # Success message
+        return redirect('badges')  # Redirect to badges
     else:
-        messages.error(request, "Badge not found.")
-        return redirect('badges')
+        messages.error(request, "Badge not found.")  # Error message
+        return redirect('badges')  # Redirect to badges
 
 # ------- Greg END -------
     

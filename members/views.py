@@ -104,7 +104,12 @@ def profile_viewer(request, username=None):
         userToView = User.objects.get(username=username)             # either returns a User object, or a 404 error saying the user doesn't exist
         user_position = list(Profile.objects.order_by('-points')).index(Profile.objects.get(user=userToView)) + 1
         badges_with_dates = ProfileBadgeRelation.objects.filter(profile=userToView.profile)
-        badge_count = badges_with_dates.count()     
+        badge_count = badges_with_dates.count()
+
+        # Add this loop to format the badge names
+        for relation in badges_with_dates:
+            relation.badge.name = relation.badge.name.replace('_', ' ').capitalize()
+
         return render(request, 'members/profileViewer.html', {'userToView': userToView, 'user_position':user_position, 'badges_with_dates':badges_with_dates, 'badge_count':badge_count})
     except:
         messages.success(request, "User not found!")         # if no parameter value is given, redirects to home page and displays message
@@ -120,21 +125,32 @@ def privacy_policy(request):
 
 # ------- Will + Greg START -------
 def profile_user(request):
+    # Get user's position based on points
     current_user_position = list(Profile.objects.order_by('-points')).index(Profile.objects.get(user=request.user)) + 1
+    # Get badges with dates for the user
     badges_with_dates = ProfileBadgeRelation.objects.filter(profile=request.user.profile)
+    # Count the badges
     badge_count = badges_with_dates.count()
 
+    # Format badge names
+    for relation in badges_with_dates:
+        relation.badge.name = relation.badge.name.replace('_', ' ').capitalize()
+
+    # Check if user is part of a team
     if request.user.profile.team is None:
-        if request.method == 'POST':
+        if request.method == 'POST':  # Handle POST request
+            # Create form with POST data
             team_selection_form = TeamSelectionForm(request.POST, instance=request.user.profile)
-            if team_selection_form.is_valid():
-                team_selection_form.save()
-                return redirect('profile_user')
-        else:
+            if team_selection_form.is_valid():  # Validate form
+                team_selection_form.save()  # Save form data
+                return redirect('profile_user')  # Redirect to profile
+        else:  # Handle GET request
+            # Create form with user profile data
             team_selection_form = TeamSelectionForm(instance=request.user.profile)
     else:
-        team_selection_form = None
+        team_selection_form = None  # No form if user is part of a team
 
+    # Render profile page with context data
     return render(request, 'members/profile.html', {
         'user': request.user, 
         'user_position': current_user_position, 
